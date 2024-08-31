@@ -4,9 +4,6 @@ import { TextStyles } from '@/constants/TextStyles'
 import { Colors } from '@/constants/Colors'
 import { Svg, Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 
-
-
-
 const WelcomeRadialGradient = Animated.createAnimatedComponent(RadialGradient)
 
 const WelcomeBackground = () => {
@@ -17,15 +14,15 @@ const WelcomeBackground = () => {
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(animationRadius, {
-          toValue: 100,
+          toValue: 70,
           duration: 5000,
-          easing: Easing.linear,
+          easing: Easing.inOut(Easing.ease),
           useNativeDriver: false
         }),
         Animated.timing(animationRadius, {
-          toValue: 90,
+          toValue: 100,
           duration: 5000,
-          easing: Easing.linear,
+          easing: Easing.inOut(Easing.ease),
           useNativeDriver: false
         })
       ])
