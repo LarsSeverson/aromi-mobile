@@ -1,7 +1,15 @@
-import { StyleSheet, View } from "react-native"
-import { Svg, Path } from "react-native-svg"
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Svg, Path } from 'react-native-svg'
 
-export const Icon = ({ width = 24, height = 24, color = 'black', d = '' }) => {
+interface IconProps {
+  width: number,
+  height: number
+  color: string
+  d: string
+}
+
+export const Icon: React.FC<IconProps> = ({ width = 24, height = 24, color = 'black', d = '' }) => {
   return (
     <View style={styles.wrapper}>
       <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill='none'>

@@ -1,10 +1,13 @@
-import Community from "@/components/Community/Community"
-import { SafeAreaView } from "react-native-safe-area-context"
+import Community from '@/components/Community/Community'
+import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function SearchPage() {
+const SearchPage: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Community />
     </SafeAreaView>
   )
 }
+
+export default SearchPage

@@ -57,8 +57,8 @@ export const Colors = {
     },
 
     text: '#000000',
-    
+
     button: '#CF6E32',
     buttonText: '#FFFFFF'
   }
-};
+}

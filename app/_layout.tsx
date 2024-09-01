@@ -1,6 +1,7 @@
-import { Stack } from "expo-router"
+import { Stack } from 'expo-router'
+import React from 'react'
 
-export default function RootLayout() {
+const RootLayout: React.FC = () => {
   return (
     <Stack>
       <Stack.Screen name='index' options={{ headerShown: false }} />
@@ -8,3 +9,5 @@ export default function RootLayout() {
     </Stack>
   )
 }
+
+export default RootLayout

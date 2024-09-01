@@ -1,6 +1,7 @@
+import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const Search = () => {
+const Search: React.FC = () => {
   return (
     <View style={styles.wrapper}>
       <Text>Search</Text>
@@ -10,7 +11,7 @@ const Search = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    flex: 1
   }
 })
 

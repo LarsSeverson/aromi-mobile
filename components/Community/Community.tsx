@@ -1,6 +1,7 @@
+import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const Community = () => {
+const Community: React.FC = () => {
   return (
     <View style={styles.wrapper}>
       <Text>Community</Text>
@@ -10,7 +11,7 @@ const Community = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    flex: 1
   }
 })
 

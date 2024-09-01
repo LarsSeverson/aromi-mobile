@@ -3,10 +3,10 @@ import React, { Component } from 'react'
 import { Colors } from '@/constants/Colors'
 
 export class HomeFragranceCard extends Component {
-  render() {
+  render () {
     return (
       <View style={styles.wrapper}>
-        <View style={styles.imageBackground}></View>
+        <View style={styles.imageBackground} />
       </View>
     )
   }

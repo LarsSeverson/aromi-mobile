@@ -1,10 +1,11 @@
+import { ElementType } from 'react'
 import { Icon } from '@/components/Utils/Icon'
 
 type IconTypes = {
-  home: React.ElementType
-  search: React.ElementType
-  community: React.ElementType
-  profile: React.ElementType
+  home: ElementType
+  search: ElementType
+  community: ElementType
+  profile: ElementType
 }
 
 const HomeIcon = () => {

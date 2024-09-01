@@ -1,21 +1,23 @@
-import Welcome from "@/components/OnBoarding/Welcome"
-import { Redirect } from "expo-router"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
+import Welcome from '@/components/OnBoarding/Welcome'
+import { Href, Redirect } from 'expo-router'
 
-export default function Index() {
+const Index: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false)
     }, 2000)
-  }, [setIsLoading])
+  }, [])
 
   if (isLoading) {
     return <Welcome />
   }
 
-  return (
-    <Redirect href='/home' />
-  )
+  const homeHref: Href = './home' // Relative path
+
+  return <Redirect href={homeHref} />
 }
+
+export default Index

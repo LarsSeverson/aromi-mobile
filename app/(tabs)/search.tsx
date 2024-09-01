@@ -1,10 +1,13 @@
-import Search from "@/components/Search/Search"
-import { SafeAreaView } from "react-native-safe-area-context"
+import React from 'react'
+import Search from '@/components/Search/Search'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function SearchPage() {
+const SearchPage: React.FC = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Search />
     </SafeAreaView>
   )
 }
+
+export default SearchPage

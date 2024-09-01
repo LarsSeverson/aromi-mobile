@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, RefreshControl, FlatList } from 'react-native'
 import React, { useState } from 'react'
+import { View, Text, StyleSheet, ScrollView, RefreshControl, FlatList } from 'react-native'
 import HomeFragranceCard from '../FragranceCards/HomeFragranceCard'
 
 const d = [
@@ -12,10 +12,10 @@ const d = [
   { w: 'w' },
   { w: 'w' },
   { w: 'w' },
-  { w: 'w' },
+  { w: 'w' }
 ]
 
-const Home = () => {
+const Home: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false)
   const [fragranceData, setFragranceData] = useState(d)
 
@@ -45,7 +45,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    flex: 1
   },
   fragranceListWrapper: {
     gap: 10,

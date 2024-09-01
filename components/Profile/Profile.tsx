@@ -1,6 +1,7 @@
+import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const Profile = () => {
+const Profile: React.FC = () => {
   return (
     <View style={styles.wrapper}>
       <Text>Profile</Text>
@@ -10,7 +11,7 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
+    flex: 1
   }
 })
 

@@ -1,8 +1,9 @@
-import NavBar from "@/components/Navigation/NavBar"
-import { Tabs } from "expo-router"
-import { View, Text } from "react-native"
+import NavBar from '@/components/Navigation/NavBar'
+import { Tabs } from 'expo-router'
+import React from 'react'
+import { View, Text } from 'react-native'
 
-export default function TabLayout() {
+const TabLayout: React.FC = () => {
   return (
     <Tabs tabBar={NavBar}>
       <Tabs.Screen name='home' options={{ headerShown: false, tabBarShowLabel: false }} />
@@ -12,3 +13,5 @@ export default function TabLayout() {
     </Tabs>
   )
 }
+
+export default TabLayout

@@ -31,7 +31,6 @@ const WelcomeBackground = () => {
     animation.start()
 
     return () => animation.stop()
-
   }, [animationRadius])
 
   useEffect(() => {
@@ -46,9 +45,9 @@ const WelcomeBackground = () => {
     <Svg viewBox='0 0 100 100' preserveAspectRatio='none'>
       <Defs>
         <WelcomeRadialGradient id='grad' cx='50%' cy='50%' r={radius}>
-          <Stop offset="17%" stopColor="#FF9D61" stopOpacity="1" />
-          <Stop offset="50%" stopColor={Colors.aromiLight.primary.tawny} stopOpacity="1" />
-          <Stop offset="100%" stopColor={Colors.aromiLight.primary.tawny} stopOpacity="1" />
+          <Stop offset='17%' stopColor='#FF9D61' stopOpacity='1' />
+          <Stop offset='50%' stopColor={Colors.aromiLight.primary.tawny} stopOpacity='1' />
+          <Stop offset='100%' stopColor={Colors.aromiLight.primary.tawny} stopOpacity='1' />
         </WelcomeRadialGradient>
       </Defs>
       <Rect x='0' y='0' width='100' height='100' fill='url(#grad)' />
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
 
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   overlay: {
     position: 'absolute'

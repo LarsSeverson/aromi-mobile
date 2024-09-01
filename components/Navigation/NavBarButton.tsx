@@ -1,7 +1,7 @@
+import React, { useRef } from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Icons from '@/constants/Icons'
 import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated'
-import { useRef } from 'react'
 
 interface NavBarButtonProps {
   routeName: string
