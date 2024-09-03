@@ -39,7 +39,7 @@ const NavBarButton: React.FC<NavBarButtonProps> = ({
     isPressed.value = true
 
     scale.value = withSpring(0.95, {
-      stiffness: 500,
+      stiffness: 900,
       damping: 100
     })
 
@@ -53,7 +53,7 @@ const NavBarButton: React.FC<NavBarButtonProps> = ({
       onPressed()
     }
     scale.value = withSpring(1, {
-      stiffness: 500,
+      stiffness: 900,
       damping: 100
     })
   }

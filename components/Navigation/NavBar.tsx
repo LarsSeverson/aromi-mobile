@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ParamListBase, TabNavigationState, Descriptor, NavigationProp } from '@react-navigation/native'
 import NavBarButton from './NavBarButton'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface NavBarProps {
   state: TabNavigationState<ParamListBase>
@@ -52,7 +53,14 @@ const styles = StyleSheet.create({
 
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5
   }
 })
 

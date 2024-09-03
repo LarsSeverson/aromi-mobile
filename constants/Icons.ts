@@ -2,7 +2,7 @@ import { ElementType } from 'react'
 import { Icon } from '@/components/Utils/Icon'
 
 type IconTypes = {
-  home: ElementType
+  index: ElementType
   search: ElementType
   community: ElementType
   profile: ElementType
@@ -46,7 +46,7 @@ const ProfileIcon = () => {
 
 const Icons: IconTypes =
 {
-  home: HomeIcon,
+  index: HomeIcon,
   search: SearchIcon,
   community: CommunityIcon,
   profile: ProfileIcon

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, RefreshControl, FlatList } from 'react-native'
-import HomeFragranceCard from '../FragranceCards/HomeFragranceCard'
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
+
+import HomeSection from './HomeSection'
+import { Colors } from '@/constants/Colors'
 
 const d = [
   { w: 'w' },
@@ -25,31 +27,26 @@ const Home: React.FC = () => {
     setRefreshing(false)
   }
 
+  const expandSuggestedForYou = () => {
+    console.log('suggested for you')
+  }
+
   return (
     <View style={styles.wrapper}>
-      <FlatList
-        data={d}
-        renderItem={({ item }) => (
-          <HomeFragranceCard />
-        )}
-        refreshing={refreshing}
-        onRefresh={handleRefresh}
-        numColumns={2}
-        columnWrapperStyle={{ gap: 10 }}
-        contentContainerStyle={styles.fragranceListWrapper}
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+      >
+        <HomeSection title='suggested for you' data={d} onSeeAll={expandSuggestedForYou} />
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1
-  },
-  fragranceListWrapper: {
-    gap: 10,
-    padding: 10
+    flex: 1,
+    padding: 10,
+    backgroundColor: Colors.white
   }
 })
 

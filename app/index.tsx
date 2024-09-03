@@ -1,23 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import Welcome from '@/components/OnBoarding/Welcome'
-import { Href, Redirect } from 'expo-router'
+import Home from '@/components/Home/Home'
+import React from 'react'
 
-const Index: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true)
+import changeNavigationBarColor from 'react-native-navigation-bar-color'
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
-  }, [])
+changeNavigationBarColor('white', true)
 
-  if (isLoading) {
-    return <Welcome />
-  }
-
-  const homeHref: Href = './home' // Relative path
-
-  return <Redirect href={homeHref} />
+const HomePage: React.FC = () => {
+  return (
+    <Home />
+  )
 }
 
-export default Index
+export default HomePage
