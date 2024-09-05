@@ -1,18 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ColorSchemeName, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { ParamListBase, TabNavigationState, Descriptor, NavigationProp } from '@react-navigation/native'
 import NavBarButton from './NavBarButton'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Colors } from '@/constants/Colors'
 
 interface NavBarProps {
   state: TabNavigationState<ParamListBase>
   descriptors: any
   navigation: any
+  colorScheme?: ColorSchemeName // TODO:
 }
 
-const NavBar: React.FC<NavBarProps> = ({ state, navigation }) => {
+const NavBar: React.FC<NavBarProps> = ({ state, navigation, colorScheme }) => {
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, { backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white }]}>
       {
         state.routes.map((route, index) => {
           const isFocused = state.index === index
@@ -43,7 +44,7 @@ const NavBar: React.FC<NavBarProps> = ({ state, navigation }) => {
           )
         })
       }
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -54,12 +55,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-
-    backgroundColor: 'white',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
     elevation: 5
   }
 })

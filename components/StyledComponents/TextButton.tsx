@@ -6,7 +6,7 @@ import React from 'react'
 export const TextButtonStyle = styled.Text`
   font-family: 'PalanquinDark-SemiBold';
   font-size: 15px;
-  color: ${Colors.aromiLight.button};
+  color: ${Colors.button};
 `
 
 interface TextButtonProps {

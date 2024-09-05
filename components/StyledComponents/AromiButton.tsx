@@ -4,8 +4,9 @@ import styled from 'styled-components/native'
 import { Colors } from '@/constants/Colors'
 
 const AromiButtonStyle = styled.TouchableOpacity`
+  height: 40px;
   width: 110px;
-  background-color: ${Colors.aromiLight.button};
+  background-color: ${Colors.button};
 
   display: flex;
   justify-content: center;
@@ -13,7 +14,6 @@ const AromiButtonStyle = styled.TouchableOpacity`
 `
 
 const AromiButtonTextStyle = styled.Text`
-  height: 100%;
 
   color: ${Colors.white};
   font-family: 'PalanquinDark-Regular';
@@ -24,7 +24,7 @@ const AromiButton: React.FC<TouchableOpacityProps> = (props: TouchableOpacityPro
   return (
     <View style={styles.wrapper}>
       <AromiButtonStyle {...props}>
-        <AromiButtonTextStyle style={{ textAlignVertical: 'center' }}>{props.children}</AromiButtonTextStyle>
+        <AromiButtonTextStyle adjustsFontSizeToFit style={{ textAlignVertical: 'center' }}>{props.children}</AromiButtonTextStyle>
       </AromiButtonStyle>
     </View>
   )
@@ -32,8 +32,6 @@ const AromiButton: React.FC<TouchableOpacityProps> = (props: TouchableOpacityPro
 
 const styles = StyleSheet.create({
   wrapper: {
-    height: 40,
-
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'

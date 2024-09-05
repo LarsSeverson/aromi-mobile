@@ -6,17 +6,23 @@ import TitleText from '../StyledComponents/Text'
 
 const HomeHeader = () => {
   return (
-    <SafeAreaView style={styles.wrapper}>
-      <TitleText>aromi</TitleText>
+    <SafeAreaView edges={['top', 'left', 'right']} style={styles.wrapper}>
+      <View>
+        <TitleText>aromi</TitleText>
+      </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: Colors.white,
     paddingLeft: 10,
-    elevation: 5
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+    backgroundColor: 'white'
   }
 })
 

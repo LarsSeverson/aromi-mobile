@@ -9,11 +9,12 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "fill",
+      "resizeMode": "contain",
       "backgroundColor": "#CC612B"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aromiInc.aromi"
     },
     "android": {
       "adaptiveIcon": {
