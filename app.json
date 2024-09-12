@@ -4,11 +4,11 @@
     "slug": "aromi",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#CC612B"
     },
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.aromiInc.aromi"
@@ -26,7 +26,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
@@ -34,17 +34,17 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Palanquin-Bold.ttf",
-            "./assets/fonts/Palanquin-ExtraLight.ttf",
-            "./assets/fonts/Palanquin-Light.ttf",
-            "./assets/fonts/Palanquin-Medium.ttf",
-            "./assets/fonts/Palanquin-Regular.ttf",
-            "./assets/fonts/Palanquin-SemiBold.ttf",
-            "./assets/fonts/Palanquin-Thin.ttf",
-            "./assets/fonts/PalanquinDark-Bold.ttf",
-            "./assets/fonts/PalanquinDark-Medium.ttf",
-            "./assets/fonts/PalanquinDark-Regular.ttf",
-            "./assets/fonts/PalanquinDark-SemiBold.ttf"
+            "./src/assets/fonts/Palanquin-Bold.ttf",
+            "./src/assets/fonts/Palanquin-ExtraLight.ttf",
+            "./src/assets/fonts/Palanquin-Light.ttf",
+            "./src/assets/fonts/Palanquin-Medium.ttf",
+            "./src/assets/fonts/Palanquin-Regular.ttf",
+            "./src/assets/fonts/Palanquin-SemiBold.ttf",
+            "./src/assets/fonts/Palanquin-Thin.ttf",
+            "./src/assets/fonts/PalanquinDark-Bold.ttf",
+            "./src/assets/fonts/PalanquinDark-Medium.ttf",
+            "./src/assets/fonts/PalanquinDark-Regular.ttf",
+            "./src/assets/fonts/PalanquinDark-SemiBold.ttf"
           ]
         }
       ]
