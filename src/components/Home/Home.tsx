@@ -1,22 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { HomeBlock, HomeBlockTypes } from './HomeBlocks/HomeBlock'
 import { Colors } from '@/src/constants/Colors'
-import { gql, useQuery } from '@apollo/client'
-
-const FRAGRANCES_QUERY = gql`
-  query Fragrance($limit: Int) {
-    fragrances(limit: $limit) {
-      id
-    }
-  }
-`
 
 const Home: React.FC = () => {
-  const suggestedData = useQuery(FRAGRANCES_QUERY, {
-    variables: { limit: 6 }
-  })
-
   const [refreshing, setRefreshing] = useState(false)
 
   const handleRefresh = async () => {
@@ -52,12 +39,12 @@ const Home: React.FC = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.homeContentWrapper}
       >
-        <HomeBlock type={HomeBlockTypes.VerticalCards} title='suggested for you' data={suggestedData} onSeeAll={expandSuggestedForYou} />
+        {/* <HomeBlock type={HomeBlockTypes.VerticalCards} title='suggested for you' data={suggestedData} onSeeAll={expandSuggestedForYou} />
         {
           suggestedData.loading || suggestedData.error
             ? null
             : <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={suggestedData} onSeeAll={expandWhatsPopular} />
-        }
+        } */}
         {/* <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={suggestedData} onSeeAll={expandWhatsPopular} />
         <HomeBlock type={HomeBlockTypes.HorizontalCards} title='your likes' data={suggestedData} onSeeAll={expandYourLikes} />
         <HomeBlock type={HomeBlockTypes.HorizontalCards} title='recently viewed' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} />
