@@ -72,7 +72,7 @@ const NavBarButton: React.FC<NavBarButtonProps> = ({
       style={styles.container}
     >
       <Animated.View style={animatedIconStyle}>
-        <Icon style={{ borderWidth: 1 }} />
+        <Icon />
       </Animated.View>
     </Pressable>
   )

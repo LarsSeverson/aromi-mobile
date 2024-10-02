@@ -1,0 +1,101 @@
+{
+  "auth": {
+    "aromimobile3eb0eb42": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_aromimobile3eb0eb42_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    },
+    "AMPLIFY_auth_aromimobile3eb0eb42_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "aromimobile3eb0eb42"
+        }
+      ]
+    }
+  }
+}

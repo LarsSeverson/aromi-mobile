@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import FragranceBlockHorizontalCard from './FragranceBlockHorizontalCard'
 import FragranceBlockHorizontalBar from './FragranceBlockHorizontalBars'
 import FragranceBlockVerticalCard from './FragranceBlockVerticalCard'
-import { ApolloError } from '@apollo/client'
+import { Fragrance } from '@/aromi-backend/src/types/fragrance'
 
 enum FragranceBlockTypes {
   VerticalCard = 0,
@@ -13,8 +13,7 @@ enum FragranceBlockTypes {
 
 interface FragranceBlockProps {
   type: FragranceBlockTypes
-  loading: boolean
-  error: ApolloError | undefined
+  fragrance: Fragrance
 }
 
 const FragranceBlockComponentMap: Record<FragranceBlockTypes, React.FC<FragranceBlockProps>> = {

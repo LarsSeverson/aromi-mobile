@@ -6,4 +6,5 @@ const TitleText = styled.Text`
   font-size: 32px;
   color: ${Colors.black};
 `
+
 export default TitleText

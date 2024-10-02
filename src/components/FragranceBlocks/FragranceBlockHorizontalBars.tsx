@@ -3,7 +3,7 @@ import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import { Colors } from '@/src/constants/Colors'
 import BlockButton from '../Misc/BlockButton'
-import FragranceBlockLoading from './Utils/FragranceBlockLoading'
+import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
 
 const FragranceBlockHorizontalBar: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
   const loading = props.loading
@@ -12,7 +12,7 @@ const FragranceBlockHorizontalBar: React.FC<FragranceBlockProps> = (props: Fragr
   if (loading || error) {
     return (
       <View style={styles.wrapper}>
-        <FragranceBlockLoading />
+        <FragranceBlockVerticalCardLoading />
       </View>
     )
   }

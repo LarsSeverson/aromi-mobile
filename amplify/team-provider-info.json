@@ -1,0 +1,32 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-aromimobile-dev-f23e7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::490004620452:role/amplify-aromimobile-dev-f23e7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::490004620452:role/amplify-aromimobile-dev-f23e7-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-aromimobile-dev-f23e7-deployment",
+      "UnauthRoleName": "amplify-aromimobile-dev-f23e7-unauthRole",
+      "StackName": "amplify-aromimobile-dev-f23e7",
+      "StackId": "arn:aws:cloudformation:us-east-2:490004620452:stack/amplify-aromimobile-dev-f23e7/38264630-7e84-11ef-b58a-0af6cb02a1e7",
+      "AmplifyAppId": "d3cv7b8esi1p6q"
+    },
+    "categories": {
+      "auth": {
+        "aromimobile3eb0eb42": {
+          "userPoolId": "us-east-2_b6DRVfvJw",
+          "userPoolName": "aromiUserPool",
+          "webClientId": "1aop96ct6tm1oh2dttv8v1j2et",
+          "nativeClientId": "1aop96ct6tm1oh2dttv8v1j2et",
+          "identityPoolId": "us-east-2:bbae1053-0888-4120-85f4-5692fe6246ee",
+          "identityPoolName": "aromiIdentityPool",
+          "allowUnauthenticatedIdentities": true,
+          "authRoleArn": "arn:aws:iam::490004620452:role/aromiAuthRole",
+          "authRoleName": "aromiAuthRole",
+          "unauthRoleArn": "arn:aws:iam::490004620452:role/aromiUnauthRole",
+          "unauthRoleName": "aromiUnauthRole"
+        }
+      }
+    }
+  }
+}

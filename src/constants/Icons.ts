@@ -1,12 +1,4 @@
-import { ElementType } from 'react'
 import { Icon } from '@/src/components/Utils/Icon'
-
-type IconTypes = {
-  index: ElementType
-  search: ElementType
-  community: ElementType
-  profile: ElementType
-}
 
 const HomeIcon = () => {
   return Icon({
@@ -44,7 +36,7 @@ const ProfileIcon = () => {
   })
 }
 
-const Icons: IconTypes =
+const Icons =
 {
   index: HomeIcon,
   search: SearchIcon,
