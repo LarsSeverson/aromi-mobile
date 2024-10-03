@@ -6,9 +6,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     gap: 10
   },
-  fragranceListWrapper: {
-    gap: 10
-  }
+  fragranceListWrapper: { gap: 10 }
 })
 
 export { styles }

@@ -1,21 +1,23 @@
 import { View, FlatList, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import HomeCategory from '../HomeCategory'
 import { FragranceBlock, FragranceBlockTypes } from '../../FragranceBlocks/FragranceBlock'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
+import { Fragrances } from '@/aromi-backend/src/types/fragrances'
 
 const HomeBlockHorizontalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
   const rows = props.numRows || 1
-  const previewLength = props.previewLength || 12
+  const previewLength = props.previewLength || 6
 
-  const { data, loading, error } = props.data
-
+  const data = props.data
   const [blockData, setBlockData] = useState(Array(previewLength).fill(null))
 
-  if (!loading && !error) {
-    setBlockData(data)
-  }
+  useEffect(() => {
+    if (data) {
+      setBlockData(data as Fragrances)
+    }
+  }, [data])
 
   return (
     <View style={styles.wrapper}>
@@ -28,7 +30,7 @@ const HomeBlockHorizontalCards: React.FC<HomeBlockProps> = (props: HomeBlockProp
         <FlatList
           data={blockData.slice(0, previewLength)}
           numColumns={Math.ceil(blockData.slice(0, previewLength * (rows)).length / rows)}
-          renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.HorizontalCard} loading={loading} error={error} />)}
+          renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.HorizontalCard} fragrance={item} />)}
           alwaysBounceVertical={false}
           columnWrapperStyle={styles.fragranceListWrapper}
           contentContainerStyle={styles.fragranceListWrapper}

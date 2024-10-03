@@ -1,42 +1,59 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import { Colors } from '@/src/constants/Colors'
 import BlockButton from '../Misc/BlockButton'
-import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
+import styled from 'styled-components/native'
+import { Fragrance } from '@/aromi-backend/src/types/fragrance'
+import FragranceBlockHorizontalCardLoading from './Utils/FragranceBlockHorizontalCardLoading'
+
+const Name = styled.Text`
+  font-family: 'PalanquinDark-Medium';
+  font-size: 12px;
+  color: ${Colors.black};
+`
 
 const FragranceBlockHorizontalCard: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
-  const loading = props.loading
-  const error = props.error
+  const fragrance = props.fragrance as Fragrance
 
-  if (loading || error) {
+  if (!fragrance) {
     return (
-      <View style={styles.wrapper}>
-        <View style={styles.imageBackground}>
-          <FragranceBlockVerticalCardLoading />
-        </View>
-      </View>
+      <FragranceBlockHorizontalCardLoading />
     )
   }
 
   return (
-    <BlockButton>
-      <View style={styles.wrapper}>
+    <View style={styles.wrapper}>
+      <BlockButton style={styles.wrapper}>
         <View style={styles.imageBackground} />
+      </BlockButton>
+      <View style={styles.bottomWrapper}>
+        <Name numberOfLines={1} ellipsizeMode='tail'>{fragrance.name}</Name>
       </View>
-    </BlockButton>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    width: 150,
-    height: 150
+    display: 'flex',
+    overflow: 'hidden'
   },
   imageBackground: {
     flex: 1,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: Colors.black,
+    opacity: 0.1,
+    height: 150,
+    width: 150,
+    maxWidth: 150
+  },
+  bottomWrapper: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: 'row',
+    maxWidth: 150
   }
 })
 

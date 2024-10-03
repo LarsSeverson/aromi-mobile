@@ -3,7 +3,8 @@ import React, { createContext, ReactNode, useMemo, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 interface BlockButtonProps extends PressableProps {
-    children?: ReactNode
+    children?: ReactNode,
+    scaleTo?: number
 }
 
 const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
@@ -11,10 +12,12 @@ const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
   const longPressed = useRef(false)
   const isPressed = useSharedValue(false)
 
+  const scaleTo = props.scaleTo || 0.98
+
   const onPressIn = () => {
     isPressed.value = true
 
-    scale.value = withSpring(0.98, {
+    scale.value = withSpring(scaleTo, {
       stiffness: 900,
       damping: 100
     })

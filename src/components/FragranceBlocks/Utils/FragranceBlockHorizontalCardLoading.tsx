@@ -3,13 +3,12 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import Shimmer from '../../Misc/Shimmer'
 
-const FragranceBlockVerticalCardLoading: React.FC = () => {
+const FragranceBlockHorizontalCardLoading: React.FC = () => {
   return (
     <View style={styles.wrapper}>
-      <Shimmer style={styles.contentMask} />
+      <Shimmer style={styles.imageMask} />
       <View style={styles.bottomMask}>
         <Shimmer style={styles.nameMask} />
-        <Shimmer style={styles.brandMask} />
       </View>
     </View>
   )
@@ -19,8 +18,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1
   },
-  contentMask: {
-    height: 200,
+  imageMask: {
+    height: 150,
+    width: 150,
     borderRadius: 20,
     backgroundColor: Colors.placeholder
   },
@@ -30,19 +30,12 @@ const styles = StyleSheet.create({
   },
   nameMask: {
     width: '75%',
-    height: 20,
+    height: 17,
     marginTop: 5,
     marginBottom: 5,
-    borderRadius: 15,
-    backgroundColor: Colors.placeholder
-  },
-  brandMask: {
-    width: '35%',
-    height: 17,
-    marginBottom: 12,
     borderRadius: 15,
     backgroundColor: Colors.placeholder
   }
 })
 
-export default FragranceBlockVerticalCardLoading
+export default FragranceBlockHorizontalCardLoading

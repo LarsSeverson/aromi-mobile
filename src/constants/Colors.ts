@@ -4,14 +4,18 @@ const tintColorDark = '#FFFFFF'
 const button = '#CF6E32'
 const buttonText = '#FFFFFF'
 
-const black = '#000000'
+const black = '#0f0f0f'
+const placeholder = '#F3F3F3F3'
 const white = '#FFFFFF'
 
 export const Colors = {
   white,
+  placeholder,
   black,
   button,
   buttonText,
+
+  heart: '#e20020',
 
   sinopia: '#C6471D',
   tawny: tintColorLight,

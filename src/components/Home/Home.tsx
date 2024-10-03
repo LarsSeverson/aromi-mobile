@@ -4,14 +4,18 @@ import { HomeBlock, HomeBlockTypes } from './HomeBlocks/HomeBlock'
 import { Colors } from '@/src/constants/Colors'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import AppError from '../Misc/AppError'
+import usePopularFragrances from '@/src/hooks/usePopularFragrances'
+import useLikedFragrances from '@/src/hooks/useLikedFragrances'
 
 const Home: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false)
 
   const suggestedFragrancesHook = useSuggestedFragrances()
+  const popularFragrancesHook = usePopularFragrances()
+  const likedFragrancesHook = useLikedFragrances()
 
-  const errors = [suggestedFragrancesHook.error].filter(Boolean)
-  const refreshes = [suggestedFragrancesHook.refresh]
+  const errors = [suggestedFragrancesHook.error, popularFragrancesHook.error, likedFragrancesHook.error].filter(Boolean)
+  const refreshes = [suggestedFragrancesHook.refresh, popularFragrancesHook.refresh, likedFragrancesHook.refresh]
 
   const handleRefresh = async () => {
     setRefreshing(true)
@@ -52,9 +56,9 @@ const Home: React.FC = () => {
         contentContainerStyle={styles.homeContentWrapper}
       >
         <HomeBlock type={HomeBlockTypes.VerticalCards} title='suggested for you' data={suggestedFragrancesHook.suggestedFragrances} onSeeAll={expandSuggestedForYou} />
-        {/* <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={suggestedData} onSeeAll={expandWhatsPopular} />
-        <HomeBlock type={HomeBlockTypes.HorizontalCards} title='your likes' data={suggestedData} onSeeAll={expandYourLikes} />
-        <HomeBlock type={HomeBlockTypes.HorizontalCards} title='recently viewed' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} />
+        <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={popularFragrancesHook.popularFragrances} onSeeAll={expandWhatsPopular} />
+        <HomeBlock type={HomeBlockTypes.HorizontalCards} title='your likes' data={likedFragrancesHook.likedFragrances} onSeeAll={expandYourLikes} />
+        {/* <HomeBlock type={HomeBlockTypes.HorizontalCards} title='recently viewed' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} />
         <HomeBlock type={HomeBlockTypes.HorizontalBars} title='continue your search' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} /> */}
       </ScrollView>
     </View>
