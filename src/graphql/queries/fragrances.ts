@@ -9,7 +9,9 @@ export const fragrances = gql`
     query fragrances($limit: Int, $offset: Int) {
         fragrances(limit: $limit, offset: $offset) {
             brand,
-            name
+            name,
+            likes,
+            dislikes
         }
     }
 `

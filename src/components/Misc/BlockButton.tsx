@@ -1,10 +1,12 @@
-import { GestureResponderEvent, Pressable, PressableProps, PressableStateCallbackType, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React, { createContext, ReactNode, useMemo, useRef } from 'react'
+import { GestureResponderEvent, Pressable, PressableProps, ViewStyle } from 'react-native'
+import React, { ReactNode, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 interface BlockButtonProps extends PressableProps {
-    children?: ReactNode,
+    children?: ReactNode
     scaleTo?: number
+
+    contentStyle?: ViewStyle
 }
 
 const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
@@ -66,7 +68,7 @@ const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
       onLongPress={onLongPress}
       delayLongPress={1000}
     >
-      <Animated.View style={animatedStyle}>
+      <Animated.View style={[props.contentStyle, animatedStyle]}>
         {props.children}
       </Animated.View>
     </Pressable>
