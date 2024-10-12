@@ -4,7 +4,7 @@ import { FragranceBlockProps } from './FragranceBlock'
 import { Colors } from '@/src/constants/Colors'
 import BlockButton from '../Misc/BlockButton'
 import styled from 'styled-components/native'
-import { Fragrance } from '@/aromi-backend/src/types/fragrance'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceBlockHorizontalCardLoading from './Utils/FragranceBlockHorizontalCardLoading'
 
 const Name = styled.Text`

@@ -1,8 +1,6 @@
 import { API } from 'aws-amplify'
 import { GraphQLResult } from '@aws-amplify/api-graphql'
 import { useState, useEffect, useCallback } from 'react'
-import { fragrances, FragrancesQueryResult } from '../graphql/queries/fragrances'
-import { Fragrances } from '@/aromi-backend/src/types/fragrances'
 import { DocumentNode } from 'graphql'
 import { GRAPHQL_AUTH_MODE } from '@aws-amplify/auth'
 

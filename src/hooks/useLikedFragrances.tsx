@@ -1,5 +1,4 @@
 import { fragrances, FragrancesQueryResult } from '../graphql/queries/fragrances'
-import { Fragrances } from '@/aromi-backend/src/types/fragrances'
 import useQuery from './useQuery'
 import { useMemo } from 'react'
 
@@ -14,7 +13,7 @@ const useLikedFragrances = () => {
     }
   )
 
-  const likedFragrances = data?.fragrances as Fragrances
+  const likedFragrances = data?.fragrances
 
   return { likedFragrances, loading, error, refresh }
 }

@@ -1,4 +1,4 @@
-import { Fragrances } from '@/aromi-backend/src/types/fragrances'
+import { Fragrances } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import gql from 'graphql-tag'
 
 export interface FragrancesQueryResult {
