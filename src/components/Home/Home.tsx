@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { HomeBlock, HomeBlockTypes } from './HomeBlocks/HomeBlock'
 import { Colors } from '@/src/constants/Colors'
@@ -56,8 +56,8 @@ const Home: React.FC = () => {
         contentContainerStyle={styles.homeContentWrapper}
       >
         <HomeBlock type={HomeBlockTypes.VerticalCards} title='suggested for you' data={suggestedFragrancesHook.suggestedFragrances} onSeeAll={expandSuggestedForYou} />
-        <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={popularFragrancesHook.popularFragrances} onSeeAll={expandWhatsPopular} />
-        <HomeBlock type={HomeBlockTypes.HorizontalCards} title='your likes' data={likedFragrancesHook.likedFragrances} onSeeAll={expandYourLikes} />
+        {/* <HomeBlock type={HomeBlockTypes.VerticalCards} title="see what's popular" data={popularFragrancesHook.popularFragrances} onSeeAll={expandWhatsPopular} />
+        <HomeBlock type={HomeBlockTypes.HorizontalCards} title='your likes' data={likedFragrancesHook.likedFragrances} onSeeAll={expandYourLikes} /> */}
         {/* <HomeBlock type={HomeBlockTypes.HorizontalCards} title='recently viewed' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} />
         <HomeBlock type={HomeBlockTypes.HorizontalBars} title='continue your search' data={suggestedData} onSeeAll={expandRecentlyViewed} numRows={2} /> */}
       </ScrollView>

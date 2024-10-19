@@ -8,13 +8,7 @@
     "amplify/backend/amplify-meta.json": true,
     "amplify/backend/awscloudformation": true
   },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
   "files.autoSave": "afterDelay",
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "eslint.codeActionsOnSave.rules": null,
-  "eslint.format.enable": true,
   "yaml.customTags": [
     "!Ref scalar",
     "!Sub scalar",
@@ -43,5 +37,14 @@
   },
   "[graphql]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "json.schemas": [
+
+  ],
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": null,
+  "eslint.useFlatConfig": false,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }

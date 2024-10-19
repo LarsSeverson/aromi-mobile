@@ -5,7 +5,6 @@ import { FragranceBlock, FragranceBlockTypes } from '../../FragranceBlocks/Fragr
 import AromiButton from '../../Misc/ButtonText'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
-import { Fragrances } from '@/aromi-backend/src/types/fragrances'
 
 const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
   const cols = props.numColumns || 2
@@ -16,7 +15,7 @@ const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps)
 
   useEffect(() => {
     if (data) {
-      setBlockData(data as Fragrances)
+      setBlockData(data)
     }
   }, [data])
 

@@ -8,10 +8,14 @@ export interface FragrancesQueryResult {
 export const fragrances = gql`
     query fragrances($limit: Int, $offset: Int) {
         fragrances(limit: $limit, offset: $offset) {
-            brand,
-            name,
-            likes,
+            id
+            brand
+            name
+            likes
             dislikes
+            images {
+                s3Key
+            }
         }
     }
 `

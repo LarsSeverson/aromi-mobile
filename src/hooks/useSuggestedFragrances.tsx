@@ -13,7 +13,7 @@ const useSuggestedFragrances = () => {
     }
   )
 
-  const suggestedFragrances = data?.fragrances
+  const suggestedFragrances = data?.fragrances || null
 
   return { suggestedFragrances, loading, error, refresh }
 }

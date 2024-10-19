@@ -8,6 +8,7 @@ import { Colors } from '@/src/constants/Colors'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import LikeDislike from '../Misc/LikeDislike'
+import FragranceBlockImage from './Utils/FragranceBlockImage'
 
 const Name = styled.Text`
   font-family: 'PalanquinDark-Medium';
@@ -33,12 +34,14 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
     )
   }
 
+  const previewURL = fragrance.images?.length ? fragrance.images[0].s3Key : undefined
+
   return (
     <View style={styles.wrapper}>
       <BlockButton style={styles.wrapper}>
-        <View style={styles.contentWrapper}>
-          <LikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
-        </View>
+        <FragranceBlockImage url={previewURL}>
+          {/* <LikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} /> */}
+        </FragranceBlockImage>
       </BlockButton>
       <View style={styles.bottomWrapper}>
         <View style={styles.bottomTop}>

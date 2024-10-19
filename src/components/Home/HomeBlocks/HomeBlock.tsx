@@ -3,6 +3,7 @@ import React from 'react'
 import HomeBlockVerticalCards from './HomeBlockVerticalCards'
 import HomeBlockHorizontalCards from './HomeBlockHorizontalCards'
 import HomeBlockHorizontalBars from './HomeBlockHorizontalBars'
+import { Fragrances } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 enum HomeBlockTypes {
   VerticalCards = 0,
@@ -14,7 +15,7 @@ enum HomeBlockTypes {
 interface HomeBlockProps {
   type: HomeBlockTypes
   title: string
-  data: any[]
+  data: Fragrances | null
   onSeeAll: (event: GestureResponderEvent) => void | undefined
 
   numColumns?: number

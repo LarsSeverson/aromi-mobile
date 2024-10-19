@@ -13,7 +13,7 @@ const usePopularFragrances = () => {
     }
   )
 
-  const popularFragrances = data?.fragrances
+  const popularFragrances = data?.fragrances || null
 
   return { popularFragrances, loading, error, refresh }
 }

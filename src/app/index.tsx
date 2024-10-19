@@ -1,15 +1,8 @@
 import Home from '@/src/components/Home/Home'
 import React from 'react'
-import { SafeAreaView } from 'react-native'
-
-import changeNavigationBarColor from 'react-native-navigation-bar-color'
-
-changeNavigationBarColor('white', true)
 
 const HomePage: React.FC = () => {
-  return (
-    <Home />
-  )
+  return <Home />
 }
 
 export default HomePage

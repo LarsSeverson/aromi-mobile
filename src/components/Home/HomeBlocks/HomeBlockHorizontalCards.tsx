@@ -4,7 +4,6 @@ import HomeCategory from '../HomeCategory'
 import { FragranceBlock, FragranceBlockTypes } from '../../FragranceBlocks/FragranceBlock'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
-import { Fragrances } from '@/aromi-backend/src/types/fragrances'
 
 const HomeBlockHorizontalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
   const rows = props.numRows || 1
@@ -15,7 +14,7 @@ const HomeBlockHorizontalCards: React.FC<HomeBlockProps> = (props: HomeBlockProp
 
   useEffect(() => {
     if (data) {
-      setBlockData(data as Fragrances)
+      setBlockData(data)
     }
   }, [data])
 

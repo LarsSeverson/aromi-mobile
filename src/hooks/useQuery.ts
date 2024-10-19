@@ -1,13 +1,9 @@
-import { API } from 'aws-amplify'
-import { GraphQLResult } from '@aws-amplify/api-graphql'
 import { useState, useEffect, useCallback } from 'react'
 import { DocumentNode } from 'graphql'
-import { GRAPHQL_AUTH_MODE } from '@aws-amplify/auth'
 
 interface UseQueryProps {
   query: string | DocumentNode,
-  variables?: object,
-  authMode?: keyof typeof GRAPHQL_AUTH_MODE
+  variables?: object
 }
 
 const useQuery = <T>(props: UseQueryProps) => {
@@ -19,11 +15,7 @@ const useQuery = <T>(props: UseQueryProps) => {
   useEffect(() => {
     const getData = async (): Promise<void> => {
       try {
-        const response = await API.graphql({
-          query: props.query,
-          variables: props.variables,
-          authMode: props.authMode
-        }) as GraphQLResult<T>
+        const response = { data: null }
 
         const data = response.data
 
@@ -42,7 +34,7 @@ const useQuery = <T>(props: UseQueryProps) => {
     }
 
     getData()
-  }, [props.query, props.variables, props.authMode, trigger])
+  }, [props.query, props.variables, trigger])
 
   const refresh = useCallback(() => {
     setTrigger(prev => prev + 1)
