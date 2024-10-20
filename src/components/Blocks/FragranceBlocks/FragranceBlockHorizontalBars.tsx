@@ -1,15 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
-import { Colors } from '@/src/constants/Colors'
-import BlockButton from '../Misc/BlockButton'
+import BlockButton from '../Utils/BlockButton'
 import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 const FragranceBlockHorizontalBar: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
-  const loading = props.loading
-  const error = props.error
+  const fragrance = props.fragrance as Fragrance
 
-  if (loading || error) {
+  if (!fragrance) {
     return (
       <View style={styles.wrapper}>
         <FragranceBlockVerticalCardLoading />

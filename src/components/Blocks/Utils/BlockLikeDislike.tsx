@@ -17,17 +17,18 @@ interface LikeDislikeProps {
   onDislike?: () => void
 }
 
-const LikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) => {
+const BlockLikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) => {
   const iconSize = props.iconSize || 15
 
   const [liked, setLiked] = useState(false)
   const [disliked, setDisliked] = useState(false)
-
-  const likes = props.numLikes - props.numDislikes
+  const [likes, setLikes] = useState(props.numLikes - props.numDislikes)
 
   const onLike = () => {
     setLiked(!liked)
     setDisliked(false)
+
+    setLikes(prev => liked ? prev - 1 : prev + 1)
 
     if (props.onLike) {
       props.onLike()
@@ -37,6 +38,8 @@ const LikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) => {
   const onDislike = () => {
     setDisliked(!disliked)
     setLiked(false)
+
+    setLikes(prev => disliked ? prev + 1 : prev - 1)
 
     if (props.onDislike) {
       props.onDislike()
@@ -57,7 +60,7 @@ const LikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) => {
   )
 }
 
-export default LikeDislike
+export default BlockLikeDislike
 
 const styles = StyleSheet.create({
   wrapper: {

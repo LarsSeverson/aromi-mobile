@@ -1,14 +1,14 @@
-import { StyleSheet, View, Text } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
-import BlockButton from '../Misc/BlockButton'
+import BlockButton from '../Utils/BlockButton'
 import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import LikeDislike from '../Misc/LikeDislike'
-import FragranceBlockImage from './Utils/FragranceBlockImage'
+import BlockLikeDislike from '../Utils/BlockLikeDislike'
+import BlockImage from '../Utils/BlockImage'
 
 const Name = styled.Text`
   font-family: 'PalanquinDark-Medium';
@@ -39,9 +39,9 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
   return (
     <View style={styles.wrapper}>
       <BlockButton style={styles.wrapper}>
-        <FragranceBlockImage url={previewURL}>
-          {/* <LikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} /> */}
-        </FragranceBlockImage>
+        <BlockImage path={previewURL} style={styles.contentWrapper}>
+          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
+        </BlockImage>
       </BlockButton>
       <View style={styles.bottomWrapper}>
         <View style={styles.bottomTop}>

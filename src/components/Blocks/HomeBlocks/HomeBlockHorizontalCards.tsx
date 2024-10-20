@@ -1,7 +1,7 @@
 import { View, FlatList, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import HomeCategory from '../HomeCategory'
-import { FragranceBlock, FragranceBlockTypes } from '../../FragranceBlocks/FragranceBlock'
+import HomeCategory from '../../Home/HomeCategory'
+import { FragranceBlock, FragranceBlockTypes } from '../FragranceBlocks/FragranceBlock'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
 

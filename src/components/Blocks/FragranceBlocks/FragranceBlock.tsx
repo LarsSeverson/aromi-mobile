@@ -1,8 +1,8 @@
-import React, { Component, useState } from 'react'
+import React from 'react'
 import FragranceBlockHorizontalCard from './FragranceBlockHorizontalCard'
 import FragranceBlockHorizontalBar from './FragranceBlockHorizontalBars'
 import FragranceBlockVerticalCard from './FragranceBlockVerticalCard'
-import { Fragrance, FragranceImage, FragranceImages } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 enum FragranceBlockTypes {
   VerticalCard = 0,

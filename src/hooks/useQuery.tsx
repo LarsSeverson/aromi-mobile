@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import { DocumentNode } from 'graphql'
+import { generateClient, GraphQLResult } from 'aws-amplify/api'
+import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils'
+
+const client = generateClient()
 
 interface UseQueryProps {
-  query: string | DocumentNode,
+  query: string
   variables?: object
+  authMode: GraphQLAuthMode
 }
 
-const useQuery = <T>(props: UseQueryProps) => {
+const useQuery = <T, >(props: UseQueryProps) => {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
@@ -15,7 +19,11 @@ const useQuery = <T>(props: UseQueryProps) => {
   useEffect(() => {
     const getData = async (): Promise<void> => {
       try {
-        const response = { data: null }
+        const response = await client.graphql<typeof props.variables>({
+          query: props.query,
+          variables: props.variables,
+          authMode: props.authMode
+        }) as GraphQLResult<T>
 
         const data = response.data
 

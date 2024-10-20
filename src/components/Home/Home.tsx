@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
-import { HomeBlock, HomeBlockTypes } from './HomeBlocks/HomeBlock'
+import { HomeBlock, HomeBlockTypes } from '../Blocks/HomeBlocks/HomeBlock'
 import { Colors } from '@/src/constants/Colors'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import AppError from '../Misc/AppError'
@@ -11,11 +11,11 @@ const Home: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false)
 
   const suggestedFragrancesHook = useSuggestedFragrances()
-  const popularFragrancesHook = usePopularFragrances()
-  const likedFragrancesHook = useLikedFragrances()
+  // const popularFragrancesHook = usePopularFragrances()
+  // const likedFragrancesHook = useLikedFragrances()
 
-  const errors = [suggestedFragrancesHook.error, popularFragrancesHook.error, likedFragrancesHook.error].filter(Boolean)
-  const refreshes = [suggestedFragrancesHook.refresh, popularFragrancesHook.refresh, likedFragrancesHook.refresh]
+  const errors = [suggestedFragrancesHook.error].filter(Boolean)
+  const refreshes = [suggestedFragrancesHook.refresh]
 
   const handleRefresh = async () => {
     setRefreshing(true)
@@ -43,6 +43,8 @@ const Home: React.FC = () => {
   }
 
   if (errors.length > 0) {
+    console.log(errors)
+
     return (
       <AppError onRetry={handleRefresh} />
     )

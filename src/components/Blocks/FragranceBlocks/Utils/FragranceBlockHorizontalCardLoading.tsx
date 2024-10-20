@@ -1,7 +1,7 @@
 import { Colors } from '@/src/constants/Colors'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import Shimmer from '../../Misc/Shimmer'
+import Shimmer from '@/src/components/Misc/Shimmer'
 
 const FragranceBlockHorizontalCardLoading: React.FC = () => {
   return (
