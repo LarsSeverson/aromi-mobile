@@ -19,7 +19,7 @@ const AromiButtonTextStyle = styled.Text`
   font-size: 16px;
 `
 
-const AromiButton: React.FC<TouchableOpacityProps> = (props: TouchableOpacityProps) => {
+const ButtonText: React.FC<TouchableOpacityProps> = (props: TouchableOpacityProps) => {
   return (
     <View style={styles.wrapper}>
       <AromiButtonStyle {...props}>
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default AromiButton
+export default ButtonText

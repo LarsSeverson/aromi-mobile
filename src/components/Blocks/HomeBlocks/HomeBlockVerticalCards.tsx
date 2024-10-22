@@ -2,7 +2,7 @@ import { View, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import HomeCategory from '../../Home/HomeCategory'
 import { FragranceBlock, FragranceBlockTypes } from '../FragranceBlocks/FragranceBlock'
-import AromiButton from '../../Misc/ButtonText'
+import ButtonText from '../../Utils/ButtonText'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
 
@@ -31,7 +31,7 @@ const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps)
         columnWrapperStyle={cols ? { gap: 10 } : null}
         contentContainerStyle={styles.fragranceListWrapper}
       />
-      <AromiButton onPress={props.onSeeAll}>see all</AromiButton>
+      <ButtonText onPress={props.onSeeAll}>see all</ButtonText>
     </View>
   )
 }

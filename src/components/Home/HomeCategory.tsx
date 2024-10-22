@@ -1,7 +1,7 @@
 import { GestureResponderEvent, StyleSheet, View } from 'react-native'
 import React from 'react'
-import CategoryText from '../Misc/CategoryText'
-import TextButton from '../Misc/TextButton'
+import CategoryText from '../Utils/CategoryText'
+import TextButton from '../Utils/TextButton'
 
 interface HomeCategoryProps {
   children?: React.ReactNode
@@ -16,7 +16,7 @@ const HomeCategory: React.FC<HomeCategoryProps> = (props: HomeCategoryProps) => 
     <View style={styles.wrapper}>
       <CategoryText>{props.children}</CategoryText>
       {expandable && (
-        <TextButton onPress={props.onPress} style={{ marginLeft: 'auto' }}>see all</TextButton>
+        <TextButton onPress={props.onPress} text='see all' />
       )}
     </View>
   )

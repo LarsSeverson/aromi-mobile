@@ -2,13 +2,13 @@ import { GestureResponderEvent, Pressable, PressableProps, ViewStyle } from 'rea
 import React, { ReactNode, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
-interface BlockButtonProps extends PressableProps {
+export interface BouncyButtonProps extends PressableProps {
   children?: ReactNode
   scaleTo?: number
   contentStyle?: ViewStyle
 }
 
-const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
+const BouncyButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => {
   const { onPress, children, scaleTo = 0.98, contentStyle, ...restProps } = props
 
   const scale = useSharedValue(1)
@@ -30,8 +30,8 @@ const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
     isPressed.value = false
 
     if (!longPressed.current) {
-      if (props.onPress && typeof props.onPress === 'function') {
-        props.onPress(event)
+      if (onPress && typeof onPress === 'function') {
+        onPress(event)
       }
     }
     scale.value = withSpring(1, {
@@ -43,8 +43,8 @@ const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
   const onLongPress = (event: GestureResponderEvent) => {
     longPressed.current = true
 
-    if (props.onPressOut) {
-      props.onPressOut(event)
+    if (onPressOut) {
+      onPressOut(event)
     } else {
       scale.value = withSpring(1, {
         stiffness: 900,
@@ -67,11 +67,11 @@ const BlockButton: React.FC<BlockButtonProps> = (props: BlockButtonProps) => {
       onLongPress={onLongPress}
       delayLongPress={1000}
     >
-      <Animated.View style={[props.contentStyle, animatedStyle]}>
-        {props.children}
+      <Animated.View style={[contentStyle, animatedStyle]}>
+        {children}
       </Animated.View>
     </Pressable>
   )
 }
 
-export default BlockButton
+export default BouncyButton

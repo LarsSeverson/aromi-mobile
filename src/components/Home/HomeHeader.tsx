@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import TitleText from '../Misc/Text'
+import TitleText from '../Utils/Text'
 
 const HomeHeader = () => {
   return (

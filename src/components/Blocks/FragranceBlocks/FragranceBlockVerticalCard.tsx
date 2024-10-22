@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
-import BlockButton from '../Utils/BlockButton'
+import BouncyButton from '../../Utils/BouncyButton'
 import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
@@ -38,18 +38,18 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
 
   return (
     <View style={styles.wrapper}>
-      <BlockButton style={styles.wrapper}>
+      <BouncyButton style={styles.wrapper}>
         <BlockImage path={previewURL} style={styles.contentWrapper}>
           <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
         </BlockImage>
-      </BlockButton>
+      </BouncyButton>
       <View style={styles.bottomWrapper}>
         <View style={styles.bottomTop}>
           <Name numberOfLines={1} ellipsizeMode='tail'>{fragrance.name}</Name>
           <View style={styles.blockOptionsWrapper}>
-            <BlockButton scaleTo={0.8}>
+            <BouncyButton scaleTo={0.8}>
               <Icon name='more-horiz' size={20} color={Colors.black} />
-            </BlockButton>
+            </BouncyButton>
           </View>
         </View>
         <Brand numberOfLines={1} ellipsizeMode='tail'>{fragrance.brand}</Brand>

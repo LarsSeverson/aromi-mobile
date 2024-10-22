@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
-import BlockButton from '../Utils/BlockButton'
+import BouncyButton from '../../Utils/BouncyButton'
 import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
@@ -17,9 +17,9 @@ const FragranceBlockHorizontalBar: React.FC<FragranceBlockProps> = (props: Fragr
   }
 
   return (
-    <BlockButton>
+    <BouncyButton>
       <View style={styles.wrapper} />
-    </BlockButton>
+    </BouncyButton>
   )
 }
 

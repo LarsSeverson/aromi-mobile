@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import { Colors } from '@/src/constants/Colors'
-import BlockButton from '../Utils/BlockButton'
+import BouncyButton from '../../Utils/BouncyButton'
 import styled from 'styled-components/native'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceBlockHorizontalCardLoading from './Utils/FragranceBlockHorizontalCardLoading'
@@ -24,9 +24,9 @@ const FragranceBlockHorizontalCard: React.FC<FragranceBlockProps> = (props: Frag
 
   return (
     <View style={styles.wrapper}>
-      <BlockButton style={styles.wrapper}>
+      <BouncyButton style={styles.wrapper}>
         <View style={styles.imageBackground} />
-      </BlockButton>
+      </BouncyButton>
       <View style={styles.bottomWrapper}>
         <Name numberOfLines={1} ellipsizeMode='tail'>{fragrance.name}</Name>
       </View>

@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native'
 import { HomeBlock, HomeBlockTypes } from '../Blocks/HomeBlocks/HomeBlock'
 import { Colors } from '@/src/constants/Colors'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
-import AppError from '../Misc/AppError'
+import AppError from '../Utils/AppError'
 import usePopularFragrances from '@/src/hooks/usePopularFragrances'
 import useLikedFragrances from '@/src/hooks/useLikedFragrances'
 

@@ -1,6 +1,6 @@
 import { Text, StyleSheet, View, ViewStyle } from 'react-native'
 import React, { useState } from 'react'
-import BlockButton from './BlockButton'
+import BouncyButton from '../../Utils/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
@@ -48,14 +48,14 @@ const BlockLikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) =
 
   return (
     <View style={[styles.wrapper, props.style]}>
-      <BlockButton scaleTo={0.8} onPress={onLike} style={styles.buttonWrapper} contentStyle={styles.buttonContentWrapper}>
+      <BouncyButton scaleTo={0.8} onPress={onLike} style={styles.buttonWrapper} contentStyle={styles.buttonContentWrapper}>
         <CIcon name={liked ? 'heart' : 'heart-outline'} size={iconSize} color={liked ? Colors.heart : Colors.black} />
         <Text adjustsFontSizeToFit style={[styles.textWrapper, { color: liked ? Colors.heart : disliked ? Colors.som : Colors.black }]}>{likes}</Text>
-      </BlockButton>
+      </BouncyButton>
       <Divider orientation='vertical' width={1} color={Colors.black} />
-      <BlockButton scaleTo={0.8} onPress={onDislike} style={styles.buttonWrapper}>
+      <BouncyButton scaleTo={0.8} onPress={onDislike} style={styles.buttonWrapper}>
         <AIcon name={disliked ? 'dislike1' : 'dislike2'} size={iconSize} color={disliked ? Colors.som : Colors.black} />
-      </BlockButton>
+      </BouncyButton>
     </View>
   )
 }
