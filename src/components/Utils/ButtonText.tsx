@@ -1,39 +1,45 @@
-import { View, Text, TouchableOpacityProps, TouchableOpacity, StyleSheet } from 'react-native'
+import { StyleSheet, Text, TextStyle } from 'react-native'
 import React from 'react'
-import styled from 'styled-components/native'
+import BouncyButton, { BouncyButtonProps } from './BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 
-const AromiButtonStyle = styled.TouchableOpacity`
-  height: 40px;
-  width: 110px;
-  background-color: ${Colors.button};
+interface ButtonTextProps extends BouncyButtonProps {
+  text: string
+  color?: string
+  outlined?: boolean
+  textColor?: string
+  textStyle?: TextStyle
+}
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const AromiButtonTextStyle = styled.Text`
-  color: ${Colors.white};
-  font-family: 'PalanquinDark-Regular';
-  font-size: 16px;
-`
-
-const ButtonText: React.FC<TouchableOpacityProps> = (props: TouchableOpacityProps) => {
+const ButtonText: React.FC<ButtonTextProps> = (props: ButtonTextProps) => {
+  const { text, color, outlined, textColor, textStyle, ...buttonProps } = props
   return (
-    <View style={styles.wrapper}>
-      <AromiButtonStyle {...props}>
-        <AromiButtonTextStyle adjustsFontSizeToFit style={{ textAlignVertical: 'center' }}>{props.children}</AromiButtonTextStyle>
-      </AromiButtonStyle>
-    </View>
+    <BouncyButton style={[styles.defaultButtonStyle, outlined ? styles.outlinedButtonStyle : {}, { backgroundColor: color }]} {...buttonProps}>
+      <Text style={[styles.defaultTextStyle, { color: textColor }, textStyle]}>{text}</Text>
+    </BouncyButton>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  defaultButtonStyle: {
+    borderRadius: 20,
+    width: '100%',
     display: 'flex',
-    justifyContent: 'center',
+    padding: 11,
     alignItems: 'center'
+  },
+  outlinedButtonStyle: {
+    borderRadius: 20,
+    width: '100%',
+    display: 'flex',
+    padding: 11,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.placeholder3
+  },
+  defaultTextStyle: {
+    fontFamily: 'PalanquinDark-Regular',
+    fontSize: 13
   }
 })
 

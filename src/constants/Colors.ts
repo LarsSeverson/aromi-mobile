@@ -7,12 +7,16 @@ const buttonText = '#FFFFFF'
 const black = '#0f0f0f'
 const placeholder = '#F3F3F3F3'
 const placeholder2 = '#E5E5E5E5'
+const placeholder3 = '#888'
+const placeholder4 = '#333333'
 const white = '#FFFFFF'
 
 export const Colors = {
   white,
   placeholder,
   placeholder2,
+  placeholder3,
+  placeholder4,
   black,
   button,
   buttonText,

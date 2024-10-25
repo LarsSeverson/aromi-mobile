@@ -6,5 +6,9 @@ const TitleText = styled.Text`
   font-size: 32px;
   color: ${Colors.black};
 `
+export const ThemedText = styled.Text`
+  font-family: 'PalanquinDark-Regular';
+  color: ${Colors.black}
+`
 
 export default TitleText

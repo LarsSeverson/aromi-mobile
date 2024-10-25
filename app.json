@@ -44,7 +44,9 @@
             "./src/assets/fonts/PalanquinDark-Bold.ttf",
             "./src/assets/fonts/PalanquinDark-Medium.ttf",
             "./src/assets/fonts/PalanquinDark-Regular.ttf",
-            "./src/assets/fonts/PalanquinDark-SemiBold.ttf"
+            "./src/assets/fonts/PalanquinDark-SemiBold.ttf",
+            "./src/assets/fonts/RobotoMono-Regular.ttf",
+            "./src/assets/fonts/PlaywriteGBS-Regular.ttf"
           ]
         }
       ]
