@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '@/src/constants/Colors'
 import TitleText from '@/src/components/Utils/Text'
 import TextButton from '@/src/components/Utils/TextButton'
 import LegalAgreement from '@/src/components/Auth/LegalAgreement'
-import { useRouter } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
 import ButtonText from '@/src/components/Utils/ButtonText'
 
 const AuthIndex = () => {

@@ -11,6 +11,10 @@ const placeholder3 = '#888'
 const placeholder4 = '#333333'
 const white = '#FFFFFF'
 
+const negativeDark = '#A53620'
+const negative = '#D44529'
+const negativeLight = '#f57071'
+
 export const Colors = {
   white,
   placeholder,
@@ -20,6 +24,9 @@ export const Colors = {
   black,
   button,
   buttonText,
+  negativeDark,
+  negative,
+  negativeLight,
 
   heart: '#e20020',
 

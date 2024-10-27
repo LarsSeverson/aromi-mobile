@@ -1,10 +1,11 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Stack, useRouter } from 'expo-router'
 import HeaderBackButton from '@/src/components/Navigation/HeaderBackButton'
 
 const AuthLayout = () => {
   const router = useRouter()
+
   return (
     <Stack screenOptions={{
       headerShadowVisible: false,
@@ -13,12 +14,9 @@ const AuthLayout = () => {
     }}
     >
       <Stack.Screen name='index' options={{ headerShown: false }} />
-      <Stack.Screen
-        name='SignUp'
-        options={{
-          headerTitle: 'Sign up'
-        }}
-      />
+      <Stack.Screen name='SignUp' options={{ headerTitle: 'Sign up' }} />
+      <Stack.Screen name='ConfirmSignUp' options={{ headerTitle: 'Sign up' }} />
+      <Stack.Screen name='LogIn' options={{ headerTitle: 'Log in' }} />
     </Stack>
   )
 }
