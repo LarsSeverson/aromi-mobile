@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ThemedText } from './Text'
+import { ThemedText } from '../Utils/Text'
 import { Icon } from 'react-native-elements'
 
 export interface NotifyProps {
@@ -26,7 +26,7 @@ export const ErrorNotify: React.FC<NotifyProps> = (props: NotifyProps) => {
 
 const styles = StyleSheet.create({
   errorNotifyWrapper: {
-    paddingHorizontal: 10,
+    marginHorizontal: 10,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
@@ -35,22 +35,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    padding: 15,
     gap: 10,
     backgroundColor: Colors.negative,
     shadowColor: Colors.black,
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
+    shadowOpacity: 0.4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 10,
     elevation: 20,
     width: '100%'
   },
   errorMessage: {
     fontSize: 16,
-    marginTop: 10,
+    marginBottom: -5,
     fontFamily: 'Palanquin-SemiBold',
-    flexWrap: 'wrap',
+    flexShrink: 1,
     lineHeight: 20,
     color: Colors.white
   }

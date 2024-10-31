@@ -1,8 +1,7 @@
-import ReactNative, { KeyboardAvoidingView, StyleSheet, View } from 'react-native'
+import ReactNative, { StyleSheet, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
-import { TextInput } from 'react-native-paper'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Dialog, Portal, TextInput } from 'react-native-paper'
 import { ThemedText } from '../Utils/Text'
 import TextButton from '../Utils/TextButton'
 import ButtonText from '../Utils/ButtonText'
@@ -11,24 +10,27 @@ import { TextStyles } from '@/src/constants/TextStyles'
 interface ConfirmationCodeProps {
   to: string
   length?: number
-  onCompleted: () => void
+  loading: boolean | null
+  onCompleted: (code: string) => void
   onEdit: () => void
   onReset: () => void
 }
 
 const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCodeProps) => {
-  const { to, length = 6, onCompleted, onEdit, onReset } = props
+  const { to, length = 6, loading, onCompleted, onEdit, onReset } = props
 
   const [codes, setCodes] = useState(Array(length).fill(''))
   const [codesValid, setCodesValid] = useState<boolean | null>(null)
+  const [dialogVisible, setDialogVisible] = useState(false)
 
   const inputsRef = useRef<Array<ReactNative.TextInput>>([])
 
   const continueForm = () => {
-    const valid = codes.every(code => code.trim() !== '')
+    const code = codes.join('').trim()
+    const valid = code.length === length
     setCodesValid(valid)
     if (valid) {
-      onCompleted()
+      onCompleted(code)
     }
   }
 
@@ -77,6 +79,7 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
                 mode='outlined'
                 inputMode='numeric'
                 maxLength={1}
+                readOnly={dialogVisible}
                 autoFocus={index === 0}
                 outlineColor={Colors.placeholder3}
                 activeOutlineColor={Colors.button}
@@ -91,9 +94,41 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
           </View>
           <ThemedText style={[TextStyles.smallInputFeedback, { opacity: codesValid === false ? 1 : 0, marginTop: 10, marginBottom: -10 }]}>Enter the complete 6-digit code</ThemedText>
         </View>
-        <TextButton text="Didn't get a code?" style={{ fontFamily: 'Palanquin-SemiBold', flex: 1 }} scaleTo={0.997} />
-        <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
+        <TextButton text="Didn't get a code?" scaleTo={0.997} style={{ fontFamily: 'Palanquin-SemiBold', flex: 1 }} onPress={() => setDialogVisible(true)} />
+        <ButtonText text='Continue' loading={loading || false} color={Colors.sinopia} loadingColor={Colors.white} textColor={Colors.white} onPress={continueForm} />
       </View>
+      <Portal>
+        <Dialog dismissable={false} visible={dialogVisible} style={styles.dialogWrapper}>
+          <Dialog.Content style={styles.dialogContentWrapper}>
+            <View>
+              <ButtonText
+                text='Send again'
+                color={Colors.white}
+                style={[styles.dialogGroupWrapper, styles.sendAgainWrapper]}
+                onPress={() => {
+                  setDialogVisible(false)
+                  onReset()
+                }}
+              />
+              <ButtonText
+                text='Edit email'
+                color={Colors.white}
+                style={[styles.dialogGroupWrapper, styles.editEmailWrapper]}
+                onPress={() => {
+                  setDialogVisible(false)
+                  onEdit()
+                }}
+              />
+            </View>
+            <ButtonText
+              text='Cancel'
+              color={Colors.white}
+              style={styles.dialogGroupWrapper}
+              onPress={() => setDialogVisible(false)}
+            />
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
     </View>
   )
 }
@@ -104,7 +139,8 @@ const styles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: 20,
     paddingVertical: 20,
-    gap: 10
+    gap: 10,
+    flex: 1
   },
   sentToWrapper: {
     marginBottom: 10,
@@ -138,5 +174,30 @@ const styles = StyleSheet.create({
   },
   borderWrapper: {
     borderRadius: 10
+  },
+  dialogWrapper: {
+    marginTop: 'auto',
+    marginHorizontal: 0,
+    height: 0
+  },
+  dialogContentWrapper: {
+    gap: 10,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%'
+  },
+  dialogGroupWrapper: {
+    borderRadius: 10,
+    padding: 15
+  },
+  sendAgainWrapper: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.placeholder2
+  },
+  editEmailWrapper: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0
   }
 })

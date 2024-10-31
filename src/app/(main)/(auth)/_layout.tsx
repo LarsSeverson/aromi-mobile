@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet } from 'react-native'
+import React from 'react'
 import { Stack, useRouter } from 'expo-router'
 import HeaderBackButton from '@/src/components/Navigation/HeaderBackButton'
 

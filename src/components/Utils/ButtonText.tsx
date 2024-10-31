@@ -1,12 +1,13 @@
-import { StyleSheet, Text, TextStyle, View } from 'react-native'
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
 import React from 'react'
 import BouncyButton, { BouncyButtonProps } from './BouncyButton'
 import { Colors } from '@/src/constants/Colors'
-import { Icon } from 'react-native-elements'
-import { IconType } from 'react-native-elements/dist/icons/Icon'
+import { ActivityIndicator } from 'react-native-paper'
 
 interface ButtonTextProps extends BouncyButtonProps {
   text: string
+  loading?: boolean
+  loadingColor?: string
   color?: string
   outlined?: boolean
   textColor?: string
@@ -15,12 +16,30 @@ interface ButtonTextProps extends BouncyButtonProps {
 }
 
 const ButtonText: React.FC<ButtonTextProps> = (props: ButtonTextProps) => {
-  const { text, color, outlined, textColor, textStyle, icon, ...buttonProps } = props
+  const { text, loading, loadingColor, color, outlined, textColor, textStyle, icon, style, ...buttonProps } = props
+
+  const getButtonStyles = (color?: string, outlined?: boolean, customStyle?: any) => {
+    return [
+      styles.defaultButtonStyle,
+      outlined ? styles.outlinedButtonStyle : {},
+      { backgroundColor: color },
+      customStyle
+    ]
+  }
+
   return (
-    <BouncyButton style={[styles.defaultButtonStyle, outlined ? styles.outlinedButtonStyle : {}, { backgroundColor: color }]} {...buttonProps}>
+    <BouncyButton disabled={loading} style={getButtonStyles(color, outlined, style)} {...buttonProps}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        {icon}
-        <Text style={[styles.defaultTextStyle, { color: textColor }, textStyle]}>{text}</Text>
+        {loading
+          ? (
+            <ActivityIndicator color={loadingColor} />
+            )
+          : (
+            <>
+              {icon}
+              <Text style={[styles.defaultTextStyle, { color: textColor }, textStyle]}>{text}</Text>
+            </>
+            )}
       </View>
     </BouncyButton>
   )

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from '@/src/constants/Colors'
@@ -13,10 +13,12 @@ const AuthIndex = () => {
   const router = useRouter()
 
   const redirectToSignUp = () => {
-    router.push('/(auth)/SignUp')
+    router.push('/SignUp')
   }
 
-  const redirectToLogIn = () => {}
+  const redirectToLogIn = () => {
+    router.push('/LogIn')
+  }
 
   const redirectToHome = () => {
     router.replace('/(main)/')
@@ -24,6 +26,9 @@ const AuthIndex = () => {
 
   return (
     <View style={styles.wrapper}>
+      <Image
+        source={require('@/src/assets/images/logo.png')} style={{ width: 125, height: 125 }}
+      />
       <View style={[styles.authFlowWrapper, { paddingBottom: insets.bottom }]}>
         <TitleText style={styles.welcomeText}>Welcome to aromi</TitleText>
         <ButtonText onPress={redirectToSignUp} text='Sign up' color={Colors.sinopia} textColor={Colors.white} />
@@ -40,17 +45,14 @@ export default AuthIndex
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    borderWidth: 1,
-    position: 'relative',
-    backgroundColor: Colors.white
+    backgroundColor: Colors.white,
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   authFlowWrapper: {
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
     gap: 10,
     padding: 20
   },

@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { setStatusBarStyle } from 'expo-status-bar'
 import { Amplify } from 'aws-amplify'
 import amplifyConfig from '../amplifyconfiguration.json'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { NotifierWrapper } from 'react-native-notifier'
+import { PaperProvider } from 'react-native-paper'
+import { AromiAuthProvider } from '../contexts/AromiAuthContext'
+import MainLayout from './(main)/_layout'
 
 Amplify.configure(amplifyConfig)
 
@@ -37,20 +40,15 @@ Amplify.configure({
 setStatusBarStyle('dark')
 
 const RootLayout = () => {
-  const isAuthenticated = false
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NotifierWrapper>
-        <Stack screenOptions={{ headerShown: false }}>
-          {isAuthenticated
-            ? (
-              <Stack.Screen name='(main)' />
-              )
-            : (
-              <Stack.Screen name='(auth)' />
-              )}
-        </Stack>
-      </NotifierWrapper>
+      <PaperProvider>
+        <NotifierWrapper>
+          <AromiAuthProvider>
+            <MainLayout />
+          </AromiAuthProvider>
+        </NotifierWrapper>
+      </PaperProvider>
     </GestureHandlerRootView>
   )
 }

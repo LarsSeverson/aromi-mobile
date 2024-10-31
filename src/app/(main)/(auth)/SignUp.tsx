@@ -1,17 +1,24 @@
 import ReactNative, { StyleSheet, View, Text } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput } from 'react-native-paper'
 import ButtonText from '@/src/components/Utils/ButtonText'
 import { ThemedText } from '@/src/components/Utils/Text'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { Icon } from 'react-native-elements'
-import { signUp } from 'aws-amplify/auth'
-import { ScreenProps } from 'expo-router/build/useScreens'
 import { useRouter } from 'expo-router'
 import { TextStyles } from '@/src/constants/TextStyles'
+import { Notifier } from 'react-native-notifier'
+import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
+import { AuthState } from '@/src/hooks/useAromiAuth'
 
 const SignUp = () => {
+  const aromiAuth = useAromiAuthContext()
+  const authState = aromiAuth.authState
+  const userAutoLogIn = aromiAuth.userAutoLogIn
+
   const router = useRouter()
 
   const [email, setEmail] = useState('')
@@ -20,38 +27,51 @@ const SignUp = () => {
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [confirmPasswordValid, setConfirmPasswordValid] = useState<boolean | null>(null)
+  const [loading, setLoading] = useState(false)
   const [continueLevel, setContinueLevel] = useState(0)
 
   const passwordRef = useRef<ReactNative.TextInput>(null)
   const confirmPasswordRef = useRef<ReactNative.TextInput>(null)
 
   const createAccount = async () => {
-    const userInfo = { id: email }
-    try {
-      const { isSignUpComplete, userId, nextStep } = await signUp(
-        {
-          username: email,
-          password,
-          options: {
-            userAttributes: {
-              email
-            },
-            autoSignIn: true
-          }
-        })
-      if (userId) {
-        userInfo.id = userId
+    setLoading(true)
+    const { success, error } = await aromiAuth.userSignUp(email, password)
+    setLoading(false)
+
+    if (success) {
+      // router.push('/ConfirmSignUp')
+      return
+    }
+
+    if (error) {
+      Notifier.showNotification(showNotifaction.error(error.message))
+      if (error.code === AuthErrorCode.USERNAME_EXISTS) {
+        router.dismissAll()
+        router.push('/(main)/(auth)/LogIn')
       }
-    } catch (err) {
-      // TODO:
-      console.error('Error signing up:', err)
-    } finally {
-      router.push({
-        pathname: '/(auth)/ConfirmSignUp',
-        params: { userId: userInfo.id }
-      })
     }
   }
+
+  const autoLogIn = useCallback(async () => {
+    console.log('Auto log in started')
+
+    setLoading(true)
+    const { success, error } = await userAutoLogIn()
+    setLoading(false)
+
+    if (success) {
+      router.replace('/(core)/')
+      return
+    }
+
+    if (error) {
+      console.error('Auto log in error: ', error)
+
+      Notifier.showNotification(showNotifaction.error('Something went wrong logging you in.'))
+      router.dismissAll()
+      router.push('/LogIn')
+    }
+  }, [userAutoLogIn, router])
 
   const validate = (email: boolean = false, password: boolean = false, confirmPassword: boolean = false) => {
     const valid: Array<boolean | null> = [null, null, null]
@@ -69,25 +89,19 @@ const SignUp = () => {
   }
 
   const validateEmail = () => {
-    const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
-    const valid = emailRegex.test(email.toLowerCase())
-
+    const valid = aromiAuth.validateEmail(email)
     setEmailValid(valid)
-
     return valid
   }
 
   const validatePassword = () => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-    const valid = passwordRegex.test(password)
-
+    const valid = aromiAuth.validatePassword(password)
     setPasswordValid(valid)
-
     return valid
   }
 
   const validateConfirmPassword = () => {
-    const valid = confirmPassword === password
+    const valid = aromiAuth.validateConfirmPassword(password, confirmPassword)
     setConfirmPasswordValid(valid)
     return valid
   }
@@ -111,8 +125,26 @@ const SignUp = () => {
     }
   }
 
+  useEffect(() => {
+    const checkAuthState = async () => {
+      switch (authState) {
+        case AuthState.AWAITING_CONFIRMATION:
+          router.push('/ConfirmSignUp')
+          return
+        case AuthState.SIGNED_UP: {
+          autoLogIn()
+          break
+        }
+        default:
+          break
+      }
+    }
+
+    checkAuthState()
+  }, [authState, autoLogIn, router])
+
   return (
-    <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>
+    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>
       <ThemedText style={styles.title}>Let's get your account set up</ThemedText>
       <View>
         <TextInput
@@ -121,6 +153,7 @@ const SignUp = () => {
           mode='outlined'
           inputMode='email'
           autoCapitalize='none'
+          autoComplete='email'
           outlineColor={Colors.placeholder3}
           activeOutlineColor={Colors.button}
           selectionColor={Colors.placeholder3}
@@ -135,7 +168,7 @@ const SignUp = () => {
             setEmail(email)
           }}
         />
-        <Text style={[styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
+        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
         {continueLevel >= 1 && (
           <>
             <TextInput
@@ -160,7 +193,7 @@ const SignUp = () => {
                 setPassword(password)
               }}
             />
-            <Text style={[styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password must be 8+ characters, with a letter and number</Text>
+            <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password must be 8+ characters, with a letter and number</Text>
           </>
         )}
         {continueLevel === 2 &&
@@ -192,7 +225,7 @@ const SignUp = () => {
           </>
         )}
       </View>
-      <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
+      <ButtonText text='Continue' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
       <ButtonText text='Already have an account?' color={Colors.placeholder2} />
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
@@ -201,7 +234,7 @@ const SignUp = () => {
       </View>
       <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
       <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
-    </KeyboardAwareScrollView>
+    </KeyboardScrollView>
   )
 }
 
@@ -220,11 +253,12 @@ const styles = StyleSheet.create({
   inputWrapper: {
     backgroundColor: Colors.white,
     paddingHorizontal: 10,
+    display: 'flex',
     justifyContent: 'center'
   },
   contentWrapper: {
-    fontFamily: 'RobotoMono-Regular',
-    fontSize: 14
+    fontFamily: 'PalanquinDark-Regular',
+    fontSize: 17
   },
   outline: {
     borderRadius: 15

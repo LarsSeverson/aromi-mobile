@@ -1,24 +1,28 @@
-import HomeHeader from '@/src/components/Home/HomeHeader'
-import NavBar from '@/src/components/Navigation/NavBar'
-import { Tabs } from 'expo-router'
-import React from 'react'
-import { useColorScheme } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Stack, useRouter } from 'expo-router'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { signOut } from 'aws-amplify/auth'
 
-const TabLayout: React.FC = () => {
-  // TODO:
-  const colorScheme = useColorScheme()
+const MainLayout = () => {
+  const { userGetInfo } = useAromiAuthContext()
+  const router = useRouter()
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      // const { success } = await userGetInfo()
+
+      // if (success) {
+      await signOut()
+      // router.replace('/(core)/')
+      // }
+    }
+
+    getUserInfo()
+  }, [userGetInfo, router])
 
   return (
-    <Tabs
-      tabBar={(props) => <NavBar {...props} />}
-      screenOptions={{ tabBarShowLabel: false }}
-    >
-      <Tabs.Screen name='index' options={{ header: HomeHeader }} />
-      <Tabs.Screen name='search' />
-      <Tabs.Screen name='community' />
-      <Tabs.Screen name='profile' />
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }} />
   )
 }
 
-export default TabLayout
+export default MainLayout
