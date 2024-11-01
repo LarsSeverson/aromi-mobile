@@ -39,7 +39,6 @@ const SignUp = () => {
     setLoading(false)
 
     if (success) {
-      // router.push('/ConfirmSignUp')
       return
     }
 
@@ -47,29 +46,18 @@ const SignUp = () => {
       Notifier.showNotification(showNotifaction.error(error.message))
       if (error.code === AuthErrorCode.USERNAME_EXISTS) {
         router.dismissAll()
-        router.push('/(main)/(auth)/LogIn')
+        router.push('/LogIn')
       }
     }
   }
 
   const autoLogIn = useCallback(async () => {
-    console.log('Auto log in started')
-
     setLoading(true)
     const { success, error } = await userAutoLogIn()
     setLoading(false)
 
     if (success) {
       router.replace('/(core)/')
-      return
-    }
-
-    if (error) {
-      console.error('Auto log in error: ', error)
-
-      Notifier.showNotification(showNotifaction.error('Something went wrong logging you in.'))
-      router.dismissAll()
-      router.push('/LogIn')
     }
   }, [userAutoLogIn, router])
 
@@ -123,6 +111,11 @@ const SignUp = () => {
         createAccount()
       }
     }
+  }
+
+  const gotoLogIn = () => {
+    router.dismissAll()
+    router.push('/LogIn')
   }
 
   useEffect(() => {
@@ -226,7 +219,7 @@ const SignUp = () => {
         )}
       </View>
       <ButtonText text='Continue' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
-      <ButtonText text='Already have an account?' color={Colors.placeholder2} />
+      <ButtonText text='Already have an account?' color={Colors.placeholder2} onPress={gotoLogIn} />
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
         <ThemedText>or</ThemedText>

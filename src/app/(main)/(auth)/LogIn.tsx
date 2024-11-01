@@ -13,6 +13,7 @@ import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { Notifier } from 'react-native-notifier'
 import { showNotifaction } from '@/src/components/Notify/ShowNotification'
 import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
+import { AuthState } from '@/src/hooks/useAromiAuth'
 
 const LogIn = () => {
   const aromiAuth = useAromiAuthContext()
@@ -36,14 +37,17 @@ const LogIn = () => {
     setLoading(false)
 
     if (success) {
-      console.log(success)
+      router.replace('/(core)/')
       return
     }
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
       if (error.code === AuthErrorCode.SIGN_UP_INCOMPLETE) {
-        router.replace('/SignUp')
+        router.push('/ConfirmSignUp')
+      } else if (error.code === AuthErrorCode.USER_NOT_FOUND) {
+        Notifier.showNotification(showNotifaction.error(error.message))
+      } else {
+        Notifier.showNotification(showNotifaction.error('Something went wrong. Please try again later.'))
       }
     }
   }
@@ -74,6 +78,11 @@ const LogIn = () => {
     setPasswordValid(valid)
 
     return valid
+  }
+
+  const gotoSignUp = () => {
+    router.dismissAll()
+    router.push('/SignUp')
   }
 
   return (
@@ -123,9 +132,11 @@ const LogIn = () => {
             setPassword(password)
           }}
         />
+        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password must be 8+ characters, with a letter and number</Text>
+        <TextButton text='Forgot password?' style={styles.forgotPasswordWrapper} />
+        <ButtonText text='Log in' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={logIn} />
       </View>
-      <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password should be at least 8 characters long</Text>
-      <ButtonText text='Log in' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={logIn} />
+
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
         <ThemedText>or</ThemedText>
@@ -133,7 +144,7 @@ const LogIn = () => {
       </View>
       <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
       <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
-      <ThemedText style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -2, fontSize: 13 }} /></ThemedText>
+      <ThemedText style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -2, fontSize: 13 }} onPress={gotoSignUp} /></ThemedText>
     </KeyboardScrollView>
   )
 }
@@ -171,6 +182,10 @@ const styles = StyleSheet.create({
     gap: 15
   },
   feedbackText: {
-    paddingHorizontal: 20
+    marginHorizontal: 20
+  },
+  forgotPasswordWrapper: {
+    fontSize: 13,
+    margin: 10
   }
 })

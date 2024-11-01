@@ -7,6 +7,7 @@ import TextButton from '@/src/components/Utils/TextButton'
 import LegalAgreement from '@/src/components/Auth/LegalAgreement'
 import { Redirect, useRouter } from 'expo-router'
 import ButtonText from '@/src/components/Utils/ButtonText'
+import { appImages } from '@/src/assets/images/appImages'
 
 const AuthIndex = () => {
   const insets = useSafeAreaInsets()
@@ -27,7 +28,7 @@ const AuthIndex = () => {
   return (
     <View style={styles.wrapper}>
       <Image
-        source={require('@/src/assets/images/logo.png')} style={{ width: 125, height: 125 }}
+        source={appImages.logo} style={{ width: 125, height: 125 }}
       />
       <View style={[styles.authFlowWrapper, { paddingBottom: insets.bottom }]}>
         <TitleText style={styles.welcomeText}>Welcome to aromi</TitleText>

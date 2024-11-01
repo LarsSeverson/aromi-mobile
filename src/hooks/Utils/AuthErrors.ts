@@ -126,8 +126,8 @@ export const toLogInError = (error: AuthError): AromiAuthError => {
       )
     case 'NotAuthorizedException':
       return new AromiAuthError(
-        'Incorrect username or password.',
-        AuthErrorCode.NOT_AUTHORIZED
+        'Incorrect email or password.',
+        AuthErrorCode.USER_NOT_FOUND
       )
     case 'UserNotConfirmedException':
       return new AromiAuthError(

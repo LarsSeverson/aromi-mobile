@@ -7,7 +7,8 @@ export enum AuthState {
   SIGNED_UP,
   LOGGED_IN,
 
-  AWAITING_CONFIRMATION
+  AWAITING_CONFIRMATION,
+  AWAITING_LOGIN
 }
 
 export interface AuthOutput {
@@ -22,12 +23,9 @@ export interface AuthUserInfo {
 
 const useAromiAuth = () => {
   const [authState, setAuthState] = useState<AuthState>(AuthState.GUEST)
-  const [error, setError] = useState<AuthError | null>(null)
   const [userInfo, setUserInfo] = useState<AuthUserInfo | null>(null)
 
   const userGetInfo = useCallback(async (): Promise<AuthOutput> => {
-    setError(null)
-
     try {
       const { userId } = await getCurrentUser()
 
@@ -38,14 +36,11 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toGetUserInfoError(error)
 
-      setError(authError)
-
       return { success: false, error: authError }
     }
   }, [])
 
   const userSignUp = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
-    setError(null)
     setUserInfo({ email })
 
     try {
@@ -75,19 +70,13 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toSignUpError(error)
 
-      setError(authError)
-
       return { success: false, error: authError }
     }
   }, [])
 
   const userConfirmSignUp = useCallback(async (confirmationCode: string, userId: string | undefined = userInfo?.email): Promise<AuthOutput> => {
-    setError(null)
-
     if (!userId) {
       const authError = new AromiAuthError('You are not authorized to perform this action.', AuthErrorCode.SERVICE_EXCEPTION)
-
-      setError(authError)
 
       return { success: false, error: authError }
     }
@@ -107,19 +96,13 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toConfirmSignUpError(error)
 
-      setError(authError)
-
       return { success: false, error: authError }
     }
   }, [userInfo?.email])
 
   const userResendConfirmCode = useCallback(async (userId: string | undefined = userInfo?.email): Promise<AuthOutput> => {
-    setError(null)
-
     if (!userId) {
       const authError = new AromiAuthError('You are not authorized to perform this action.', AuthErrorCode.SERVICE_EXCEPTION)
-
-      setError(authError)
 
       return { success: false, error: authError }
     }
@@ -136,15 +119,12 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toResendSignUpError(error)
 
-      setError(authError)
-
       return { success: false, error: authError }
     }
   }, [userInfo?.email])
 
   const userAutoLogIn = useCallback(async (): Promise<AuthOutput> => {
-    setError(null)
-    setAuthState(AuthState.SIGNED_UP)
+    setAuthState(AuthState.AWAITING_LOGIN)
 
     try {
       const { isSignedIn, nextStep } = await autoSignIn()
@@ -153,7 +133,6 @@ const useAromiAuth = () => {
         case 'CONFIRM_SIGN_UP': {
           const authError = new AromiAuthError("You haven't finished signing up yet.", AuthErrorCode.SIGN_UP_INCOMPLETE)
 
-          setError(authError)
           setAuthState(AuthState.AWAITING_CONFIRMATION)
 
           return { success: false, error: authError }
@@ -171,15 +150,13 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toLogInError(error)
 
-      setError(authError)
-
       return { success: false, error: authError }
     }
   }, [])
 
   const userLogIn = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
-    setError(null)
     setUserInfo({ email })
+    setAuthState(AuthState.AWAITING_LOGIN)
 
     try {
       const { nextStep } = await signIn({
@@ -192,19 +169,17 @@ const useAromiAuth = () => {
           const authError = new AromiAuthError("You haven't finished signing up yet.", AuthErrorCode.SIGN_UP_INCOMPLETE)
 
           setAuthState(AuthState.AWAITING_CONFIRMATION)
-          setError(authError)
 
           return { success: false, error: authError }
         }
         default:
           break
       }
+
       setAuthState(AuthState.LOGGED_IN)
       return { success: true, error: null }
     } catch (error: AuthError | any) {
       const authError = toLogInError(error)
-
-      setError(authError)
 
       return { success: false, error: authError }
     }
@@ -226,7 +201,7 @@ const useAromiAuth = () => {
     return password1 === password2
   }, [])
 
-  const state = useMemo(() => ({ authState, userInfo, error }), [authState, userInfo, error])
+  const state = useMemo(() => ({ authState, userInfo }), [authState, userInfo])
 
   const actions = useMemo(() => (
     { userGetInfo, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn }

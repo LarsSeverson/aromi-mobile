@@ -48,6 +48,14 @@
             "./src/assets/fonts/PlaywriteGBS-Regular.ttf"
           ]
         }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./src/assets/images/logo.png"
+          ]
+        }
       ]
     ],
     "experiments": {

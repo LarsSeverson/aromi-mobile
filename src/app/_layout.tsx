@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { setStatusBarStyle } from 'expo-status-bar'
 import { Amplify } from 'aws-amplify'
@@ -9,6 +9,11 @@ import { NotifierWrapper } from 'react-native-notifier'
 import { PaperProvider } from 'react-native-paper'
 import { AromiAuthProvider } from '../contexts/AromiAuthContext'
 import MainLayout from './(main)/_layout'
+import { Asset } from 'expo-asset'
+import { appImages } from '@/src/assets/images/appImages'
+import * as SplashScreen from 'expo-splash-screen'
+
+SplashScreen.preventAutoHideAsync()
 
 Amplify.configure(amplifyConfig)
 
@@ -40,8 +45,35 @@ Amplify.configure({
 setStatusBarStyle('dark')
 
 const RootLayout = () => {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    const mount = async () => {
+      try {
+        const imageAssets = Object.values(appImages).map((image) => Asset.fromModule(image).downloadAsync())
+        await Promise.all(imageAssets)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setMounted(true)
+      }
+    }
+
+    mount()
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if (mounted) {
+      await SplashScreen.hideAsync()
+    }
+  }, [mounted])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <PaperProvider>
         <NotifierWrapper>
           <AromiAuthProvider>
