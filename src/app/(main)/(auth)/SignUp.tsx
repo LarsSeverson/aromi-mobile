@@ -16,8 +16,6 @@ import { AuthState } from '@/src/hooks/useAromiAuth'
 
 const SignUp = () => {
   const aromiAuth = useAromiAuthContext()
-  const authState = aromiAuth.authState
-  const userAutoLogIn = aromiAuth.userAutoLogIn
 
   const router = useRouter()
 
@@ -50,16 +48,6 @@ const SignUp = () => {
       }
     }
   }
-
-  const autoLogIn = useCallback(async () => {
-    setLoading(true)
-    const { success, error } = await userAutoLogIn()
-    setLoading(false)
-
-    if (success) {
-      router.replace('/(core)/')
-    }
-  }, [userAutoLogIn, router])
 
   const validate = (email: boolean = false, password: boolean = false, confirmPassword: boolean = false) => {
     const valid: Array<boolean | null> = [null, null, null]
@@ -117,24 +105,6 @@ const SignUp = () => {
     router.dismissAll()
     router.push('/LogIn')
   }
-
-  useEffect(() => {
-    const checkAuthState = async () => {
-      switch (authState) {
-        case AuthState.AWAITING_CONFIRMATION:
-          router.push('/ConfirmSignUp')
-          return
-        case AuthState.SIGNED_UP: {
-          autoLogIn()
-          break
-        }
-        default:
-          break
-      }
-    }
-
-    checkAuthState()
-  }, [authState, autoLogIn, router])
 
   return (
     <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>

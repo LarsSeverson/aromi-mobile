@@ -7,11 +7,9 @@ export const AromiAuthContext = createContext<AromiAuthContextProps | null>(null
 
 export const AromiAuthProvider = ({ children }: { children: ReactNode }) => {
   const aromiAuth = useAromiAuth()
-
-  const memoizedAromiAuth = useMemo(() => aromiAuth, [aromiAuth])
-
+  const meoizedAuth = useMemo(() => aromiAuth, [aromiAuth])
   return (
-    <AromiAuthContext.Provider value={memoizedAromiAuth}>
+    <AromiAuthContext.Provider value={meoizedAuth}>
       {children}
     </AromiAuthContext.Provider>
   )

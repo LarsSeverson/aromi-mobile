@@ -18,7 +18,6 @@ export default LegalAgreement
 
 const styles = StyleSheet.create({
   agreementText: {
-    marginTop: 20,
     textAlign: 'center',
     fontFamily: 'Palanquin-Medium',
     opacity: 0.7,

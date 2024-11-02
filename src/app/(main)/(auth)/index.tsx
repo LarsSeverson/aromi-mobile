@@ -1,16 +1,14 @@
-import { StyleSheet, View, Image } from 'react-native'
-import React, { useEffect } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { StyleSheet, View } from 'react-native'
+import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import TitleText from '@/src/components/Utils/Text'
 import TextButton from '@/src/components/Utils/TextButton'
 import LegalAgreement from '@/src/components/Auth/LegalAgreement'
-import { Redirect, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import ButtonText from '@/src/components/Utils/ButtonText'
-import { appImages } from '@/src/assets/images/appImages'
+import { Image } from 'expo-image'
 
 const AuthIndex = () => {
-  const insets = useSafeAreaInsets()
   const router = useRouter()
 
   const redirectToSignUp = () => {
@@ -27,10 +25,8 @@ const AuthIndex = () => {
 
   return (
     <View style={styles.wrapper}>
-      <Image
-        source={appImages.logo} style={{ width: 125, height: 125 }}
-      />
-      <View style={[styles.authFlowWrapper, { paddingBottom: insets.bottom }]}>
+      <Image source='logo' style={{ width: 125, height: 125 }} />
+      <View style={styles.authFlowWrapper}>
         <TitleText style={styles.welcomeText}>Welcome to aromi</TitleText>
         <ButtonText onPress={redirectToSignUp} text='Sign up' color={Colors.sinopia} textColor={Colors.white} />
         <ButtonText onPress={redirectToLogIn} text='Log in' color={Colors.placeholder2} />

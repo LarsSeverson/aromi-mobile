@@ -20,7 +20,7 @@ const LogIn = () => {
 
   const router = useRouter()
 
-  const [email, setEmail] = useState(aromiAuth.userInfo?.email || '')
+  const [email, setEmail] = useState(aromiAuth.userInfo.email || '')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [password, setPassword] = useState('')
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null)

@@ -2,12 +2,8 @@ import HomeHeader from '@/src/components/Home/HomeHeader'
 import NavBar from '@/src/components/Navigation/NavBar'
 import { Tabs } from 'expo-router'
 import React from 'react'
-import { useColorScheme } from 'react-native'
 
-const TabLayout: React.FC = () => {
-  // TODO:
-  const colorScheme = useColorScheme()
-
+const CoreLayout: React.FC = () => {
   return (
     <Tabs
       tabBar={(props) => <NavBar {...props} />}
@@ -21,4 +17,4 @@ const TabLayout: React.FC = () => {
   )
 }
 
-export default TabLayout
+export default CoreLayout

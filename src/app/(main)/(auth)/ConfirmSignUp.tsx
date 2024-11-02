@@ -10,20 +10,32 @@ import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { showNotifaction } from '@/src/components/Notify/ShowNotification'
 
 const ConfirmSignUp = () => {
-  const aromiAuth = useAromiAuthContext()
+  const { userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userInfo } = useAromiAuthContext()
 
   const router = useRouter()
 
   const [loading, setLoading] = useState<boolean | null>(null)
 
+  const tryLogIn = async () => {
+    setLoading(true)
+    const { success } = await userAutoLogIn()
+    setLoading(false)
+
+    return success
+  }
+
   const confirm = async (confirmationCode: string) => {
     setLoading(true)
-    const { success, error } = await aromiAuth.userConfirmSignUp(confirmationCode)
+    const { success, error } = await userConfirmSignUp(confirmationCode)
     setLoading(false)
 
     if (success) {
-      router.dismiss()
-      return
+      const autoLogInSuccess = await tryLogIn()
+      if (autoLogInSuccess) {
+        return router.replace('/(core)/')
+      }
+
+      return router.dismiss()
     }
 
     if (error) {
@@ -36,7 +48,7 @@ const ConfirmSignUp = () => {
   }
 
   const resend = async () => {
-    const { success, error } = await aromiAuth.userResendConfirmCode(aromiAuth.userInfo?.email)
+    const { success, error } = await userResendConfirmCode()
 
     if (success) {
       return
@@ -49,7 +61,7 @@ const ConfirmSignUp = () => {
 
   return (
     <KeyboardScrollView keyboardShouldPersistTaps='always' style={styles.wrapper}>
-      <ConfirmationCode to={aromiAuth.userInfo?.email || 'WHO ARE YOU'} loading={loading} onCompleted={(code) => confirm(code)} onEdit={edit} onReset={resend} />
+      <ConfirmationCode to={userInfo.email || 'WHO ARE YOU'} loading={loading} onCompleted={(code) => confirm(code)} onEdit={edit} onReset={resend} />
     </KeyboardScrollView>
   )
 }
