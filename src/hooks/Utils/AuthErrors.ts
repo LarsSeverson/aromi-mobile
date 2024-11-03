@@ -120,10 +120,6 @@ export const toResendSignUpError = (error: AuthError): AromiAuthError => {
 export const toLogInError = (error: AuthError): AromiAuthError => {
   switch (error.name) {
     case 'UserNotFoundException':
-      return new AromiAuthError(
-        'No account found for the provided email.',
-        AuthErrorCode.USER_NOT_FOUND
-      )
     case 'NotAuthorizedException':
       return new AromiAuthError(
         'Incorrect email or password.',

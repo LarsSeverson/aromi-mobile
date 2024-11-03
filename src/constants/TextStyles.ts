@@ -10,5 +10,9 @@ export const TextStyles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'PalanquinDark-Regular',
     color: Colors.negativeDark
+  },
+  headerTitle: {
+    fontSize: 13,
+    fontFamily: 'PalanquinDark-Regular'
   }
 })

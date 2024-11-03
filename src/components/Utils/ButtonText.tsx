@@ -30,16 +30,11 @@ const ButtonText: React.FC<ButtonTextProps> = (props: ButtonTextProps) => {
   return (
     <BouncyButton disabled={loading} style={getButtonStyles(color, outlined, style)} {...buttonProps}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        {loading
-          ? (
-            <ActivityIndicator color={loadingColor} />
-            )
-          : (
-            <>
-              {icon}
-              <Text style={[styles.defaultTextStyle, { color: textColor }, textStyle]}>{text}</Text>
-            </>
-            )}
+        {icon}
+        <Text style={[styles.defaultTextStyle, { color: textColor, opacity: loading ? 0 : 1 }, textStyle]}>{text}</Text>
+        {loading && (
+          <ActivityIndicator color={loadingColor} size={20} style={styles.activityIndicatorWrapper} />
+        )}
       </View>
     </BouncyButton>
   )
@@ -65,6 +60,11 @@ const styles = StyleSheet.create({
   defaultTextStyle: {
     fontFamily: 'PalanquinDark-Regular',
     fontSize: 13
+  },
+  activityIndicatorWrapper: {
+    position: 'absolute',
+    left: '50%',
+    transform: [{ translateX: -10 }]
   }
 })
 

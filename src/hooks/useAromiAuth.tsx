@@ -1,4 +1,4 @@
-import { AuthError, autoSignIn, confirmSignUp, getCurrentUser, resendSignUpCode, signIn, signUp } from 'aws-amplify/auth'
+import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signUp } from 'aws-amplify/auth'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError } from './Utils/AuthErrors'
 
@@ -146,13 +146,33 @@ const useAromiAuth = () => {
   }, [])
 
   const validatePassword = useCallback((password: string): boolean => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/
     const valid = passwordRegex.test(password)
     return valid
   }, [])
 
   const validateConfirmPassword = useCallback((password1: string, password2: string): boolean => {
     return password1 === password2
+  }, [])
+
+  const sendResetPasswordCode = useCallback(async (email: string) => {
+    try {
+      await resetPassword({ username: email })
+    } catch (error) {
+      console.error('Error on resetPassword: ', error)
+    }
+  }, [])
+
+  const userResetPassword = useCallback(async (email: string, password: string, code: string) => {
+    try {
+      await confirmResetPassword({
+        username: email,
+        newPassword: password,
+        confirmationCode: code
+      })
+    } catch (error) {
+      console.log('Error on confirmResetPassword: ', error)
+    }
   }, [])
 
   const state = useMemo(() => ({ userInfo }), [userInfo])

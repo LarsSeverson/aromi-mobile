@@ -1,13 +1,18 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import React from 'react'
 import BouncyButton, { BouncyButtonProps } from '../Utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 
-const HeaderBackButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => {
+interface HeaderBackButtonProps extends BouncyButtonProps {
+  iconSize?: number
+}
+
+const HeaderBackButton: React.FC<HeaderBackButtonProps> = (props: HeaderBackButtonProps) => {
+  const { iconSize = 18, ...restProps } = props
   return (
-    <BouncyButton {...props} style={styles.wrapper}>
-      <Icon name='arrow-left' type='octicon' size={18} />
+    <BouncyButton {...restProps} style={[styles.wrapper, props.style as ViewStyle]}>
+      <Icon name='arrow-left' type='octicon' size={iconSize} />
     </BouncyButton>
   )
 }
@@ -21,6 +26,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     padding: 10,
-    borderColor: Colors.placeholder2
+    borderColor: Colors.placeholder2,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

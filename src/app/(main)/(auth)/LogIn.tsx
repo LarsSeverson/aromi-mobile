@@ -13,7 +13,6 @@ import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { Notifier } from 'react-native-notifier'
 import { showNotifaction } from '@/src/components/Notify/ShowNotification'
 import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
-import { AuthState } from '@/src/hooks/useAromiAuth'
 
 const LogIn = () => {
   const aromiAuth = useAromiAuthContext()
@@ -85,6 +84,10 @@ const LogIn = () => {
     router.push('/SignUp')
   }
 
+  const gotoForgotPassword = async () => {
+    router.push('/help')
+  }
+
   return (
     <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>
       <ThemedText style={styles.title}>Welcome back</ThemedText>
@@ -106,7 +109,9 @@ const LogIn = () => {
             colors: { onSurfaceVariant: Colors.placeholder3 }
           }}
           onChangeText={email => {
-            setEmailValid(null)
+            if (emailValid) {
+              setEmailValid(null)
+            }
             setEmail(email)
           }}
         />
@@ -128,12 +133,14 @@ const LogIn = () => {
             colors: { onSurfaceVariant: Colors.placeholder3 }
           }}
           onChangeText={password => {
-            setPasswordValid(null)
+            if (passwordValid) {
+              setPasswordValid(null)
+            }
             setPassword(password)
           }}
         />
         <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password must be 8+ characters, with a letter and number</Text>
-        <TextButton text='Forgot password?' style={styles.forgotPasswordWrapper} />
+        <TextButton text='Forgot password?' scaleTo={0.995} wrapperStyle={{ alignSelf: 'flex-start' }} style={styles.forgotPasswordWrapper} onPress={gotoForgotPassword} />
         <ButtonText text='Log in' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={logIn} />
       </View>
 

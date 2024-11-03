@@ -66,7 +66,7 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
 
   return (
     <View style={styles.wrapper}>
-      <ThemedText style={{ fontSize: 25 }}>Enter your verification code</ThemedText>
+      <ThemedText style={{ fontSize: 18 }}>Enter your verification code</ThemedText>
       <View style={{ gap: 20 }}>
         <ThemedText style={styles.sentToWrapper}>sent to: {to}   •<TextButton text='Edit' style={styles.toWrapper} onPress={onEdit} /></ThemedText>
         <View>

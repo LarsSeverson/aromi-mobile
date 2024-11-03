@@ -28,9 +28,6 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false)
   const [continueLevel, setContinueLevel] = useState(0)
 
-  const passwordRef = useRef<ReactNative.TextInput>(null)
-  const confirmPasswordRef = useRef<ReactNative.TextInput>(null)
-
   const createAccount = async () => {
     setLoading(true)
     const { success, error } = await aromiAuth.userSignUp(email, password)
@@ -127,7 +124,9 @@ const SignUp = () => {
             colors: { onSurfaceVariant: Colors.placeholder3 }
           }}
           onChangeText={email => {
-            setEmailValid(null)
+            if (emailValid) {
+              setEmailValid(null)
+            }
             setEmail(email)
           }}
         />
@@ -135,7 +134,6 @@ const SignUp = () => {
         {continueLevel >= 1 && (
           <>
             <TextInput
-              ref={passwordRef}
               label='Password'
               value={password}
               mode='outlined'
@@ -152,7 +150,9 @@ const SignUp = () => {
                 colors: { onSurfaceVariant: Colors.placeholder3 }
               }}
               onChangeText={password => {
-                setPasswordValid(null)
+                if (passwordValid) {
+                  setPasswordValid(null)
+                }
                 setPassword(password)
               }}
             />
@@ -163,7 +163,6 @@ const SignUp = () => {
         (
           <>
             <TextInput
-              ref={confirmPasswordRef}
               label='Repeat password'
               value={confirmPassword}
               mode='outlined'
@@ -180,7 +179,9 @@ const SignUp = () => {
                 colors: { onSurfaceVariant: Colors.placeholder3 }
               }}
               onChangeText={confirmPassword => {
-                setConfirmPasswordValid(null)
+                if (confirmPasswordValid) {
+                  setConfirmPasswordValid(null)
+                }
                 setConfirmPassword(confirmPassword)
               }}
             />

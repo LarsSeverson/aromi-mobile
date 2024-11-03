@@ -3,6 +3,7 @@ import { Redirect } from 'expo-router'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { AuthState } from '@/src/hooks/useAromiAuth'
 import * as SplashScreen from 'expo-splash-screen'
+import { signOut } from 'aws-amplify/auth'
 
 const MainIndex = () => {
   const { userGetInfo } = useAromiAuthContext()
@@ -13,6 +14,7 @@ const MainIndex = () => {
     const initializeAuth = async () => {
       const { success } = await userGetInfo()
       setAuthenticated(success)
+      await signOut()
     }
 
     initializeAuth()
