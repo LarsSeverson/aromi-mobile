@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import ConfirmResetPasswordPage from '@/src/pages/help/ConfirmResetPassword'
+import ConfirmResetPasswordPage from '@/src/pages/help/ConfirmResetPasswordPage'
 
 const ConfirmPasswordReset = () => {
   return <ConfirmResetPasswordPage />

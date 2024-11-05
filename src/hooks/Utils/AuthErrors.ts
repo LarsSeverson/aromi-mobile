@@ -164,3 +164,72 @@ export const toGetUserInfoError = (error: AuthError): AromiAuthError => {
       )
   }
 }
+
+export const toResetPasswordError = (error: AuthError): AromiAuthError => {
+  switch (error.name) {
+    case 'UserNotFoundException':
+      return new AromiAuthError(
+        'No account found for the provided email.',
+        AuthErrorCode.USER_NOT_FOUND
+      )
+    case 'LimitExceededException':
+      return new AromiAuthError(
+        'Resend limit exceeded. Please wait before trying again.',
+        AuthErrorCode.LIMIT_EXCEEDED
+      )
+    default:
+      console.error(error)
+      return new AromiAuthError(
+        error.message || 'Something went wrong. Please try again later.',
+        AuthErrorCode.UNKNOWN_ERROR
+      )
+  }
+}
+
+export const toConfirmResetPasswordError = (error: AuthError): AromiAuthError => {
+  switch (error.name) {
+    case 'CodeMismatchException':
+      return new AromiAuthError(
+        'The confirmation code is incorrect. Please try again.',
+        AuthErrorCode.INVALID_CONFIRMATION_CODE
+      )
+    case 'ExpiredCodeException':
+      return new AromiAuthError(
+        'The confirmation code has expired. Please request a new one.',
+        AuthErrorCode.INVALID_CONFIRMATION_CODE
+      )
+    case 'InvalidParameterException':
+      if (error.message.includes('confirmation code')) {
+        return new AromiAuthError(
+          'Confirmation code cannot be empty.',
+          AuthErrorCode.EMPTY_CONFIRMATION_CODE
+        )
+      } else if (error.message.includes('password')) {
+        return new AromiAuthError(
+          'Password cannot be empty.',
+          AuthErrorCode.INVALID_PASSWORD
+        )
+      } else if (error.message.includes('username')) {
+        return new AromiAuthError(
+          'Email cannot be empty.',
+          AuthErrorCode.USER_NOT_FOUND
+        )
+      } else {
+        return new AromiAuthError(
+          'Invalid parameters provided.',
+          AuthErrorCode.INVALID_PARAMETER
+        )
+      }
+    case 'LimitExceededException':
+      return new AromiAuthError(
+        'Attempt limit exceeded. Please try again later.',
+        AuthErrorCode.LIMIT_EXCEEDED
+      )
+    default:
+      console.error(error)
+      return new AromiAuthError(
+        error.message || 'Something went wrong. Please try again later.',
+        AuthErrorCode.UNKNOWN_ERROR
+      )
+  }
+}

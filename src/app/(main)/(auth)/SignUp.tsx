@@ -1,9 +1,8 @@
-import ReactNative, { StyleSheet, View, Text } from 'react-native'
+import ReactNative, { StyleSheet, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
-import { Divider, TextInput } from 'react-native-paper'
+import { Divider, TextInput, Text } from 'react-native-paper'
 import ButtonText from '@/src/components/Utils/ButtonText'
-import { ThemedText } from '@/src/components/Utils/Text'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { Icon } from 'react-native-elements'
 import { useRouter } from 'expo-router'
@@ -104,8 +103,8 @@ const SignUp = () => {
   }
 
   return (
-    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>
-      <ThemedText style={styles.title}>Let's get your account set up</ThemedText>
+    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' contentContainerStyle={styles.wrapper}>
+      <Text variant='titleMedium'>Let's get your account set up</Text>
       <View>
         <TextInput
           label='Email'
@@ -114,17 +113,8 @@ const SignUp = () => {
           inputMode='email'
           autoCapitalize='none'
           autoComplete='email'
-          outlineColor={Colors.placeholder3}
-          activeOutlineColor={Colors.button}
-          selectionColor={Colors.placeholder3}
-          contentStyle={styles.contentWrapper}
-          outlineStyle={styles.outline}
-          style={styles.inputWrapper}
-          theme={{
-            colors: { onSurfaceVariant: Colors.placeholder3 }
-          }}
           onChangeText={email => {
-            if (emailValid) {
+            if (emailValid !== null) {
               setEmailValid(null)
             }
             setEmail(email)
@@ -140,17 +130,8 @@ const SignUp = () => {
               inputMode='text'
               secureTextEntry
               autoFocus
-              outlineColor={Colors.placeholder3}
-              activeOutlineColor={Colors.button}
-              selectionColor={Colors.placeholder3}
-              contentStyle={styles.contentWrapper}
-              outlineStyle={styles.outline}
-              style={styles.inputWrapper}
-              theme={{
-                colors: { onSurfaceVariant: Colors.placeholder3 }
-              }}
               onChangeText={password => {
-                if (passwordValid) {
+                if (passwordValid !== null) {
                   setPasswordValid(null)
                 }
                 setPassword(password)
@@ -169,17 +150,8 @@ const SignUp = () => {
               inputMode='text'
               secureTextEntry
               autoFocus
-              outlineColor={Colors.placeholder3}
-              activeOutlineColor={Colors.button}
-              selectionColor={Colors.placeholder3}
-              contentStyle={styles.contentWrapper}
-              outlineStyle={styles.outline}
-              style={styles.inputWrapper}
-              theme={{
-                colors: { onSurfaceVariant: Colors.placeholder3 }
-              }}
               onChangeText={confirmPassword => {
-                if (confirmPasswordValid) {
+                if (confirmPasswordValid !== null) {
                   setConfirmPasswordValid(null)
                 }
                 setConfirmPassword(confirmPassword)
@@ -190,10 +162,10 @@ const SignUp = () => {
         )}
       </View>
       <ButtonText text='Continue' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
-      <ButtonText text='Already have an account?' color={Colors.placeholder2} onPress={gotoLogIn} />
+      <ButtonText text='Already have an account?' onPress={gotoLogIn} />
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
-        <ThemedText>or</ThemedText>
+        <Text>or</Text>
         <Divider style={{ flex: 1 }} />
       </View>
       <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
@@ -207,25 +179,8 @@ export default SignUp
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: Colors.white,
     padding: 20,
     gap: 15
-  },
-  title: {
-    fontSize: 18
-  },
-  inputWrapper: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 10,
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  contentWrapper: {
-    fontFamily: 'PalanquinDark-Regular',
-    fontSize: 17
-  },
-  outline: {
-    borderRadius: 15
   },
   orWrapper: {
     display: 'flex',

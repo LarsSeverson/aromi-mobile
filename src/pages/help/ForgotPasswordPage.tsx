@@ -1,0 +1,70 @@
+import { StyleSheet, View } from 'react-native'
+import React, { useState } from 'react'
+import { TextInput, Text } from 'react-native-paper'
+import TextButton from '@/src/components/Utils/TextButton'
+import ButtonText from '@/src/components/Utils/ButtonText'
+import { Colors } from '@/src/constants/Colors'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { TextStyles } from '@/src/constants/TextStyles'
+
+export interface ForgotPasswordProps {
+  onContinue: (email: string) => void
+  onRememberedPassword: () => void
+}
+
+const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPasswordProps) => {
+  const { onContinue, onRememberedPassword } = props
+  const { validateEmail } = useAromiAuthContext()
+  const [email, setEmail] = useState('')
+  const [emailValid, setEmailValid] = useState<boolean | null>(null)
+
+  const continueForm = () => {
+    const valid = validateEmail(email)
+    setEmailValid(valid)
+    if (valid) {
+      onContinue(email)
+    }
+  }
+
+  return (
+    <View style={styles.wrapper}>
+      <Text variant='titleMedium'>Enter your email to reset your password</Text>
+      <View>
+        <TextInput
+          label='Email'
+          value={email}
+          mode='outlined'
+          inputMode='email'
+          autoCapitalize='none'
+          autoComplete='email'
+          onChangeText={(email) => {
+            if (emailValid !== null) {
+              setEmailValid(null)
+            }
+            setEmail(email)
+          }}
+        />
+        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
+      </View>
+      <TextButton text='Remember password?' scaleTo={0.995} wrapperStyle={{ alignSelf: 'flex-start' }} style={styles.rememberPasswordText} onPress={onRememberedPassword} />
+      <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
+    </View>
+  )
+}
+
+export default ForgotPasswordPage
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    padding: 20,
+    gap: 15,
+    display: 'flex'
+  },
+  feedbackText: {
+    marginHorizontal: 20
+  },
+  rememberPasswordText: {
+    marginHorizontal: 10
+  }
+})

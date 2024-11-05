@@ -1,16 +1,18 @@
 import React from 'react'
-import ForgotPasswordPage from '@/src/pages/help/ForgotPassword'
+import ForgotPasswordPage from '@/src/pages/help/ForgotPasswordPage'
 import { useRouter } from 'expo-router'
 
 const ForgotPassword = () => {
   const router = useRouter()
 
-  const onContinue = () => {
-    router.push('/help/ConfirmPasswordReset')
+  const onContinue = (email: string) => {
+    router.push({ pathname: '/help/ConfirmPasswordReset', params: { email } })
   }
+
   const onRememberedPassword = () => {
     router.navigate('/(auth)/LogIn')
   }
+
   return <ForgotPasswordPage onContinue={onContinue} onRememberedPassword={onRememberedPassword} />
 }
 

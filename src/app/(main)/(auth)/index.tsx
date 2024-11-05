@@ -1,15 +1,16 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
-import TitleText from '@/src/components/Utils/Text'
 import TextButton from '@/src/components/Utils/TextButton'
 import LegalAgreement from '@/src/components/Auth/LegalAgreement'
 import { useRouter } from 'expo-router'
 import ButtonText from '@/src/components/Utils/ButtonText'
 import { Image } from 'expo-image'
+import { useTheme, Text } from 'react-native-paper'
 
 const AuthIndex = () => {
   const router = useRouter()
+  const theme = useTheme()
 
   const redirectToSignUp = () => {
     router.push('/SignUp')
@@ -20,14 +21,14 @@ const AuthIndex = () => {
   }
 
   const redirectToHome = () => {
-    router.replace('/(main)/')
+    router.replace('/(core)/')
   }
 
   return (
     <View style={styles.wrapper}>
       <Image source='logo' style={{ width: 125, height: 125 }} />
       <View style={styles.authFlowWrapper}>
-        <TitleText style={styles.welcomeText}>Welcome to aromi</TitleText>
+        <Text variant='titleLarge'>Welcome to aromi</Text>
         <ButtonText onPress={redirectToSignUp} text='Sign up' color={Colors.sinopia} textColor={Colors.white} />
         <ButtonText onPress={redirectToLogIn} text='Log in' color={Colors.placeholder2} />
         <TextButton text='Continue as guest' onPress={redirectToHome} />
@@ -42,7 +43,6 @@ export default AuthIndex
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: Colors.white,
     justifyContent: 'flex-end',
     alignItems: 'center'
   },

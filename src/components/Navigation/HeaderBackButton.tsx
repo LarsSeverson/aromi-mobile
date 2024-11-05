@@ -3,6 +3,7 @@ import React from 'react'
 import BouncyButton, { BouncyButtonProps } from '../Utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
+import { useAppTheme } from '@/src/constants/Themes'
 
 interface HeaderBackButtonProps extends BouncyButtonProps {
   iconSize?: number
@@ -10,9 +11,11 @@ interface HeaderBackButtonProps extends BouncyButtonProps {
 
 const HeaderBackButton: React.FC<HeaderBackButtonProps> = (props: HeaderBackButtonProps) => {
   const { iconSize = 18, ...restProps } = props
+  const theme = useAppTheme()
+
   return (
     <BouncyButton {...restProps} style={[styles.wrapper, props.style as ViewStyle]}>
-      <Icon name='arrow-left' type='octicon' size={iconSize} />
+      <Icon name='arrow-left' type='octicon' size={iconSize} color={theme.colors.card} />
     </BouncyButton>
   )
 }

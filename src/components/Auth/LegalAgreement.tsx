@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, TextStyle, View } from 'react-native'
+import { Text, useTheme } from 'react-native-paper'
 import React from 'react'
 import TextButton from '../Utils/TextButton'
 import { Colors } from '@/src/constants/Colors'
+import { useAppTheme } from '@/src/constants/Themes'
 
 const LegalAgreement = () => {
+  const theme = useAppTheme()
+
   return (
-    <Text style={styles.agreementText}>
+    <Text variant='labelSmall' style={styles.agreementText}>
       By continuing, you agree to aromi's
-      <TextButton style={styles.agreementTextHighlight} text=' Terms of Service ' />
+      <TextButton variant='labelSmall' style={[styles.agreementTextHighlight, { color: theme.colors.text }]} text=' Terms of Service ' />
       and acknowledge you have read our
-      <TextButton style={styles.agreementTextHighlight} text=' Privacy Policy.' />
+      <TextButton variant='labelSmall' style={[styles.agreementTextHighlight, { color: theme.colors.text }]} text=' Privacy Policy.' />
     </Text>
   )
 }
@@ -19,16 +23,11 @@ export default LegalAgreement
 const styles = StyleSheet.create({
   agreementText: {
     textAlign: 'center',
-    fontFamily: 'Palanquin-Medium',
-    opacity: 0.7,
-    lineHeight: 18,
-    fontSize: 12
+    opacity: 0.85
   },
   agreementTextHighlight: {
-    opacity: 1,
-    fontFamily: 'Palanquin-Bold',
-    fontSize: 12,
     marginBottom: -3,
-    color: Colors.black
+    fontWeight: 'bold',
+    opacity: 0.85
   }
 })

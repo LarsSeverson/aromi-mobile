@@ -2,7 +2,7 @@ import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-n
 import React from 'react'
 import BouncyButton, { BouncyButtonProps } from './BouncyButton'
 import { Colors } from '@/src/constants/Colors'
-import { ActivityIndicator } from 'react-native-paper'
+import { ActivityIndicator, useTheme } from 'react-native-paper'
 
 interface ButtonTextProps extends BouncyButtonProps {
   text: string
@@ -16,7 +16,8 @@ interface ButtonTextProps extends BouncyButtonProps {
 }
 
 const ButtonText: React.FC<ButtonTextProps> = (props: ButtonTextProps) => {
-  const { text, loading, loadingColor, color, outlined, textColor, textStyle, icon, style, ...buttonProps } = props
+  const theme = useTheme()
+  const { text, loading, loadingColor, color = theme.colors.surfaceVariant, outlined, textColor, textStyle, icon, style, ...buttonProps } = props
 
   const getButtonStyles = (color?: string, outlined?: boolean, customStyle?: any) => {
     return [

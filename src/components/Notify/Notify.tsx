@@ -1,56 +1,28 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { Colors } from '@/src/constants/Colors'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ThemedText } from '../Utils/Text'
-import { Icon } from 'react-native-elements'
+import { SafeAreaView, SafeAreaViewProps } from 'react-native-safe-area-context'
 
-export interface NotifyProps {
-  message: string
+export interface NotifyProps extends SafeAreaViewProps {
+  children: React.ReactNode
 }
 
-export const ErrorNotify: React.FC<NotifyProps> = (props: NotifyProps) => {
-  const { message } = props
+export const Notify: React.FC<NotifyProps> = (props: NotifyProps) => {
+  const { children, ...restProps } = props
 
   return (
-    <SafeAreaView style={{ padding: 10 }}>
-      <View style={styles.errorNotifyWrapper}>
-        <View style={styles.errorNotifyContentWrapper}>
-          <Icon name='alert-box' type='material-community' size={35} color={Colors.white} />
-          <ThemedText style={styles.errorMessage}>{message}</ThemedText>
-        </View>
+    <SafeAreaView {...restProps}>
+      <View style={styles.notifyWrapper}>
+        {children}
       </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  errorNotifyWrapper: {
+  notifyWrapper: {
     marginHorizontal: 10,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  errorNotifyContentWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 20,
-    padding: 15,
-    gap: 10,
-    backgroundColor: Colors.negative,
-    shadowColor: Colors.black,
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 10,
-    elevation: 20,
-    width: '100%'
-  },
-  errorMessage: {
-    fontSize: 16,
-    marginBottom: -5,
-    fontFamily: 'Palanquin-SemiBold',
-    flexShrink: 1,
-    lineHeight: 20,
-    color: Colors.white
   }
 })

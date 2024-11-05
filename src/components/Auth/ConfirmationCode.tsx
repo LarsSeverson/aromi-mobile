@@ -1,8 +1,7 @@
 import ReactNative, { StyleSheet, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
-import { Dialog, Portal, TextInput } from 'react-native-paper'
-import { ThemedText } from '../Utils/Text'
+import { Dialog, Portal, TextInput, Text } from 'react-native-paper'
 import TextButton from '../Utils/TextButton'
 import ButtonText from '../Utils/ButtonText'
 import { TextStyles } from '@/src/constants/TextStyles'
@@ -66,9 +65,9 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
 
   return (
     <View style={styles.wrapper}>
-      <ThemedText style={{ fontSize: 18 }}>Enter your verification code</ThemedText>
+      <Text variant='titleMedium'>Enter your confirmation code</Text>
       <View style={{ gap: 20 }}>
-        <ThemedText style={styles.sentToWrapper}>sent to: {to}   •<TextButton text='Edit' style={styles.toWrapper} onPress={onEdit} /></ThemedText>
+        <Text style={styles.sentToWrapper}>sent to: {to}   •<TextButton text='Edit' style={styles.toWrapper} onPress={onEdit} /></Text>
         <View>
           <View style={styles.codesWrapper}>
             {codes.map((code, index) => (
@@ -81,20 +80,16 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
                 maxLength={1}
                 readOnly={dialogVisible}
                 autoFocus={index === 0}
-                outlineColor={Colors.placeholder3}
-                activeOutlineColor={Colors.button}
-                selectionColor={Colors.placeholder3}
                 style={styles.codeWrapper}
                 contentStyle={styles.codeInputWrapper}
-                outlineStyle={styles.borderWrapper}
                 onChangeText={text => textChange(text, index)}
                 onKeyPress={e => keyPress(e, index)}
               />
             ))}
           </View>
-          <ThemedText style={[TextStyles.smallInputFeedback, { opacity: codesValid === false ? 1 : 0, marginTop: 10, marginBottom: -10 }]}>Enter the complete 6-digit code</ThemedText>
+          <Text style={[TextStyles.smallInputFeedback, { opacity: codesValid === false ? 1 : 0, marginTop: 10, marginBottom: -10 }]}>Enter the complete 6-digit code</Text>
         </View>
-        <TextButton text="Didn't get a code?" scaleTo={0.997} style={{ fontFamily: 'Palanquin-SemiBold', flex: 1 }} onPress={() => setDialogVisible(true)} />
+        <TextButton text="Didn't get a code?" scaleTo={0.997} onPress={() => setDialogVisible(true)} />
         <ButtonText text='Continue' loading={loading || false} color={Colors.sinopia} loadingColor={Colors.white} textColor={Colors.white} onPress={continueForm} />
       </View>
       <Portal>
@@ -149,8 +144,7 @@ const styles = StyleSheet.create({
   toWrapper: {
     color: Colors.button,
     marginBottom: -4,
-    marginLeft: 10,
-    fontFamily: 'Palanquin-SemiBold'
+    marginLeft: 10
   },
   codesWrapper: {
     display: 'flex',
@@ -162,14 +156,11 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 50,
     maxHeight: 50,
-    backgroundColor: Colors.white,
-    fontSize: 20,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   },
   codeInputWrapper: {
-    fontFamily: 'PalanquinDark-Regular',
     textAlign: 'center'
   },
   borderWrapper: {
@@ -177,8 +168,7 @@ const styles = StyleSheet.create({
   },
   dialogWrapper: {
     marginTop: 'auto',
-    marginHorizontal: 0,
-    height: 0
+    marginHorizontal: 0
   },
   dialogContentWrapper: {
     gap: 10,

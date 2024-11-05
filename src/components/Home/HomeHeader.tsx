@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import React from 'react'
+import { Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import TitleText from '../Utils/Text'
 
 const HomeHeader = () => {
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.wrapper}>
       <View>
-        <TitleText>aromi</TitleText>
+        <Text variant='titleLarge'>aromi</Text>
       </View>
     </SafeAreaView>
   )

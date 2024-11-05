@@ -1,10 +1,10 @@
 const tintColorLight = '#CC612B'
 const tintColorDark = '#FFFFFF'
 
-const button = '#CF6E32'
+const button = '#C6471D'
 const buttonText = '#FFFFFF'
 
-const black = '#0f0f0f'
+const black = '#000'
 const placeholder = '#F3F3F3F3'
 const placeholder2 = '#E5E5E5E5'
 const placeholder3 = '#888'
@@ -13,6 +13,7 @@ const white = '#FFFFFF'
 
 const negativeDark = '#A53620'
 const negative = '#D44529'
+const positive = '#2CB357'
 const negativeLight = '#f57071'
 
 export const Colors = {
@@ -27,10 +28,11 @@ export const Colors = {
   negativeDark,
   negative,
   negativeLight,
+  positive,
 
   heart: '#e20020',
 
-  sinopia: '#C6471D',
+  sinopia: button,
   tawny: tintColorLight,
   cocoaBrown: '#CF6E32',
   caramel: '#D27A38',

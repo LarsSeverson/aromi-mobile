@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { View, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
-import TitleText from './Text'
 import { Colors } from '@/src/constants/Colors'
 import CategoryText from './CategoryText'
+import { Text } from 'react-native-paper'
 
 interface AppErrorProps {
     onRetry: () => void
@@ -11,7 +11,7 @@ interface AppErrorProps {
 const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
   return (
     <View style={styles.wrapper}>
-      <TitleText>Oh no!</TitleText>
+      <Text variant='titleLarge'>Oh no!</Text>
       <CategoryText style={styles.textMiniWrapper}>It looks like something went wrong. Please try again.</CategoryText>
       <Pressable onPress={props.onRetry} style={styles.reloadButtonWrapper}>
         <CategoryText style={styles.reloadButtonText}>Reload Page</CategoryText>

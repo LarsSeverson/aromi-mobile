@@ -1,9 +1,8 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
-import { Divider, TextInput } from 'react-native-paper'
+import { Divider, TextInput, Text } from 'react-native-paper'
 import ButtonText from '@/src/components/Utils/ButtonText'
-import { ThemedText } from '@/src/components/Utils/Text'
 import { Icon } from 'react-native-elements'
 import { useRouter } from 'expo-router'
 import { TextStyles } from '@/src/constants/TextStyles'
@@ -89,8 +88,8 @@ const LogIn = () => {
   }
 
   return (
-    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' style={{ backgroundColor: Colors.white }} contentContainerStyle={styles.wrapper}>
-      <ThemedText style={styles.title}>Welcome back</ThemedText>
+    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' contentContainerStyle={styles.wrapper}>
+      <Text variant='titleMedium'>Welcome back</Text>
       <View>
         <TextInput
           value={email}
@@ -99,15 +98,6 @@ const LogIn = () => {
           inputMode='email'
           autoCapitalize='none'
           autoComplete='email'
-          outlineColor={Colors.placeholder3}
-          activeOutlineColor={Colors.button}
-          selectionColor={Colors.placeholder3}
-          contentStyle={styles.contentWrapper}
-          outlineStyle={styles.outline}
-          style={styles.inputWrapper}
-          theme={{
-            colors: { onSurfaceVariant: Colors.placeholder3 }
-          }}
           onChangeText={email => {
             if (emailValid) {
               setEmailValid(null)
@@ -123,17 +113,8 @@ const LogIn = () => {
           mode='outlined'
           inputMode='text'
           secureTextEntry
-          outlineColor={Colors.placeholder3}
-          activeOutlineColor={Colors.button}
-          selectionColor={Colors.placeholder3}
-          contentStyle={styles.contentWrapper}
-          outlineStyle={styles.outline}
-          style={styles.inputWrapper}
-          theme={{
-            colors: { onSurfaceVariant: Colors.placeholder3 }
-          }}
           onChangeText={password => {
-            if (passwordValid) {
+            if (passwordValid !== null) {
               setPasswordValid(null)
             }
             setPassword(password)
@@ -146,12 +127,12 @@ const LogIn = () => {
 
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
-        <ThemedText>or</ThemedText>
+        <Text>or</Text>
         <Divider style={{ flex: 1 }} />
       </View>
       <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
       <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
-      <ThemedText style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -2, fontSize: 13 }} onPress={gotoSignUp} /></ThemedText>
+      <Text style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -3 }} onPress={gotoSignUp} /></Text>
     </KeyboardScrollView>
   )
 }
@@ -161,7 +142,6 @@ export default LogIn
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: Colors.white,
     padding: 20,
     gap: 15
   },
@@ -192,7 +172,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20
   },
   forgotPasswordWrapper: {
-    fontSize: 13,
     margin: 10
   }
 })

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { setStatusBarStyle } from 'expo-status-bar'
 import { Amplify } from 'aws-amplify'
 import amplifyConfig from '../amplifyconfiguration.json'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -10,6 +9,8 @@ import { Asset } from 'expo-asset'
 import { appImages } from '@/src/assets/images/appImages'
 import * as SplashScreen from 'expo-splash-screen'
 import { Slot } from 'expo-router'
+import { darkTheme, lightTheme } from '../constants/Themes'
+import { Theme, ThemeProvider } from '@react-navigation/native'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -40,10 +41,12 @@ Amplify.configure({
   }
 })
 
-setStatusBarStyle('dark')
-
 const RootLayout = () => {
   const [mounted, setMounted] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
+
+  const theme = darkMode ? darkTheme : lightTheme
+
   useEffect(() => {
     const loadAssets = async () => {
       try {
@@ -65,13 +68,15 @@ const RootLayout = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <PaperProvider>
-        <NotifierWrapper>
-          <AromiAuthProvider>
-            <Slot />
-          </AromiAuthProvider>
-        </NotifierWrapper>
-      </PaperProvider>
+      <ThemeProvider value={theme as Theme}>
+        <PaperProvider theme={theme}>
+          <NotifierWrapper>
+            <AromiAuthProvider>
+              <Slot />
+            </AromiAuthProvider>
+          </NotifierWrapper>
+        </PaperProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   )
 }
