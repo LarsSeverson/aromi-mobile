@@ -1,16 +1,16 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import TextButton from '@/src/components/Utils/TextButton'
 import LegalAgreement from '@/src/components/Auth/LegalAgreement'
 import { useRouter } from 'expo-router'
 import ButtonText from '@/src/components/Utils/ButtonText'
 import { Image } from 'expo-image'
-import { useTheme, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
+import { Hub } from '@aws-amplify/core'
 
 const AuthIndex = () => {
   const router = useRouter()
-  const theme = useTheme()
 
   const redirectToSignUp = () => {
     router.push('/SignUp')
@@ -23,6 +23,21 @@ const AuthIndex = () => {
   const redirectToHome = () => {
     router.replace('/(core)/')
   }
+
+  useEffect(() => {
+    const unsubscribe = Hub.listen('auth', ({ payload }) => {
+      switch (payload.event) {
+        case 'signInWithRedirect':
+          console.log('WOW')
+          break
+        case 'signInWithRedirect_failure':
+          console.log('ERROR')
+          break
+      }
+    })
+
+    return unsubscribe
+  }, [])
 
   return (
     <View style={styles.wrapper}>

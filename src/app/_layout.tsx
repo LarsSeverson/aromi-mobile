@@ -23,7 +23,16 @@ Amplify.configure({
       userPoolClientId: '1aop96ct6tm1oh2dttv8v1j2et',
       identityPoolId: 'us-east-2:bbae1053-0888-4120-85f4-5692fe6246ee',
       allowGuestAccess: true,
-      signUpVerificationMethod: 'code'
+      signUpVerificationMethod: 'code',
+      loginWith: {
+        oauth: {
+          domain: 'aromi.auth.us-east-2.amazoncognito.com',
+          scopes: ['email', 'profile', 'openid'],
+          redirectSignIn: ['myapp://'],
+          redirectSignOut: ['myapp://'],
+          responseType: 'token'
+        }
+      }
     }
   },
   API: {

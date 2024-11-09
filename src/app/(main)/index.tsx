@@ -13,8 +13,17 @@ const MainIndex = () => {
   useEffect(() => {
     const initializeAuth = async () => {
       const { success } = await userGetInfo()
+      // try {
+      //   await signOut({
+      //     global: false,
+      //     oauth: {
+      //       redirectUrl: 'myapp://'
+      //     }
+      //   })
+      // } catch (error) {
+      //   console.log(error)
+      // }
       setAuthenticated(success)
-      await signOut()
     }
 
     initializeAuth()

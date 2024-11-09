@@ -12,6 +12,7 @@ import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { Notifier } from 'react-native-notifier'
 import { showNotifaction } from '@/src/components/Notify/ShowNotification'
 import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
+import { signInWithRedirect } from 'aws-amplify/auth'
 
 const LogIn = () => {
   const aromiAuth = useAromiAuthContext()
@@ -78,6 +79,14 @@ const LogIn = () => {
     return valid
   }
 
+  const continueWithGoogle = async () => {
+    try {
+      await signInWithRedirect({ provider: 'Google' })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const gotoSignUp = () => {
     router.dismissAll()
     router.push('/SignUp')
@@ -130,7 +139,7 @@ const LogIn = () => {
         <Text>or</Text>
         <Divider style={{ flex: 1 }} />
       </View>
-      <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
+      <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} onPress={continueWithGoogle} />
       <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
       <Text style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -3 }} onPress={gotoSignUp} /></Text>
     </KeyboardScrollView>

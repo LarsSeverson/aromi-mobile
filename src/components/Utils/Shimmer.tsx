@@ -1,4 +1,3 @@
-// Shimmer.tsx
 import { Colors } from '@/src/constants/Colors'
 import React, { useRef, useEffect, useState } from 'react'
 import { View, StyleSheet, Animated, ViewStyle, LayoutChangeEvent } from 'react-native'
