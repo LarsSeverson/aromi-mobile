@@ -21,7 +21,7 @@ const useSuggestedFragrances = () => {
 
   const suggestedFragrances = data?.fragrances || null
 
-  return { suggestedFragrances, loading, error, refresh }
+  return { data: suggestedFragrances, loading, error, refresh }
 }
 
 export default useSuggestedFragrances

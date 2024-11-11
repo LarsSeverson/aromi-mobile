@@ -1,0 +1,79 @@
+import { StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { Colors } from '@/src/constants/Colors'
+import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
+import { Notifier } from 'react-native-notifier'
+import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+
+export interface ConfirmSignUpPageProps {
+  onLogIn: () => void
+  onSuccess: () => void
+  onEdit: () => void
+}
+
+const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignUpPageProps) => {
+  const { onLogIn, onSuccess, onEdit } = props
+  const { userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userInfo } = useAromiAuthContext()
+
+  const [loading, setLoading] = useState<boolean | null>(null)
+
+  const tryLogIn = async () => {
+    setLoading(true)
+    const { success } = await userAutoLogIn()
+    setLoading(false)
+
+    return success
+  }
+
+  const confirm = async (confirmationCode: string) => {
+    setLoading(true)
+    const { success, error } = await userConfirmSignUp(confirmationCode)
+    setLoading(false)
+
+    if (success) {
+      const autoLogInSuccess = await tryLogIn()
+      if (autoLogInSuccess) {
+        return onLogIn()
+      }
+
+      return onSuccess()
+    }
+
+    if (error) {
+      Notifier.showNotification(showNotifaction.error(error.message))
+    }
+  }
+
+  const edit = () => {
+    onEdit()
+  }
+
+  const resend = async () => {
+    const { success, error } = await userResendConfirmCode()
+
+    if (success) {
+      return
+    }
+
+    if (error) {
+      Notifier.showNotification(showNotifaction.error(error.message))
+    }
+  }
+
+  return (
+    <KeyboardScrollView keyboardShouldPersistTaps='always' style={styles.wrapper}>
+      <ConfirmationCode to={userInfo.email || 'WHO ARE YOU'} loading={loading} onCompleted={(code) => confirm(code)} onEdit={edit} onReset={resend} />
+    </KeyboardScrollView>
+  )
+}
+
+export default ConfirmSignUpPage
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: Colors.white
+  }
+})

@@ -5,8 +5,8 @@ import { Colors } from '@/src/constants/Colors'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Divider } from 'react-native-elements'
-import AuthActionGuard from '../../Auth/AuthActionGuard'
-import { AuthActions } from '../../Auth/Utils/AuthActions'
+import AuthActionGuard from '../../auth/AuthActionGuard'
+import { AuthActions } from '../../auth/Utils/AuthActions'
 
 interface LikeDislikeProps extends AuthActions {
   style?: ViewStyle

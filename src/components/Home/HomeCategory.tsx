@@ -16,7 +16,7 @@ const HomeCategory: React.FC<HomeCategoryProps> = (props: HomeCategoryProps) => 
     <View style={styles.wrapper}>
       <CategoryText>{props.children}</CategoryText>
       {expandable && (
-        <TextButton onPress={props.onPress} text='see all' />
+        <TextButton onPress={props.onPress} text='see all' wrapperStyle={{ marginLeft: 'auto' }} />
       )}
     </View>
   )
@@ -24,6 +24,7 @@ const HomeCategory: React.FC<HomeCategoryProps> = (props: HomeCategoryProps) => 
 
 const styles = StyleSheet.create({
   wrapper: {
+    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 10,

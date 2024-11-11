@@ -38,7 +38,7 @@ const ProfileIcon = () => {
 
 const Icons =
 {
-  index: HomeIcon,
+  home: HomeIcon,
   search: SearchIcon,
   community: CommunityIcon,
   profile: ProfileIcon

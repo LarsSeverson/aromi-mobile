@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'expo-router'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { AuthState } from '@/src/hooks/useAromiAuth'
 import * as SplashScreen from 'expo-splash-screen'
 import { signOut } from 'aws-amplify/auth'
 
@@ -39,7 +38,7 @@ const MainIndex = () => {
   }
 
   if (authenticated) {
-    return <Redirect href='/(core)/' />
+    return <Redirect href='/(core)' />
   }
 
   return <Redirect href='/auth' />

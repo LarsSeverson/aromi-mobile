@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useCallback, useMemo } from 'react'
-import { AuthActions } from '../components/Auth/Utils/AuthActions'
+import { AuthActions } from '../components/auth/Utils/AuthActions'
 
 export interface HomeContextProps extends AuthActions {}
 
