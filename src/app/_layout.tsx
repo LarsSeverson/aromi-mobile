@@ -28,9 +28,9 @@ Amplify.configure({
         oauth: {
           domain: 'aromi.auth.us-east-2.amazoncognito.com',
           scopes: ['email', 'profile', 'openid'],
-          redirectSignIn: ['myapp://'],
-          redirectSignOut: ['myapp://'],
-          responseType: 'token'
+          redirectSignIn: ['myapp://', 'http://localhost:8081/'],
+          redirectSignOut: ['myapp://', 'http://localhost:8081/'],
+          responseType: 'code'
         }
       }
     }

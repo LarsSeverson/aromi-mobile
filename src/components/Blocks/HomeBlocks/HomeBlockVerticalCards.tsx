@@ -5,8 +5,10 @@ import { FragranceBlock, FragranceBlockTypes } from '../FragranceBlocks/Fragranc
 import ButtonText from '../../Utils/ButtonText'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
+import { useHomeContext } from '@/src/hooks/useHomeContext'
 
 const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
+  const { onUnAuth } = useHomeContext()
   const cols = props.numColumns || 2
   const previewLength = props.previewLength || 6
 
@@ -24,14 +26,14 @@ const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps)
       <HomeCategory onPress={props.onSeeAll}>{props.title}</HomeCategory>
       <FlatList
         data={blockData.slice(0, previewLength)}
-        renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.VerticalCard} fragrance={item} />)}
+        renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.VerticalCard} fragrance={item} onUnAuth={onUnAuth} />)}
         scrollEnabled={false}
         numColumns={cols}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={cols ? { gap: 10 } : null}
         contentContainerStyle={styles.fragranceListWrapper}
       />
-      <ButtonText onPress={props.onSeeAll}>see all</ButtonText>
+      <ButtonText text='see all' onPress={props.onSeeAll} />
     </View>
   )
 }

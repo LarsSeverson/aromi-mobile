@@ -40,7 +40,7 @@ const SignUp = () => {
       Notifier.showNotification(showNotifaction.error(error.message))
       if (error.code === AuthErrorCode.USERNAME_EXISTS) {
         router.dismissAll()
-        router.push('/LogIn')
+        router.push('/auth/LogIn')
       }
     }
   }
@@ -99,7 +99,13 @@ const SignUp = () => {
 
   const gotoLogIn = () => {
     router.dismissAll()
-    router.push('/LogIn')
+    router.push('/auth/LogIn')
+  }
+
+  const continueWithGoogle = () => {
+    setLoading(true)
+    aromiAuth.socialSignIn('Google')
+    setLoading(false)
   }
 
   return (
@@ -168,7 +174,7 @@ const SignUp = () => {
         <Text>or</Text>
         <Divider style={{ flex: 1 }} />
       </View>
-      <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} />
+      <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} onPress={continueWithGoogle} />
       <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
     </KeyboardScrollView>
   )

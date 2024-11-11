@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Stack, useRouter } from 'expo-router'
 import { TextStyles } from '@/src/constants/TextStyles'
@@ -22,7 +22,7 @@ const AuthHelpLayout = () => {
           headerTitleStyle: TextStyles.headerTitle,
           headerBackVisible: false,
           headerLeft: () => <HeaderBackButton scaleTo={0.95} iconSize={16} style={{ width: 35, height: 35, padding: 0 }} onPress={() => router.dismiss()} />,
-          headerRight: () => <HeaderCloseButton scaleTo={0.95} iconSize={16} style={{ width: 35, height: 35, padding: 0 }} onPress={() => router.navigate('/(auth)/LogIn')} />
+          headerRight: () => <HeaderCloseButton scaleTo={0.95} iconSize={16} style={{ width: 35, height: 35, padding: 0 }} onPress={() => router.navigate('/auth/LogIn')} />
         }}
         >
           <Stack.Screen name='ForgotPassword' options={{ headerLeft: () => null }} />

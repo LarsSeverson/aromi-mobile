@@ -8,16 +8,21 @@ import ButtonText from '@/src/components/Utils/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
 import { Hub } from '@aws-amplify/core'
+import { autoSignIn, fetchUserAttributes, getCurrentUser } from 'aws-amplify/auth'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { Notifier } from 'react-native-notifier'
+import { showNotifaction } from '@/src/components/Notify/ShowNotification'
 
 const AuthIndex = () => {
   const router = useRouter()
+  const { userGetInfo } = useAromiAuthContext()
 
   const redirectToSignUp = () => {
-    router.push('/SignUp')
+    router.push('/auth/SignUp')
   }
 
   const redirectToLogIn = () => {
-    router.push('/LogIn')
+    router.push('/auth/LogIn')
   }
 
   const redirectToHome = () => {
@@ -25,19 +30,26 @@ const AuthIndex = () => {
   }
 
   useEffect(() => {
-    const unsubscribe = Hub.listen('auth', ({ payload }) => {
+    const unsubscribe = Hub.listen('auth', async ({ payload }) => {
       switch (payload.event) {
-        case 'signInWithRedirect':
-          console.log('WOW')
+        case 'signInWithRedirect': {
+          const { success, error } = await userGetInfo()
+          if (success) {
+            return router.navigate('/(core)/')
+          }
+          if (error) {
+            Notifier.showNotification(showNotifaction.error('Something went wrong logging you in'))
+          }
           break
+        }
         case 'signInWithRedirect_failure':
-          console.log('ERROR')
+          Notifier.showNotification(showNotifaction.error('Something went wrong logging you in'))
           break
       }
     })
 
     return unsubscribe
-  }, [])
+  }, [router, userGetInfo])
 
   return (
     <View style={styles.wrapper}>

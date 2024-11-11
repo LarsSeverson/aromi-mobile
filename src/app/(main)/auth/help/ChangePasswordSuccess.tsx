@@ -6,7 +6,7 @@ const ChangePasswordSuccess = () => {
   const router = useRouter()
 
   const backToLogin = () => {
-    router.navigate('/(auth)/LogIn')
+    router.navigate('/auth/LogIn')
   }
 
   return (

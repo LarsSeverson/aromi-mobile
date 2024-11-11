@@ -1,7 +1,8 @@
 import { View, StyleSheet } from 'react-native'
 import React from 'react'
-import { Text } from 'react-native-paper'
+import { Button, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { signOut } from 'aws-amplify/auth'
 
 const HomeHeader = () => {
   return (

@@ -42,7 +42,7 @@ const LogIn = () => {
 
     if (error) {
       if (error.code === AuthErrorCode.SIGN_UP_INCOMPLETE) {
-        router.push('/ConfirmSignUp')
+        router.push('/auth/ConfirmSignUp')
       } else if (error.code === AuthErrorCode.USER_NOT_FOUND) {
         Notifier.showNotification(showNotifaction.error(error.message))
       } else {
@@ -80,20 +80,18 @@ const LogIn = () => {
   }
 
   const continueWithGoogle = async () => {
-    try {
-      await signInWithRedirect({ provider: 'Google' })
-    } catch (error) {
-      console.log(error)
-    }
+    setLoading(true)
+    aromiAuth.socialSignIn('Google')
+    setLoading(false)
   }
 
   const gotoSignUp = () => {
     router.dismissAll()
-    router.push('/SignUp')
+    router.push('/auth/SignUp')
   }
 
   const gotoForgotPassword = async () => {
-    router.push('/help')
+    router.push('/auth/help')
   }
 
   return (

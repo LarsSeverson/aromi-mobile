@@ -14,6 +14,7 @@ enum FragranceBlockTypes {
 interface FragranceBlockProps {
   type: FragranceBlockTypes
   fragrance: Fragrance
+  onUnAuth: () => void
 }
 
 const FragranceBlockComponentMap: Record<FragranceBlockTypes, React.FC<FragranceBlockProps>> = {

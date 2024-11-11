@@ -233,3 +233,11 @@ export const toConfirmResetPasswordError = (error: AuthError): AromiAuthError =>
       )
   }
 }
+
+export const toSocialSignInError = (error: AuthError): AromiAuthError => {
+  console.error(error)
+  return new AromiAuthError(
+    'Something went wrong. Please try again later.',
+    AuthErrorCode.SERVICE_EXCEPTION
+  )
+}

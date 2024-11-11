@@ -7,11 +7,11 @@ const ChangePassword = () => {
   const router = useRouter()
 
   const onSuccess = () => {
-    router.push('/(auth)/help/ChangePasswordSuccess')
+    router.push('/auth/help/ChangePasswordSuccess')
   }
 
   const onRemembered = () => {
-    router.navigate('/(auth)/LogIn')
+    router.navigate('/auth/LogIn')
   }
 
   return <ChangePasswordPage onSuccess={onSuccess} onRemembered={onRemembered} />

@@ -18,7 +18,7 @@ const ConfirmResetPasswordPage = () => {
   const [loading, setLoading] = useState(false)
 
   const confirmCompleted = (code: string) => {
-    router.push({ pathname: '/(auth)/help/ChangePassword', params: { email, code } })
+    router.push({ pathname: '/auth/help/ChangePassword', params: { email, code } })
   }
 
   const confirmEdit = () => {

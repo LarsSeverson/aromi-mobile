@@ -1,6 +1,6 @@
-import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signUp } from 'aws-amplify/auth'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError } from './Utils/AuthErrors'
+import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signUp } from 'aws-amplify/auth'
+import { useCallback, useMemo, useState } from 'react'
+import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './Utils/AuthErrors'
 
 export enum AuthState {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
@@ -30,6 +30,16 @@ const useAromiAuth = () => {
     } catch (error: AuthError | any) {
       const authError = toGetUserInfoError(error)
 
+      return { success: false, error: authError }
+    }
+  }, [])
+
+  const socialSignIn = useCallback(async (provider: 'Google' | 'Apple'): Promise<AuthOutput> => {
+    try {
+      await signInWithRedirect({ provider })
+      return { success: true, error: null }
+    } catch (error: AuthError | any) {
+      const authError = toSocialSignInError(error)
       return { success: false, error: authError }
     }
   }, [])
@@ -186,8 +196,8 @@ const useAromiAuth = () => {
   const state = useMemo(() => ({ userInfo }), [userInfo])
 
   const actions = useMemo(() => (
-    { userGetInfo, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword }
-  ), [userGetInfo, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword])
+    { userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword }
+  ), [userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword])
 
   const validators = useMemo(() => (
     { validateEmail, validatePassword, validateConfirmPassword }

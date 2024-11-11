@@ -13,16 +13,6 @@ const MainIndex = () => {
   useEffect(() => {
     const initializeAuth = async () => {
       const { success } = await userGetInfo()
-      // try {
-      //   await signOut({
-      //     global: false,
-      //     oauth: {
-      //       redirectUrl: 'myapp://'
-      //     }
-      //   })
-      // } catch (error) {
-      //   console.log(error)
-      // }
       setAuthenticated(success)
     }
 
@@ -52,7 +42,7 @@ const MainIndex = () => {
     return <Redirect href='/(core)/' />
   }
 
-  return <Redirect href='/(auth)/' />
+  return <Redirect href='/auth' />
 }
 
 export default MainIndex

@@ -26,7 +26,7 @@ const Brand = styled.Text`
 `
 
 const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
-  const fragrance = props.fragrance as Fragrance
+  const { fragrance, onUnAuth } = props
 
   if (!fragrance) {
     return (
@@ -40,7 +40,7 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
     <View style={styles.wrapper}>
       <BouncyButton style={styles.wrapper}>
         <BlockImage path={previewURL} style={styles.contentWrapper}>
-          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
+          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} onUnAuth={onUnAuth} />
         </BlockImage>
       </BouncyButton>
       <View style={styles.bottomWrapper}>

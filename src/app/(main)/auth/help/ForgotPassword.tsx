@@ -6,11 +6,11 @@ const ForgotPassword = () => {
   const router = useRouter()
 
   const onContinue = (email: string) => {
-    router.push({ pathname: '/help/ConfirmPasswordReset', params: { email } })
+    router.push({ pathname: '/auth/help/ConfirmPasswordReset', params: { email } })
   }
 
   const onRememberedPassword = () => {
-    router.navigate('/(auth)/LogIn')
+    router.navigate('/auth/LogIn')
   }
 
   return <ForgotPasswordPage onContinue={onContinue} onRememberedPassword={onRememberedPassword} />
