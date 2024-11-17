@@ -1,11 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { TextInput, Text } from 'react-native-paper'
-import TextButton from '@/src/components/Utils/TextButton'
-import ButtonText from '@/src/components/Utils/ButtonText'
+import TextButton from '@/src/components/utils/TextButton'
+import ButtonText from '@/src/components/utils/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { TextStyles } from '@/src/constants/TextStyles'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 
 export interface ForgotPasswordProps {
   onContinue: (email: string) => void
@@ -14,15 +15,27 @@ export interface ForgotPasswordProps {
 
 const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPasswordProps) => {
   const { onContinue, onRememberedPassword } = props
-  const { validateEmail } = useAromiAuthContext()
+  const { validateEmail, sendResetPasswordCode } = useAromiAuthContext()
   const [email, setEmail] = useState('')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const continueForm = () => {
+  const continueForm = async () => {
     const valid = validateEmail(email)
     setEmailValid(valid)
+
     if (valid) {
-      onContinue(email)
+      setLoading(true)
+      const { success, error } = await sendResetPasswordCode(email)
+      setLoading(false)
+
+      if (success) {
+        return onContinue(email)
+      }
+
+      if (error) {
+        showNotifaction.error(error.message)
+      }
     }
   }
 
@@ -47,7 +60,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPassword
         <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
       </View>
       <TextButton text='Remember password?' scaleTo={0.995} wrapperStyle={{ alignSelf: 'flex-start' }} style={styles.rememberPasswordText} onPress={onRememberedPassword} />
-      <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
+      <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} loading={loading} />
     </View>
   )
 }

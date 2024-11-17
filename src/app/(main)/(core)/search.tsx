@@ -1,5 +1,5 @@
 import React from 'react'
-import Search from '@/src/components/Search/Search'
+import Search from '@/src/components/search/Search'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const SearchPage: React.FC = () => {

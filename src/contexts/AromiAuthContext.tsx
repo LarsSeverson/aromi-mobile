@@ -5,11 +5,17 @@ export type AromiAuthContextProps = ReturnType<typeof useAromiAuth>
 
 export const AromiAuthContext = createContext<AromiAuthContextProps | null>(null)
 
-export const AromiAuthProvider = ({ children }: { children: ReactNode }) => {
+interface AromiAuthProviderProps {
+  children: ReactNode
+}
+
+export const AromiAuthProvider: React.FC<AromiAuthProviderProps> = (props: AromiAuthProviderProps) => {
+  const { children } = props
   const aromiAuth = useAromiAuth()
-  const meoizedAuth = useMemo(() => aromiAuth, [aromiAuth])
+  const memoizedAuth = useMemo(() => aromiAuth, [aromiAuth])
+
   return (
-    <AromiAuthContext.Provider value={meoizedAuth}>
+    <AromiAuthContext.Provider value={memoizedAuth}>
       {children}
     </AromiAuthContext.Provider>
   )

@@ -2,15 +2,14 @@ import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
-import ButtonText from '@/src/components/Utils/ButtonText'
+import ButtonText from '@/src/components/utils/ButtonText'
 import { Icon } from 'react-native-elements'
 import { TextStyles } from '@/src/constants/TextStyles'
-import TextButton from '@/src/components/Utils/TextButton'
+import TextButton from '@/src/components/utils/TextButton'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { Notifier } from 'react-native-notifier'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
-import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
 
 export interface LogInPageProps {
   onLogIn: () => void
@@ -46,9 +45,9 @@ const LogInPage: React.FC<LogInPageProps> = (props: LogInPageProps) => {
       if (error.code === AuthErrorCode.SIGN_UP_INCOMPLETE) {
         onConfirmSignUp()
       } else if (error.code === AuthErrorCode.USER_NOT_FOUND) {
-        Notifier.showNotification(showNotifaction.error(error.message))
+        showNotifaction.error(error.message)
       } else {
-        Notifier.showNotification(showNotifaction.error('Something went wrong. Please try again later.'))
+        showNotifaction.error('Something went wrong. Please try again later.')
       }
     }
   }
@@ -83,8 +82,17 @@ const LogInPage: React.FC<LogInPageProps> = (props: LogInPageProps) => {
 
   const continueWithGoogle = async () => {
     setLoading(true)
-    aromiAuth.socialSignIn('Google')
+    const { success, error } = await aromiAuth.socialSignIn('Google')
     setLoading(false)
+
+    if (success) {
+      //
+      return
+    }
+
+    if (error) {
+      showNotifaction.error(error.message)
+    }
   }
 
   return (

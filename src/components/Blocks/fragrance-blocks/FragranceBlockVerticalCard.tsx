@@ -1,14 +1,14 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
-import BouncyButton from '../../Utils/BouncyButton'
-import FragranceBlockVerticalCardLoading from './Utils/FragranceBlockVerticalCardLoading'
+import BouncyButton from '../../utils/BouncyButton'
+import FragranceBlockVerticalCardLoading from './utils/FragranceBlockVerticalCardLoading'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import BlockLikeDislike from '../Utils/BlockLikeDislike'
-import BlockImage from '../Utils/BlockImage'
+import BlockLikeDislike from '../utils/BlockLikeDislike'
+import BlockImage from '../utils/BlockImage'
 
 const Name = styled.Text`
   font-family: 'PalanquinDark-Medium';
@@ -26,7 +26,7 @@ const Brand = styled.Text`
 `
 
 const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
-  const { fragrance, onUnAuth } = props
+  const { fragrance } = props
 
   if (!fragrance) {
     return (
@@ -40,7 +40,7 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
     <View style={styles.wrapper}>
       <BouncyButton style={styles.wrapper}>
         <BlockImage path={previewURL} style={styles.contentWrapper}>
-          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} onUnAuth={onUnAuth} />
+          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
         </BlockImage>
       </BouncyButton>
       <View style={styles.bottomWrapper}>

@@ -16,7 +16,7 @@ const LogIn = () => {
   }
 
   const gotoForgotPassword = () => {
-    router.dismissAll()
+    router.push('/(core)/home/(auth)/ForgotPassword')
   }
 
   return (

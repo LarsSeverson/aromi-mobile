@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { Stack, useRouter } from 'expo-router'
-import HeaderBackButton from '@/src/components/Navigation/HeaderBackButton'
+import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 import { useTheme } from 'react-native-paper'
+import { TextStyles } from '@/src/constants/TextStyles'
 
 const AuthLayout = () => {
   const router = useRouter()
@@ -11,7 +12,7 @@ const AuthLayout = () => {
   return (
     <Stack screenOptions={{
       headerShadowVisible: false,
-      headerTitleStyle: styles.headerTitle,
+      headerTitleStyle: TextStyles.headerTitle,
       headerStyle: { backgroundColor: theme.colors.background },
       headerLeft: () => <HeaderBackButton scaleTo={0.95} onPress={() => router.dismiss()} />
     }}
@@ -26,10 +27,3 @@ const AuthLayout = () => {
 }
 
 export default AuthLayout
-
-const styles = StyleSheet.create({
-  headerTitle: {
-    fontSize: 13,
-    fontFamily: 'PalanquinDark-Regular'
-  }
-})

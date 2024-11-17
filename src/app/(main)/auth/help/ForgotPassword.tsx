@@ -5,15 +5,15 @@ import { useRouter } from 'expo-router'
 const ForgotPassword = () => {
   const router = useRouter()
 
-  const onContinue = (email: string) => {
+  const gotoConfirmPasswordReset = (email: string) => {
     router.push({ pathname: '/auth/help/ConfirmPasswordReset', params: { email } })
   }
 
-  const onRememberedPassword = () => {
+  const gotoRememberedPassword = () => {
     router.navigate('/auth/LogIn')
   }
 
-  return <ForgotPasswordPage onContinue={onContinue} onRememberedPassword={onRememberedPassword} />
+  return <ForgotPasswordPage onContinue={gotoConfirmPasswordReset} onRememberedPassword={gotoRememberedPassword} />
 }
 
 export default ForgotPassword

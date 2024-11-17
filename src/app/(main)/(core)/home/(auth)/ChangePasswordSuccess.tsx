@@ -6,11 +6,11 @@ const ChangePasswordSuccess = () => {
   const router = useRouter()
 
   const gotoLogin = () => {
-    router.navigate('/auth/LogIn')
+    router.navigate('/(core)/home/')
   }
 
   return (
-    <ChangePasswordSuccessPage buttonText='Log in' onButtonPress={gotoLogin} />
+    <ChangePasswordSuccessPage buttonText='Go back' onButtonPress={gotoLogin} />
   )
 }
 

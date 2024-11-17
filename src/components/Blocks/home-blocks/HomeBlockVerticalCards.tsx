@@ -1,14 +1,12 @@
 import { View, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import HomeCategory from '../../Home/HomeCategory'
-import { FragranceBlock, FragranceBlockTypes } from '../FragranceBlocks/FragranceBlock'
-import ButtonText from '../../Utils/ButtonText'
+import HomeCategory from '../../home/HomeCategory'
+import { FragranceBlock, FragranceBlockTypes } from '../fragrance-blocks/FragranceBlock'
+import ButtonText from '../../utils/ButtonText'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
-import { useHomeContext } from '@/src/hooks/useHomeContext'
 
 const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
-  const { onUnAuth } = useHomeContext()
   const cols = props.numColumns || 2
   const previewLength = props.previewLength || 6
 
@@ -26,7 +24,7 @@ const HomeBlockVerticalCards: React.FC<HomeBlockProps> = (props: HomeBlockProps)
       <HomeCategory onPress={props.onSeeAll}>{props.title}</HomeCategory>
       <FlatList
         data={blockData.slice(0, previewLength)}
-        renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.VerticalCard} fragrance={item} onUnAuth={onUnAuth} />)}
+        renderItem={({ item }) => (<FragranceBlock type={FragranceBlockTypes.VerticalCard} fragrance={item} />)}
         scrollEnabled={false}
         numColumns={cols}
         showsVerticalScrollIndicator={false}

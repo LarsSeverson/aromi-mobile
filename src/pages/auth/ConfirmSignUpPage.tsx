@@ -2,10 +2,9 @@ import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
-import { Notifier } from 'react-native-notifier'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 
 export interface ConfirmSignUpPageProps {
   onLogIn: () => void
@@ -42,7 +41,7 @@ const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignU
     }
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
+      showNotifaction.error(error.message)
     }
   }
 
@@ -58,7 +57,7 @@ const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignU
     }
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
+      showNotifaction.error(error.message)
     }
   }
 

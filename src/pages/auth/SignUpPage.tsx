@@ -2,14 +2,13 @@ import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
-import ButtonText from '@/src/components/Utils/ButtonText'
+import ButtonText from '@/src/components/utils/ButtonText'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { Icon } from 'react-native-elements'
 import { TextStyles } from '@/src/constants/TextStyles'
-import { Notifier } from 'react-native-notifier'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { AuthErrorCode } from '@/src/hooks/Utils/AuthErrors'
+import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
 
 export interface SignUpPageProps {
   onSignUp: () => void
@@ -39,7 +38,7 @@ const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
     }
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
+      showNotifaction.error(error.message)
       if (error.code === AuthErrorCode.USERNAME_EXISTS) {
         onLogIn()
       }
@@ -98,10 +97,19 @@ const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
     }
   }
 
-  const continueWithGoogle = () => {
+  const continueWithGoogle = async () => {
     setLoading(true)
-    aromiAuth.socialSignIn('Google')
+    const { success, error } = await aromiAuth.socialSignIn('Google')
     setLoading(false)
+
+    if (success) {
+      //
+      return
+    }
+
+    if (error) {
+      showNotifaction.error(error.message)
+    }
   }
 
   return (

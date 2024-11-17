@@ -1,12 +1,12 @@
 import React from 'react'
-import { HomeProvider } from '@/src/contexts/HomeContext'
+import { AuthGuardProvider } from '@/src/contexts/AuthGuardContext'
 import HomePage from '@/src/pages/core/HomePage'
 
 const HomeIndex = () => {
   return (
-    <HomeProvider>
+    <AuthGuardProvider>
       <HomePage />
-    </HomeProvider>
+    </AuthGuardProvider>
   )
 }
 

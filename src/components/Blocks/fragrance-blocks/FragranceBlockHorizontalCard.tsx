@@ -2,10 +2,10 @@ import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import { Colors } from '@/src/constants/Colors'
-import BouncyButton from '../../Utils/BouncyButton'
+import BouncyButton from '../../utils/BouncyButton'
 import styled from 'styled-components/native'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import FragranceBlockHorizontalCardLoading from './Utils/FragranceBlockHorizontalCardLoading'
+import FragranceBlockHorizontalCardLoading from './utils/FragranceBlockHorizontalCardLoading'
 
 const Name = styled.Text`
   font-family: 'PalanquinDark-Medium';

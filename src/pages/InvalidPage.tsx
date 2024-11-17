@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../constants/Colors'
-import ButtonText from '../components/Utils/ButtonText'
+import ButtonText from '../components/utils/ButtonText'
 import { useRouter } from 'expo-router'
 import { Text } from 'react-native-paper'
 
@@ -17,7 +17,7 @@ const InvalidPage: React.FC<InvalidPageProps> = (props: InvalidPageProps) => {
 
   return (
     <View style={styles.wrapper}>
-      <Text variant='titleLarge'>{text}</Text>
+      <Text variant='titleMedium'>{text}</Text>
       <ButtonText text='Go back' color={Colors.sinopia} textColor={Colors.white} onPress={onGoBack} />
     </View>
   )

@@ -1,26 +1,18 @@
-import { AuthState } from '@/src/hooks/useAromiAuth'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { useAuthGuardContext } from '@/src/hooks/useAuthGuardContext'
 import React, { cloneElement, ReactElement, useCallback } from 'react'
-import { AuthActions } from './Utils/AuthActions'
 
-interface AuthActionGuardProps extends AuthActions {
+interface AuthActionGuardProps {
   children: ReactElement
 }
 
 const AuthActionGuard: React.FC<AuthActionGuardProps> = (props: AuthActionGuardProps) => {
-  const { userInfo } = useAromiAuthContext()
-  const { onUnAuth, children } = props
+  const { children } = props
+  const { checkAuth } = useAuthGuardContext()
   const childPressEvent = children.props.onPress
 
-  const authAction = useCallback((...args: any[]) => {
-    if (userInfo.state !== AuthState.AUTHENTICATED) {
-      return onUnAuth()
-    }
-
-    if (childPressEvent) {
-      childPressEvent(...args)
-    }
-  }, [childPressEvent, onUnAuth, userInfo])
+  const authAction = useCallback(() => {
+    return checkAuth(childPressEvent)
+  }, [checkAuth, childPressEvent])
 
   return cloneElement(children, { onPress: authAction })
 }

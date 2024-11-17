@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
-import AppError from '@/src/components/Utils/AppError'
+import AppError from '@/src/components/utils/AppError'
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
-import { HomeBlock, HomeBlockTypes } from '@/src/components/Blocks/HomeBlocks/HomeBlock'
+import { HomeBlock, HomeBlockTypes } from '@/src/components/blocks/home-blocks/HomeBlock'
 
 const HomePage = () => {
   const [refreshing, setRefreshing] = useState(false)

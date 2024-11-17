@@ -2,8 +2,8 @@ import { FlatList, ScrollView, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { HomeBlockProps } from './HomeBlock'
 import { styles } from './HomeBlockConstants'
-import HomeCategory from '../../Home/HomeCategory'
-import { FragranceBlock, FragranceBlockTypes } from '../FragranceBlocks/FragranceBlock'
+import HomeCategory from '../../home/HomeCategory'
+import { FragranceBlock, FragranceBlockTypes } from '../fragrance-blocks/FragranceBlock'
 
 const HomeBlockHorizontalBars: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
   const rows = props.numRows || 1

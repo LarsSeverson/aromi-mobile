@@ -17,10 +17,10 @@ const ErrorNotify: React.FC<ErrorNotifyProps> = (props: ErrorNotifyProps) => {
         <Icon
           name='alert-box'
           type='material-community'
-          size={35}
+          size={30}
           color={Colors.white}
         />
-        <Text variant='titleSmall' style={styles.errorMessage}>
+        <Text style={styles.errorMessage}>
           {message}
         </Text>
       </View>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   errorBackground: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 15,
     gap: 10,
     backgroundColor: Colors.negative,

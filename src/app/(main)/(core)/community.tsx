@@ -1,4 +1,4 @@
-import Community from '@/src/components/Community/Community'
+import Community from '@/src/components/community/Community'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 

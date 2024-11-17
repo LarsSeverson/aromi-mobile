@@ -1,4 +1,4 @@
-import { Icon } from '@/src/components/Utils/Icon'
+import { Icon } from '@/src/components/utils/Icon'
 
 const HomeIcon = () => {
   return Icon({

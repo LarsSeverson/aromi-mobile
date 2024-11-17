@@ -1,7 +1,7 @@
 import { GestureResponderEvent, StyleSheet, View } from 'react-native'
 import React from 'react'
-import CategoryText from '../Utils/CategoryText'
-import TextButton from '../Utils/TextButton'
+import CategoryText from '../utils/CategoryText'
+import TextButton from '../utils/TextButton'
 
 interface HomeCategoryProps {
   children?: React.ReactNode

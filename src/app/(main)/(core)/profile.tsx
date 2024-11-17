@@ -1,5 +1,5 @@
 import React from 'react'
-import Profile from '@/src/components/Profile/Profile'
+import Profile from '@/src/components/profile/Profile'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const ProfilePage: React.FC = () => {

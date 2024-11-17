@@ -3,6 +3,8 @@ import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import CategoryText from './CategoryText'
 import { Text } from 'react-native-paper'
+import ButtonText from './ButtonText'
+import AuthActionGuard from '../auth/AuthActionGuard'
 
 interface AppErrorProps {
     onRetry: () => void
@@ -13,9 +15,9 @@ const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
     <View style={styles.wrapper}>
       <Text variant='titleLarge'>Oh no!</Text>
       <CategoryText style={styles.textMiniWrapper}>It looks like something went wrong. Please try again.</CategoryText>
-      <Pressable onPress={props.onRetry} style={styles.reloadButtonWrapper}>
-        <CategoryText style={styles.reloadButtonText}>Reload Page</CategoryText>
-      </Pressable>
+      <AuthActionGuard>
+        <ButtonText text='Reload page' />
+      </AuthActionGuard>
     </View>
   )
 }

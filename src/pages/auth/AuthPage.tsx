@@ -1,16 +1,14 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Colors } from '@/src/constants/Colors'
-import TextButton from '@/src/components/Utils/TextButton'
+import TextButton from '@/src/components/utils/TextButton'
 import LegalAgreement from '@/src/components/auth/LegalAgreement'
-import { useRouter } from 'expo-router'
-import ButtonText from '@/src/components/Utils/ButtonText'
+import ButtonText from '@/src/components/utils/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
 import { Hub } from '@aws-amplify/core'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { Notifier } from 'react-native-notifier'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 
 export interface AuthPageProps {
   onSignUp: () => void
@@ -31,12 +29,12 @@ const AuthPage: React.FC<AuthPageProps> = (props: AuthPageProps) => {
             return onHome()
           }
           if (error) {
-            Notifier.showNotification(showNotifaction.error('Something went wrong logging you in'))
+            showNotifaction.error('Something went wrong logging you in')
           }
           break
         }
         case 'signInWithRedirect_failure':
-          Notifier.showNotification(showNotifaction.error('Something went wrong logging you in'))
+          showNotifaction.error('Something went wrong logging you in')
           break
       }
     })

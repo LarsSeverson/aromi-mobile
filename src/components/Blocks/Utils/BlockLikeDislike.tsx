@@ -1,26 +1,22 @@
 import { Text, StyleSheet, View, ViewStyle } from 'react-native'
 import React, { useState } from 'react'
-import BouncyButton from '../../Utils/BouncyButton'
+import BouncyButton from '../../utils/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Divider } from 'react-native-elements'
 import AuthActionGuard from '../../auth/AuthActionGuard'
-import { AuthActions } from '../../auth/Utils/AuthActions'
 
-interface LikeDislikeProps extends AuthActions {
+interface LikeDislikeProps {
   style?: ViewStyle
 
   iconSize?: number
   numLikes: number
   numDislikes: number
-
-  onLike?: () => void
-  onDislike?: () => void
 }
 
 const BlockLikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) => {
-  const { style, iconSize = 15, numLikes, numDislikes, onLike, onDislike, onUnAuth } = props
+  const { style, iconSize = 15, numLikes, numDislikes } = props
   const [liked, setLiked] = useState<boolean | null>(null)
   const [likes, setLikes] = useState(numLikes - numDislikes)
 
@@ -32,8 +28,6 @@ const BlockLikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) =
       setLiked(true)
       setLikes((prev) => prev + (liked === false ? 2 : 1))
     }
-
-    onLike?.()
   }
 
   const onDislikeHandle = () => {
@@ -44,20 +38,18 @@ const BlockLikeDislike: React.FC<LikeDislikeProps> = (props: LikeDislikeProps) =
       setLiked(false)
       setLikes((prev) => prev - (liked === true ? 2 : 1))
     }
-
-    onDislike?.()
   }
 
   return (
     <View style={[styles.wrapper, style]}>
-      <AuthActionGuard onUnAuth={onUnAuth}>
+      <AuthActionGuard>
         <BouncyButton scaleTo={0.8} onPress={onLikeHandle} style={styles.buttonWrapper} contentStyle={styles.buttonContentWrapper}>
           <CIcon name={liked ? 'heart' : 'heart-outline'} size={iconSize} color={liked ? Colors.heart : Colors.black} />
           <Text adjustsFontSizeToFit style={[styles.textWrapper, { color: liked ? Colors.heart : liked === false ? Colors.som : Colors.black }]}>{likes}</Text>
         </BouncyButton>
       </AuthActionGuard>
       <Divider orientation='vertical' width={1} color={Colors.black} />
-      <AuthActionGuard onUnAuth={onUnAuth}>
+      <AuthActionGuard>
         <BouncyButton scaleTo={0.8} onPress={onDislikeHandle} style={styles.buttonWrapper}>
           <AIcon name={liked === false ? 'dislike1' : 'dislike2'} size={iconSize} color={liked === false ? Colors.som : Colors.black} />
         </BouncyButton>

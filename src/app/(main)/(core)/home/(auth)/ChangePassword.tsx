@@ -1,22 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import ChangePasswordPage from '@/src/pages/help/ChangePasswordPage'
 import { useRouter } from 'expo-router'
+import React from 'react'
 
 const ChangePassword = () => {
   const router = useRouter()
 
   const gotoChangePasswordSuccess = () => {
-    router.push('/auth/help/ChangePasswordSuccess')
+    router.push('/(core)/home/(auth)/ChangePasswordSuccess')
   }
 
   const gotoLogin = () => {
-    router.navigate('/auth/LogIn')
+    router.navigate('/(core)/home/(auth)/LogIn')
   }
 
   return <ChangePasswordPage onSuccess={gotoChangePasswordSuccess} onRemembered={gotoLogin} />
 }
 
 export default ChangePassword
-
-const styles = StyleSheet.create({})

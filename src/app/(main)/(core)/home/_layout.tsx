@@ -1,6 +1,6 @@
 import React from 'react'
 import { Stack } from 'expo-router'
-import HomeHeader from '@/src/components/Home/HomeHeader'
+import HomeHeader from '@/src/components/home/HomeHeader'
 
 const HomeLayout = () => {
   return (

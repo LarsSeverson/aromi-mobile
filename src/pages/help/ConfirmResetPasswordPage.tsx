@@ -1,28 +1,26 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet } from 'react-native'
+import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import InvalidPage from '../InvalidPage'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { Notifier } from 'react-native-notifier'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 
-let codeSent = false
+export interface ConfirmPasswordResetPageProps {
+  onContinue: (email: string, code: string) => void
+}
 
-const ConfirmResetPasswordPage = () => {
+const ConfirmPasswordResetPage: React.FC<ConfirmPasswordResetPageProps> = (props: ConfirmPasswordResetPageProps) => {
+  const { onContinue } = props
   const router = useRouter()
   const { sendResetPasswordCode } = useAromiAuthContext()
   const email = useLocalSearchParams().email as string
   const [loading, setLoading] = useState(false)
 
   const confirmCompleted = (code: string) => {
-    router.push({ pathname: '/auth/help/ChangePassword', params: { email, code } })
-  }
-
-  const confirmEdit = () => {
-    router.dismiss()
+    onContinue(email, code)
   }
 
   const confirmReset = async () => {
@@ -31,27 +29,9 @@ const ConfirmResetPasswordPage = () => {
     setLoading(false)
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
+      showNotifaction.error(error.message)
     }
   }
-
-  useEffect(() => {
-    const sendCode = async () => {
-      const { success, error } = await sendResetPasswordCode(email)
-      if (success) {
-        codeSent = true
-        return
-      }
-
-      if (error) {
-        Notifier.showNotification(showNotifaction.error(error.message))
-      }
-    }
-
-    if (email && !codeSent) {
-      sendCode()
-    }
-  }, [sendResetPasswordCode, email])
 
   if (!email) {
     return <InvalidPage />
@@ -59,12 +39,12 @@ const ConfirmResetPasswordPage = () => {
 
   return (
     <KeyboardScrollView keyboardShouldPersistTaps='handled' style={styles.wrapper}>
-      <ConfirmationCode to={email} loading={loading} onCompleted={confirmCompleted} onEdit={confirmEdit} onReset={confirmReset} />
+      <ConfirmationCode to={email} loading={loading} onCompleted={confirmCompleted} onEdit={() => router.dismiss()} onReset={confirmReset} />
     </KeyboardScrollView>
   )
 }
 
-export default ConfirmResetPasswordPage
+export default ConfirmPasswordResetPage
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -6,11 +6,10 @@ import { Colors } from '@/src/constants/Colors'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { TextInput, Text } from 'react-native-paper'
 import { TextStyles } from '@/src/constants/TextStyles'
-import TextButton from '@/src/components/Utils/TextButton'
-import ButtonText from '@/src/components/Utils/ButtonText'
+import TextButton from '@/src/components/utils/TextButton'
+import ButtonText from '@/src/components/utils/ButtonText'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { Notifier } from 'react-native-notifier'
-import { showNotifaction } from '@/src/components/Notify/ShowNotification'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
 
 interface ChangePasswordPageProps {
   onRemembered: () => void
@@ -56,7 +55,7 @@ const ChangePasswordPage: React.FC<ChangePasswordPageProps> = (props: ChangePass
     }
 
     if (error) {
-      Notifier.showNotification(showNotifaction.error(error.message))
+      showNotifaction.error(error.message)
     }
   }
 
