@@ -1,85 +1,34 @@
-import React, { useRef } from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { StyleSheet } from 'react-native'
 import Icons from '@/src/constants/Icons'
-import Animated, { useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated'
+import { Href, useRouter } from 'expo-router'
+import BouncyButton from '../utils/BouncyButton'
 
 interface NavBarButtonProps {
-  routeName: string
-  onPressed: any
+  route: string
   isFocused: boolean
 }
 
-const NavBarButton: React.FC<NavBarButtonProps> = ({
-  routeName,
-  onPressed,
-  isFocused
-}) => {
-  const Icon = Icons[routeName as keyof typeof Icons]
+const NavBarButton: React.FC<NavBarButtonProps> = (props: NavBarButtonProps) => {
+  const { route, isFocused } = props
+  const router = useRouter()
+  const Icon = Icons[route as keyof typeof Icons]
 
-  const scale = useSharedValue(1)
-  const longPressed = useRef(false)
-  const isPressed = useSharedValue(false)
-
-  const opacity = useDerivedValue(() => {
-    if (isFocused || isPressed.value) {
-      return 1.0
+  const onPressed = () => {
+    if (!isFocused) {
+      router.navigate(route as Href)
     }
-
-    return 0.69
-  })
-
-  const animatedIconStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value
-    }
-  })
-
-  const onPressIn = () => {
-    isPressed.value = true
-
-    scale.value = withSpring(0.95, {
-      stiffness: 900,
-      damping: 100
-    })
-
-    longPressed.current = false
-  }
-
-  const onPressOut = () => {
-    isPressed.value = false
-
-    if (!longPressed.current) {
-      onPressed()
-    }
-    scale.value = withSpring(1, {
-      stiffness: 900,
-      damping: 100
-    })
-  }
-
-  const onLongPress = () => {
-    longPressed.current = true
-    onPressOut()
   }
 
   return (
-    <Pressable
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      onLongPress={onLongPress}
-      delayLongPress={1000}
-      style={styles.container}
-    >
-      <Animated.View style={animatedIconStyle}>
-        <Icon />
-      </Animated.View>
-    </Pressable>
+    <BouncyButton onPress={onPressed} style={[{ opacity: isFocused ? 1.0 : 0.7 }, styles.wrapper]}>
+      <Icon />
+    </BouncyButton>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     width: '20%',
     padding: 10
   }

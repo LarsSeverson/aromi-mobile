@@ -1,20 +1,22 @@
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
-import BouncyButton, { BouncyButtonProps } from '../utils/BouncyButton'
+import BouncyButton from '../utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
+import { useNavigation } from 'expo-router'
 
-interface HeaderCloseButtonProps extends BouncyButtonProps {
-  iconSize?: number
-}
-
-const HeaderCloseButton: React.FC<HeaderCloseButtonProps> = (props: HeaderCloseButtonProps) => {
-  const { iconSize = 18, ...restProps } = props
+const HeaderCloseButton = () => {
+  const nav = useNavigation()
+  const iconSize = 18
   const theme = useAppTheme()
 
+  const closeStack = () => {
+    nav.getParent()?.goBack()
+  }
+
   return (
-    <BouncyButton {...restProps} style={[styles.wrapper, props.style as ViewStyle]}>
+    <BouncyButton scaleTo={0.95} style={styles.wrapper} onPress={closeStack}>
       <Icon name='x' type='octicon' size={iconSize} color={theme.colors.card} />
     </BouncyButton>
   )

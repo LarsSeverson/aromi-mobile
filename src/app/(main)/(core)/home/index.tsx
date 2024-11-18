@@ -1,12 +1,9 @@
 import React from 'react'
-import { AuthGuardProvider } from '@/src/contexts/AuthGuardContext'
-import HomePage from '@/src/pages/core/HomePage'
+import HomePage from '@/src/pages/core/home/HomePage'
 
 const HomeIndex = () => {
   return (
-    <AuthGuardProvider>
-      <HomePage />
-    </AuthGuardProvider>
+    <HomePage />
   )
 }
 

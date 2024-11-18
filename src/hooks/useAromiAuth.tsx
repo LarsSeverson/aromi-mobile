@@ -1,4 +1,4 @@
-import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signUp } from 'aws-amplify/auth'
+import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
 import { useCallback, useMemo, useState } from 'react'
 import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './utils/AuthErrors'
 
@@ -149,6 +149,19 @@ const useAromiAuth = () => {
     }
   }, [])
 
+  const userSignOut = useCallback(async (): Promise<AuthOutput> => {
+    try {
+      await signOut()
+      const { success, error } = await userGetInfo()
+
+      return { success: !success, error: null }
+    } catch (error) {
+      const authError = new AromiAuthError('Something went wrong signing you out. Please try again.', AuthErrorCode.UNKNOWN_ERROR)
+
+      return { success: false, error: authError }
+    }
+  }, [userGetInfo])
+
   const validateEmail = useCallback((email: string): boolean => {
     const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
     const valid = emailRegex.test(email.toLowerCase())
@@ -196,8 +209,8 @@ const useAromiAuth = () => {
   const state = useMemo(() => ({ userInfo }), [userInfo])
 
   const actions = useMemo(() => (
-    { userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword }
-  ), [userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, sendResetPasswordCode, userResetPassword])
+    { userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, userSignOut, sendResetPasswordCode, userResetPassword }
+  ), [userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, userSignOut, sendResetPasswordCode, userResetPassword])
 
   const validators = useMemo(() => (
     { validateEmail, validatePassword, validateConfirmPassword }

@@ -26,23 +26,23 @@ const fonts: MD3Typescale = {
     letterSpacing: 0
   },
   headlineLarge: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'PalanquinDark-Semibold',
     fontWeight: '400',
-    fontSize: 32,
+    fontSize: 28,
     lineHeight: 40,
     letterSpacing: 0
   },
   headlineMedium: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'PalanquinDark-Semibold',
     fontWeight: '400',
-    fontSize: 28,
+    fontSize: 24,
     lineHeight: 36,
     letterSpacing: 0
   },
   headlineSmall: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'PalanquinDark-Semibold',
     fontWeight: '400',
-    fontSize: 24,
+    fontSize: 20,
     lineHeight: 32,
     letterSpacing: 0
   },

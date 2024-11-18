@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, useNavigation, useRouter } from 'expo-router'
+import { Stack } from 'expo-router'
 import { TextStyles } from '@/src/constants/TextStyles'
 import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 import HeaderCloseButton from '@/src/components/navigation/HeaderCloseButton'
@@ -8,9 +8,7 @@ import { useAppTheme } from '@/src/constants/Themes'
 import { NotifierWrapper } from 'react-native-notifier'
 
 const AuthHelpLayout = () => {
-  const router = useRouter()
   const theme = useAppTheme()
-  const nav = useNavigation()
 
   return (
     <PaperProvider theme={theme}>
@@ -21,14 +19,8 @@ const AuthHelpLayout = () => {
           headerTitle: 'Forgot password',
           headerTitleStyle: TextStyles.headerTitle,
           headerBackVisible: false,
-          headerLeft: () => <HeaderBackButton scaleTo={0.95} iconSize={16} style={{ width: 35, height: 35, padding: 0 }} onPress={() => router.dismiss()} />,
-          headerRight: () =>
-            <HeaderCloseButton
-              scaleTo={0.95}
-              iconSize={16}
-              style={{ width: 35, height: 35, padding: 0 }}
-              onPress={() => nav.getParent()?.goBack()}
-            />
+          headerLeft: HeaderBackButton,
+          headerRight: HeaderCloseButton
         }}
         >
           <Stack.Screen name='ForgotPassword' options={{ headerLeft: () => null }} />

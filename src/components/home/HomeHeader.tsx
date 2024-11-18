@@ -7,16 +7,14 @@ import { signOut } from 'aws-amplify/auth'
 const HomeHeader = () => {
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.wrapper}>
-      <View>
-        <Text variant='titleLarge'>aromi</Text>
-      </View>
+      <Text variant='headlineLarge'>aromi</Text>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingLeft: 10,
+    paddingHorizontal: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,

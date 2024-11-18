@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable } from 'react-native'
+import { View, StyleSheet, Pressable, ViewProps } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import CategoryText from './CategoryText'
@@ -7,16 +7,18 @@ import ButtonText from './ButtonText'
 import AuthActionGuard from '../auth/AuthActionGuard'
 
 interface AppErrorProps {
-    onRetry: () => void
+  onRetry: () => void
 }
 
 const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
+  const { onRetry } = props
+
   return (
     <View style={styles.wrapper}>
       <Text variant='titleLarge'>Oh no!</Text>
       <CategoryText style={styles.textMiniWrapper}>It looks like something went wrong. Please try again.</CategoryText>
       <AuthActionGuard>
-        <ButtonText text='Reload page' />
+        <ButtonText text='Reload page' onPress={onRetry} color={Colors.button} textColor={Colors.white} />
       </AuthActionGuard>
     </View>
   )
@@ -27,7 +29,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 20
   },
   textMiniWrapper: {
     textAlign: 'center',

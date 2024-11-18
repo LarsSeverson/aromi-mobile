@@ -1,19 +1,15 @@
-import { ColorSchemeName, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import React from 'react'
-import { ParamListBase, TabNavigationState, Descriptor, NavigationProp } from '@react-navigation/native'
 import NavBarButton from './NavBarButton'
-import { Colors } from '@/src/constants/Colors'
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { useAppTheme } from '@/src/constants/Themes'
 
-interface NavBarProps {
-  state: TabNavigationState<ParamListBase>
-  descriptors: any
-  navigation: any
-  colorScheme?: ColorSchemeName // TODO:
-}
+const NavBar: React.FC<BottomTabBarProps> = (props: BottomTabBarProps) => {
+  const { state } = props
+  const theme = useAppTheme()
 
-const NavBar: React.FC<NavBarProps> = ({ state, navigation, colorScheme }) => {
   return (
-    <SafeAreaView style={[styles.wrapper, { backgroundColor: colorScheme === 'dark' ? Colors.black : Colors.white }]}>
+    <SafeAreaView style={[styles.wrapper, { backgroundColor: theme.colors.background }]}>
       {
         state.routes.map((route, index) => {
           const isFocused = state.index === index
@@ -22,23 +18,10 @@ const NavBar: React.FC<NavBarProps> = ({ state, navigation, colorScheme }) => {
             return null
           }
 
-          const onPressed = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true
-            })
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params)
-            }
-          }
-
           return (
             <NavBarButton
               key={route.key}
-              routeName={route.name}
-              onPressed={onPressed}
+              route={route.name}
               isFocused={isFocused}
             />
           )
@@ -51,7 +34,6 @@ const NavBar: React.FC<NavBarProps> = ({ state, navigation, colorScheme }) => {
 const styles = StyleSheet.create({
   wrapper: {
     width: '100%',
-
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
