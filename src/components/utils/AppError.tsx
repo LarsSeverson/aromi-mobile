@@ -16,7 +16,7 @@ const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
   return (
     <View style={styles.wrapper}>
       <Text variant='titleLarge'>Oh no!</Text>
-      <CategoryText style={styles.textMiniWrapper}>It looks like something went wrong. Please try again.</CategoryText>
+      <Text>It looks like something went wrong. Please try again.</Text>
       <AuthActionGuard>
         <ButtonText text='Reload page' onPress={onRetry} color={Colors.button} textColor={Colors.white} />
       </AuthActionGuard>
@@ -27,25 +27,10 @@ const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20
-  },
-  textMiniWrapper: {
-    textAlign: 'center',
-    fontSize: 14,
-    marginBottom: 20
-  },
-  reloadButtonWrapper: {
-    backgroundColor: Colors.sinopia,
-    padding: 15,
-    borderRadius: 40
-  },
-  reloadButtonText: {
-    color: Colors.white,
-    opacity: 1.0,
-    fontSize: 15
+    padding: 20,
+    gap: 20
   }
 })
 

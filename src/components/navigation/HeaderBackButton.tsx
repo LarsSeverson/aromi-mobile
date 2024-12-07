@@ -1,12 +1,14 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import BouncyButton from '../utils/BouncyButton'
+import BouncyButton, { BouncyButtonProps } from '../utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { useRouter } from 'expo-router'
 
-const HeaderBackButton = () => {
+export interface HeaderBackButtonProps extends BouncyButtonProps {}
+
+const HeaderBackButton: React.FC<HeaderBackButtonProps> = () => {
   const router = useRouter()
   const iconSize = 18
   const theme = useAppTheme()
@@ -35,6 +37,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: Colors.placeholder2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 10
   }
 })

@@ -1,16 +1,17 @@
 import { Colors } from '@/src/constants/Colors'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import Shimmer from '@/src/components/utils/Shimmer'
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+import { LinearGradient } from 'expo-linear-gradient'
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
 
 const FragranceBlockVerticalCardLoading: React.FC = () => {
   return (
     <View style={styles.wrapper}>
-      <Shimmer style={styles.contentMask} />
-      <View style={styles.bottomMask}>
-        <Shimmer style={styles.nameMask} />
-        <Shimmer style={styles.brandMask} />
-      </View>
+      <ShimmerPlaceholder style={styles.contentMask} duration={2000} />
+      <ShimmerPlaceholder style={styles.nameMask} duration={2000} />
+      <ShimmerPlaceholder style={styles.brandMask} duration={2000} />
     </View>
   )
 }
@@ -21,8 +22,7 @@ const styles = StyleSheet.create({
   },
   contentMask: {
     height: 200,
-    borderRadius: 20,
-    backgroundColor: Colors.placeholder
+    borderRadius: 20
   },
   bottomMask: {
     paddingLeft: 10,
@@ -33,15 +33,13 @@ const styles = StyleSheet.create({
     height: 20,
     marginTop: 5,
     marginBottom: 5,
-    borderRadius: 15,
-    backgroundColor: Colors.placeholder
+    borderRadius: 15
   },
   brandMask: {
     width: '35%',
     height: 17,
     marginBottom: 12,
-    borderRadius: 15,
-    backgroundColor: Colors.placeholder
+    borderRadius: 15
   }
 })
 

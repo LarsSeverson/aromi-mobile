@@ -3,7 +3,7 @@ import { Colors } from './Colors'
 import { Theme } from '@react-navigation/native'
 import { MD3Colors, MD3Typescale } from 'react-native-paper/lib/typescript/types'
 
-const fonts: MD3Typescale = {
+const fonts: MD3Typescale & any = {
   displayLarge: {
     fontFamily: 'Roboto-Regular',
     fontWeight: '400',
@@ -116,7 +116,7 @@ const fonts: MD3Typescale = {
   }
 }
 
-export const lightTheme: MD3Theme & Theme = {
+export const lightTheme: MD3Theme & Theme & any = {
   ...MD3LightTheme,
   dark: false,
   version: 3,
@@ -147,7 +147,7 @@ export const lightTheme: MD3Theme & Theme = {
     surfaceVariant: Colors.placeholder,
     onSurfaceVariant: Colors.placeholder3,
     outline: Colors.placeholder3,
-    outlineVariant: Colors.black,
+    outlineVariant: Colors.placeholder3,
     error: Colors.negative,
     onError: Colors.buttonText,
     errorContainer: Colors.negativeLight,
@@ -157,6 +157,7 @@ export const lightTheme: MD3Theme & Theme = {
     inverseSurface: Colors.black,
     inversePrimary: Colors.tawny,
     backdrop: '#00000040',
+    icon: Colors.black,
     elevation: {
       level0: 'transparent',
       level1: 'rgba(204, 97, 43, 0.05)',
@@ -173,7 +174,7 @@ export const lightTheme: MD3Theme & Theme = {
   }
 }
 
-export const darkTheme: MD3Theme & Theme = {
+export const darkTheme: MD3Theme & Theme & any = {
   ...MD3DarkTheme,
   dark: true,
   version: 3,
@@ -214,6 +215,7 @@ export const darkTheme: MD3Theme & Theme = {
     inverseSurface: Colors.white,
     inversePrimary: Colors.tawny,
     backdrop: Colors.white,
+    icon: Colors.placeholder,
     elevation: {
       level0: 'transparent',
       level1: 'rgba(204, 97, 43, 0.05)',

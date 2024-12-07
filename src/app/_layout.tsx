@@ -11,6 +11,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import { Slot } from 'expo-router'
 import { darkTheme, lightTheme } from '../constants/Themes'
 import { Theme, ThemeProvider } from '@react-navigation/native'
+import { useColorScheme } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -51,10 +53,15 @@ Amplify.configure({
 })
 
 const RootLayout = () => {
+  const colorTheme = useColorScheme()
   const [mounted, setMounted] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
 
   const theme = darkMode ? darkTheme : lightTheme
+
+  useEffect(() => {
+    setDarkMode(colorTheme === 'dark')
+  }, [colorTheme])
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -76,17 +83,20 @@ const RootLayout = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider value={theme as Theme}>
-        <PaperProvider theme={theme}>
-          <NotifierWrapper>
-            <AromiAuthProvider>
-              <Slot />
-            </AromiAuthProvider>
-          </NotifierWrapper>
-        </PaperProvider>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <>
+      <StatusBar style={darkMode ? 'light' : 'dark'} />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider value={theme as Theme}>
+          <PaperProvider theme={theme}>
+            <NotifierWrapper>
+              <AromiAuthProvider>
+                <Slot />
+              </AromiAuthProvider>
+            </NotifierWrapper>
+          </PaperProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </>
   )
 }
 

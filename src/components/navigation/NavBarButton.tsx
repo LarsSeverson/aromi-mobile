@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import Icons from '@/src/constants/Icons'
-import { Href, useRouter } from 'expo-router'
+import NavBarIcons from '@/src/constants/Icons'
+import { useNavigation } from 'expo-router'
 import BouncyButton from '../utils/BouncyButton'
 
 interface NavBarButtonProps {
@@ -11,12 +11,12 @@ interface NavBarButtonProps {
 
 const NavBarButton: React.FC<NavBarButtonProps> = (props: NavBarButtonProps) => {
   const { route, isFocused } = props
-  const router = useRouter()
-  const Icon = Icons[route as keyof typeof Icons]
+  const nav = useNavigation()
+  const Icon = NavBarIcons[route as keyof typeof NavBarIcons]
 
   const onPressed = () => {
     if (!isFocused) {
-      router.navigate(route as Href)
+      nav.navigate(route as never)
     }
   }
 

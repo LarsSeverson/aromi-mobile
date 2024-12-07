@@ -4,13 +4,7 @@ import HomeBlockVerticalCards from './HomeBlockVerticalCards'
 import HomeBlockHorizontalCards from './HomeBlockHorizontalCards'
 import HomeBlockHorizontalBars from './HomeBlockHorizontalBars'
 import { Fragrances } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-
-enum HomeBlockTypes {
-  VerticalCards = 0,
-  HorizontalCards,
-
-  HorizontalBars
-}
+import { HomeBlockTypes } from './HomeBlockConstants'
 
 interface HomeBlockProps {
   type: HomeBlockTypes
@@ -32,6 +26,7 @@ const HomeBlockComponentMap: Record<HomeBlockTypes, React.FC<HomeBlockProps>> = 
 
 const HomeBlock: React.FC<HomeBlockProps> = (props: HomeBlockProps) => {
   const Component = HomeBlockComponentMap[props.type]
+
   return <Component {...props} />
 }
 

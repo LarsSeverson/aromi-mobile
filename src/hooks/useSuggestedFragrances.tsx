@@ -9,7 +9,7 @@ interface SuggestedFragrancesResult {
 }
 
 const useSuggestedFragrances = () => {
-  const variables = useMemo<FragrancesArgs>(() => ({ limit: 10, offset: 0 }), [])
+  const variables = { limit: 10, offset: 0 }
 
   const { data, loading, error, refresh } = useQuery<SuggestedFragrancesResult>(
     {

@@ -1,23 +1,25 @@
+import { useAppTheme } from '@/src/constants/Themes'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Svg, Path } from 'react-native-svg'
 
 interface IconProps {
-  width: number,
+  width: number
   height: number
-  color: string
   d: string
 }
 
-export const Icon: React.FC<IconProps> = ({ width = 24, height = 24, color = 'black', d = '' }) => {
+export const Icon: React.FC<IconProps> = ({ width = 24, height = 24, d = '' }) => {
+  const theme = useAppTheme()
+
   return (
     <View style={styles.wrapper}>
-      <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill='none'>
+      <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill='none' style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Path
           fillRule='evenodd'
           clipRule='evenodd'
           d={d}
-          fill={color}
+          fill={theme.colors.icon}
         />
       </Svg>
     </View>

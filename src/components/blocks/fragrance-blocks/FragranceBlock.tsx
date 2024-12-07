@@ -3,6 +3,7 @@ import FragranceBlockHorizontalCard from './FragranceBlockHorizontalCard'
 import FragranceBlockHorizontalBar from './FragranceBlockHorizontalBars'
 import FragranceBlockVerticalCard from './FragranceBlockVerticalCard'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { BouncyButtonProps } from '../../utils/BouncyButton'
 
 enum FragranceBlockTypes {
   VerticalCard = 0,
@@ -11,7 +12,7 @@ enum FragranceBlockTypes {
   HorizontalBar
 }
 
-interface FragranceBlockProps {
+interface FragranceBlockProps extends BouncyButtonProps {
   type: FragranceBlockTypes
   fragrance: Fragrance
 }

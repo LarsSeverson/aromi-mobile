@@ -4,10 +4,12 @@ import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import AppError from '@/src/components/utils/AppError'
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
 import { HomeBlock, HomeBlockTypes } from '@/src/components/blocks/home-blocks/HomeBlock'
+import { useRouter } from 'expo-router'
 
 const HomePage = () => {
   const [refreshing, setRefreshing] = useState(false)
   const suggestFragrances = useSuggestedFragrances()
+  const router = useRouter()
 
   const errors = [suggestFragrances.error].filter(Boolean)
   const refreshes = [suggestFragrances.refresh]
@@ -21,6 +23,7 @@ const HomePage = () => {
   const expandSuggestedForYou = () => {
     // TODO:
     console.log('suggested for you')
+    router.navigate('/profile')
   }
 
   const expandWhatsPopular = () => {

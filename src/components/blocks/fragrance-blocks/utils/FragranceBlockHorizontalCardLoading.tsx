@@ -1,15 +1,14 @@
 import { Colors } from '@/src/constants/Colors'
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import Shimmer from '@/src/components/utils/Shimmer'
 
 const FragranceBlockHorizontalCardLoading: React.FC = () => {
   return (
     <View style={styles.wrapper}>
-      <Shimmer style={styles.imageMask} />
+      {/* <Shimmer style={styles.imageMask} />
       <View style={styles.bottomMask}>
         <Shimmer style={styles.nameMask} />
-      </View>
+      </View> */}
     </View>
   )
 }

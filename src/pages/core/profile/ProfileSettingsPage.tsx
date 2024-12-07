@@ -39,6 +39,7 @@ export default ProfileSettingsPage
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 20
+    padding: 20,
+    backgroundColor: Colors.placeholder
   }
 })

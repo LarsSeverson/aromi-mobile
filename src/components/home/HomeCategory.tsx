@@ -1,6 +1,6 @@
 import { GestureResponderEvent, StyleSheet, View } from 'react-native'
+import { Text } from 'react-native-paper'
 import React from 'react'
-import CategoryText from '../utils/CategoryText'
 import TextButton from '../utils/TextButton'
 
 interface HomeCategoryProps {
@@ -14,7 +14,7 @@ const HomeCategory: React.FC<HomeCategoryProps> = (props: HomeCategoryProps) => 
 
   return (
     <View style={styles.wrapper}>
-      <CategoryText>{props.children}</CategoryText>
+      <Text variant='titleMedium'>{props.children}</Text>
       {expandable && (
         <TextButton onPress={props.onPress} text='see all' wrapperStyle={{ marginLeft: 'auto' }} />
       )}

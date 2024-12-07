@@ -7,15 +7,16 @@ export const CoreContext = createContext<CoreContextProps | null>(null)
 
 interface CoreProviderProps {
   children: ReactNode
+  hideNav: () => void
 }
 
 export const CoreProvider: React.FC<CoreProviderProps> = (props: CoreProviderProps) => {
-  const { children } = props
+  const { children, ...rest } = props
   const core = useCore()
-  const memoizedCoreState = useMemo(() => core, [core])
+  const memoizedCore = useMemo(() => ({ ...core, ...rest }), [core, rest])
 
   return (
-    <CoreContext.Provider value={memoizedCoreState}>
+    <CoreContext.Provider value={memoizedCore}>
       {children}
     </CoreContext.Provider>
   )

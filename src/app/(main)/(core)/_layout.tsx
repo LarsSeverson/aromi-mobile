@@ -5,12 +5,21 @@ import { Tabs } from 'expo-router'
 import React from 'react'
 
 const CoreLayout: React.FC = () => {
+  const hideNav = () => {
+    console.log('Nav hide')
+  }
+
   return (
-    <CoreProvider>
+    <CoreProvider hideNav={hideNav}>
       <AuthGuardProvider>
         <Tabs
           tabBar={(props) => <NavBar {...props} />}
-          screenOptions={{ tabBarShowLabel: false, headerShown: false }}
+          screenOptions={
+            {
+              tabBarShowLabel: false,
+              headerShown: false
+            }
+          }
         >
           <Tabs.Screen name='home' />
           <Tabs.Screen name='search' />

@@ -1,4 +1,4 @@
-import { Image, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Image, ImageProps, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { getUrl } from 'aws-amplify/storage'
 
@@ -6,10 +6,11 @@ interface FragranceBlockImageProps {
   path: string | undefined
   style?: StyleProp<ViewStyle>
   children?: ReactNode
+  imageProps?: ImageProps
 }
 
-const BlockImage: React.FC<FragranceBlockImageProps> = (props: FragranceBlockImageProps) => {
-  const { path } = props
+const AromiImage: React.FC<FragranceBlockImageProps> = (props: FragranceBlockImageProps) => {
+  const { path, imageProps } = props
   const [imageURL, setImageURL] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -45,7 +46,7 @@ const BlockImage: React.FC<FragranceBlockImageProps> = (props: FragranceBlockIma
 
   return (
     <View style={props.style}>
-      <Image source={{ uri: imageURL }} style={styles.imageWrapper} />
+      <Image source={{ uri: imageURL }} {...imageProps} style={styles.imageWrapper} />
       {props.children}
     </View>
   )
@@ -57,4 +58,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default BlockImage
+export default AromiImage

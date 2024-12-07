@@ -3,30 +3,16 @@ import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import BouncyButton from '../../utils/BouncyButton'
 import FragranceBlockVerticalCardLoading from './utils/FragranceBlockVerticalCardLoading'
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
-import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import BlockLikeDislike from '../utils/BlockLikeDislike'
-import BlockImage from '../utils/BlockImage'
-
-const Name = styled.Text`
-  font-family: 'PalanquinDark-Medium';
-  font-size: small;
-  color: ${Colors.black};
-  flex: 1;
-`
-
-const Brand = styled.Text`
-  font-family: 'Palanquin-SemiBold';
-  font-size: 11px;
-  color: ${Colors.black};
-  margin-bottom: 12px;
-  margin-top: -5px;
-`
+import AromiImage from '../../utils/AromiImage'
+import { Text } from 'react-native-paper'
+import { useAppTheme } from '@/src/constants/Themes'
 
 const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
-  const { fragrance } = props
+  const { fragrance, onPress } = props
+  const theme = useAppTheme()
 
   if (!fragrance) {
     return (
@@ -38,21 +24,28 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
 
   return (
     <View style={styles.wrapper}>
-      <BouncyButton style={styles.wrapper}>
-        <BlockImage path={previewURL} style={styles.contentWrapper}>
+      <BouncyButton style={styles.wrapper} onPress={onPress}>
+        <AromiImage path={previewURL} style={styles.contentWrapper}>
           <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
-        </BlockImage>
+        </AromiImage>
       </BouncyButton>
       <View style={styles.bottomWrapper}>
         <View style={styles.bottomTop}>
-          <Name numberOfLines={1} ellipsizeMode='tail'>{fragrance.name}</Name>
+          <Text numberOfLines={1} ellipsizeMode='tail' style={{ opacity: 0.95, flex: 1 }}>{fragrance.name}</Text>
           <View style={styles.blockOptionsWrapper}>
             <BouncyButton scaleTo={0.8}>
-              <Icon name='more-horiz' size={20} color={Colors.black} />
+              <Icon name='more-horiz' size={20} color={theme.colors.icon} />
             </BouncyButton>
           </View>
         </View>
-        <Brand numberOfLines={1} ellipsizeMode='tail'>{fragrance.brand}</Brand>
+        <Text
+          variant='labelSmall'
+          numberOfLines={1}
+          ellipsizeMode='tail'
+          style={{ opacity: 0.9 }}
+        >
+          {fragrance.brand}
+        </Text>
       </View>
     </View>
   )
