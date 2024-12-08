@@ -3,15 +3,18 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useAppTheme } from '@/src/constants/Themes'
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
 
 const FragranceBlockVerticalCardLoading: React.FC = () => {
+  const theme = useAppTheme()
+
   return (
     <View style={styles.wrapper}>
-      <ShimmerPlaceholder style={styles.contentMask} duration={2000} />
-      <ShimmerPlaceholder style={styles.nameMask} duration={2000} />
-      <ShimmerPlaceholder style={styles.brandMask} duration={2000} />
+      <ShimmerPlaceholder style={styles.contentMask} />
+      <ShimmerPlaceholder style={styles.nameMask} />
+      <ShimmerPlaceholder style={styles.brandMask} />
     </View>
   )
 }

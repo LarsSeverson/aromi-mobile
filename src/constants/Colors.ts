@@ -51,6 +51,7 @@ export const Colors = {
   coralLightPink: '#EB9486',
   coralPink: '#EC8F80',
   coralDarkPink: '#ED897A',
+  pink: '#FBAA8F',
   salmon: '#E3937C',
   salmonBuff: '#D99D7E',
   bonsaiBuff: '#CFA781',

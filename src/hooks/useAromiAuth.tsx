@@ -154,6 +154,8 @@ const useAromiAuth = () => {
       await signOut()
       const { success, error } = await userGetInfo()
 
+      setUserInfo({ email: null, state: AuthState.UNAUTHENTICATED })
+
       return { success: !success, error: null }
     } catch (error) {
       const authError = new AromiAuthError('Something went wrong signing you out. Please try again.', AuthErrorCode.UNKNOWN_ERROR)

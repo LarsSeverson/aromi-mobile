@@ -24,6 +24,7 @@ const AromiImage: React.FC<FragranceBlockImageProps> = (props: FragranceBlockIma
               validateObjectExistence: true
             }
           })
+
           setImageURL(s3URL.url.toString())
         }
       } catch (err) {
