@@ -14,6 +14,8 @@ import { useAppTheme } from '@/src/constants/Themes'
 import ScaleBar from '@/src/components/stats/ScaleBar'
 import ButtonText from '@/src/components/utils/ButtonText'
 import AccordBars from '@/src/components/stats/AccordBars'
+import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
+import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 const FragrancePage = () => {
   const theme = useAppTheme()
@@ -29,7 +31,7 @@ const FragrancePage = () => {
   const tempGenderStat = 0.5
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <AromiImage path={previewUrl} style={styles.imageWrapper}>
         <BouncyButton style={{ position: 'absolute', top: 20, right: 20 }}>
           <Icon name='dots-vertical' type='material-community' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
@@ -88,6 +90,7 @@ const FragrancePage = () => {
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <Text variant='titleSmall' style={{ fontWeight: 500 }}>Notes</Text>
+        <NotesPyramid topNotes={[] as FragranceNotes} middleNotes={[] as FragranceNotes} baseNotes={[] as FragranceNotes} />
         <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
           <Text style={{ opacity: 0.8 }}>how do the notes develop?</Text>
         </BouncyButton>
