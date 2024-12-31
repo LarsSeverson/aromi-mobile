@@ -13,9 +13,10 @@ import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import ScaleBar from '@/src/components/stats/ScaleBar'
 import ButtonText from '@/src/components/utils/ButtonText'
-import AccordBars from '@/src/components/stats/AccordBars'
+import AccordBars from '@/src/components/fragrance/AccordBars'
 import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
 import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import FragranceCharacteristics from '@/src/components/fragrance/FragranceCharacteristics'
 
 const FragrancePage = () => {
   const theme = useAppTheme()
@@ -28,7 +29,6 @@ const FragrancePage = () => {
   }
 
   const previewUrl = fragrance.images?.[0]?.s3Key || undefined
-  const tempGenderStat = 0.5
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -55,7 +55,10 @@ const FragrancePage = () => {
         <View style={{ flex: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Text variant='titleMedium' style={{ fontWeight: 500 }}>{fragrance.name}</Text>
           <Text>{fragrance.brand}</Text>
-          <Text variant='titleSmall'>{fragrance.rating}</Text>
+          <View>
+            <Text variant='titleSmall' style={{ alignSelf: 'center' }}>{fragrance.rating}</Text>
+            <Text variant='titleSmall' style={{ alignSelf: 'center' }}>({fragrance.reviewCount})</Text>
+          </View>
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <BouncyButton>
@@ -69,12 +72,8 @@ const FragrancePage = () => {
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <Text variant='titleSmall' style={{ fontWeight: 500 }}>Gender</Text>
-        <GenderIcon />
-        <ScaleBar value={tempGenderStat} style={{ marginTop: 10 }} />
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ opacity: 0.6 }}>feminine</Text>
-          <Text style={{ marginLeft: 'auto', opacity: 0.6 }}>masculine</Text>
-        </View>
+        <ScaleBar value={fragrance.gender} Icon={<GenderIcon />} style={{ marginTop: 10 }} />
+
         <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
           <Text style={{ opacity: 0.8 }}>masculine or feminine?</Text>
         </BouncyButton>
@@ -90,7 +89,7 @@ const FragrancePage = () => {
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <Text variant='titleSmall' style={{ fontWeight: 500 }}>Notes</Text>
-        <NotesPyramid topNotes={[] as FragranceNotes} middleNotes={[] as FragranceNotes} baseNotes={[] as FragranceNotes} />
+        <NotesPyramid notes={fragrance.notes} />
         <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
           <Text style={{ opacity: 0.8 }}>how do the notes develop?</Text>
         </BouncyButton>
@@ -98,6 +97,7 @@ const FragrancePage = () => {
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <Text variant='titleSmall' style={{ fontWeight: 500 }}>Characteristics</Text>
+        <FragranceCharacteristics fragrance={fragrance} />
         <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
           <Text style={{ opacity: 0.8 }}>what are its characteristics?</Text>
         </BouncyButton>

@@ -12,7 +12,7 @@ const LinearScaleBar: React.FC<LinearScaleBarProps> = (props: LinearScaleBarProp
   const theme = useAppTheme()
   const { value, color = Colors.button, ...viewProps } = props
 
-  if (value > 1.0 || value < 0.0) {
+  if (value > 100.0 || value < 0.0) {
     return null
   }
 
@@ -20,7 +20,7 @@ const LinearScaleBar: React.FC<LinearScaleBarProps> = (props: LinearScaleBarProp
 
   return (
     <View {...viewProps} style={{ backgroundColor: theme.colors.surfaceDisabled, borderRadius: 20, height: 15, overflow: 'hidden', flexDirection: 'row', ...viewStyle }}>
-      <View style={{ backgroundColor: color, width: `${value * 100}%`, borderTopRightRadius: 20, borderBottomRightRadius: 20 }} />
+      <View style={{ backgroundColor: color, width: `${value}%`, borderTopRightRadius: 20, borderBottomRightRadius: 20 }} />
     </View>
   )
 }

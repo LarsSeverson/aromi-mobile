@@ -1,6 +1,7 @@
 const fragranceQuery = `#graphql
   query fragrances($id: Int!) {
     fragrance(id: $id) {
+      id
       brand
       name
       rating
@@ -15,16 +16,16 @@ const fragranceQuery = `#graphql
       allure
 
       accords {
-        accordID,
+        accordId,
         name,
-        concentration
+        votes
       }
 
       notes {
-        noteID,
+        noteId,
         name,
         type,
-        concentration
+        votes
       }
 
       images {
