@@ -10,47 +10,24 @@ export interface BouncyButtonProps extends PressableProps {
 
 const BouncyButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => {
   const { onPress, children, scaleTo = 0.98, contentStyle, ...restProps } = props
-
   const scale = useSharedValue(1)
   const longPressed = useRef(false)
   const isPressed = useSharedValue(false)
 
-  const onPressIn = () => {
+  const onPressInHandler = () => {
     isPressed.value = true
-
-    scale.value = withSpring(scaleTo, {
-      stiffness: 900,
-      damping: 100
-    })
-
+    scale.value = withSpring(scaleTo, { stiffness: 900, damping: 100 })
     longPressed.current = false
   }
 
-  const onPressOut = (event: GestureResponderEvent) => {
+  const onPressOutHandler = (event: GestureResponderEvent) => {
     isPressed.value = false
-
-    if (!longPressed.current) {
-      if (onPress && typeof onPress === 'function') {
-        onPress(event)
-      }
-    }
-    scale.value = withSpring(1, {
-      stiffness: 900,
-      damping: 100
-    })
+    scale.value = withSpring(1, { stiffness: 900, damping: 100 })
   }
 
-  const onLongPress = (event: GestureResponderEvent) => {
+  const onLongPressHandler = (event: GestureResponderEvent) => {
     longPressed.current = true
-
-    if (onPressOut) {
-      onPressOut(event)
-    } else {
-      scale.value = withSpring(1, {
-        stiffness: 900,
-        damping: 100
-      })
-    }
+    onPressOutHandler(event)
   }
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -62,9 +39,10 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => 
   return (
     <Pressable
       {...restProps}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
-      onLongPress={onLongPress}
+      onPressIn={onPressInHandler}
+      onPressOut={onPressOutHandler}
+      onPress={onPress}
+      onLongPress={onLongPressHandler}
       delayLongPress={1000}
     >
       <Animated.View style={[contentStyle, animatedStyle]}>

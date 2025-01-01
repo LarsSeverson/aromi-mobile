@@ -17,6 +17,7 @@ import AccordBars from '@/src/components/fragrance/AccordBars'
 import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
 import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceCharacteristics from '@/src/components/fragrance/FragranceCharacteristics'
+import RatingStars from '@/src/components/stats/RatingStars'
 
 const FragrancePage = () => {
   const theme = useAppTheme()
@@ -54,10 +55,11 @@ const FragrancePage = () => {
         </View>
         <View style={{ flex: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Text variant='titleMedium' style={{ fontWeight: 500 }}>{fragrance.name}</Text>
-          <Text>{fragrance.brand}</Text>
-          <View>
-            <Text variant='titleSmall' style={{ alignSelf: 'center' }}>{fragrance.rating}</Text>
-            <Text variant='titleSmall' style={{ alignSelf: 'center' }}>({fragrance.reviewCount})</Text>
+          <Text style={{ marginBottom: 5 }}>{fragrance.brand}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+            <Text variant='titleSmall'>{fragrance.rating}</Text>
+            <RatingStars rating={fragrance.rating} />
+            <Text variant='titleSmall'>(<Text style={{ color: Colors.button }}>{fragrance.reviewCount}</Text>)</Text>
           </View>
         </View>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -104,10 +106,26 @@ const FragrancePage = () => {
       </View>
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
+        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Reviews</Text>
+        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+          <Text variant='titleSmall' style={{ opacity: 0.8 }}>No reviews yet</Text>
+          <Text variant='labelMedium' style={{ textAlign: 'center', opacity: 0.8 }}>Tried this fragrance? Help out the community by sharing your experience</Text>
+        </View>
+        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
+          <Text style={{ opacity: 0.8 }}>write a review</Text>
+        </BouncyButton>
+      </View>
+
+      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
+        <Text variant='titleSmall' style={{ fontWeight: 500 }}>More like this</Text>
+      </View>
+
+      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>
           <Text style={{ color: Colors.white }}>did we get something wrong?</Text>
         </BouncyButton>
       </View>
+
     </ScrollView>
   )
 }

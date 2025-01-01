@@ -96,11 +96,9 @@ const fonts: MD3Typescale & any = {
     letterSpacing: 0.1
   },
   labelMedium: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Palanquin-Regular',
     fontWeight: '500',
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.5
+    fontSize: 15
   },
   labelSmall: {
     fontFamily: 'PalanquinDark-Regular',

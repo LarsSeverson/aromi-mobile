@@ -34,7 +34,7 @@ const NotePreview: React.FC<NotePreviewProps> = (props: NotePreviewProps) => {
   return (
     <View style={styles.wrapper}>
       <BouncyButton style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]} />
-      <Text ellipsizeMode='tail' numberOfLines={1}>{note.name.toLowerCase()}</Text>
+      <Text ellipsizeMode='tail' numberOfLines={1} style={{ marginLeft: 10 }}>{note.name.toLowerCase()}</Text>
     </View>
   )
 }
@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     overflow: 'hidden',
-    width: 70
+    width: 100
   },
   previewWrapper: {
     borderRadius: 20,
-    height: 70,
+    height: 100,
     alignItems: 'center',
     justifyContent: 'center'
   }
