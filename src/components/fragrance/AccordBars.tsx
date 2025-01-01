@@ -23,7 +23,7 @@ const AccordBars: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
         return (
           <View key={index}>
             <Text style={{ marginHorizontal: 10 }}>{accord.name}</Text>
-            <LinearScaleBar key={index} value={width} />
+            <LinearScaleBar key={index} value={width} color={accord.color} />
           </View>
         )
       })}

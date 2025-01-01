@@ -13,7 +13,7 @@ export interface RatingStarsProps {
 
 const RatingStars: React.FC<RatingStarsProps> = (props: RatingStarsProps) => {
   const theme = useAppTheme()
-  const { rating, size = 14, filledColor = theme.colors.card, emptyColor = theme.colors.card, style } = props
+  const { rating, size = 15, filledColor = theme.colors.card, emptyColor = theme.colors.card, style } = props
 
   const transformFillPercentage = (percentage: number): number => {
     const center = 50

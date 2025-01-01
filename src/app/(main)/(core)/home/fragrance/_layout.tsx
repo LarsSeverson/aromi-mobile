@@ -1,10 +1,8 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import { useAppTheme } from '@/src/constants/Themes'
 import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
-import HeaderCloseButton from '@/src/components/navigation/HeaderCloseButton'
-import { TextStyles } from '@/src/constants/TextStyles'
+import HeaderCancelButton from '@/src/components/navigation/HeaderCancelButton'
 
 const HomeFragranceLayout = () => {
   const theme = useAppTheme()
@@ -18,8 +16,10 @@ const HomeFragranceLayout = () => {
     }}
     >
       <Stack.Screen name='index' />
+      <Stack.Screen name='edit' options={{ presentation: 'modal', headerLeft: () => <HeaderCancelButton /> }} />
     </Stack>
   )
 }
+// reanimated-bottom-sheet
 
 export default HomeFragranceLayout

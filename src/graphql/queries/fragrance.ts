@@ -18,6 +18,7 @@ const fragranceQuery = `#graphql
       accords {
         accordId,
         name,
+        color,
         votes
       }
 

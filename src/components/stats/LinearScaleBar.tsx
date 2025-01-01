@@ -19,7 +19,7 @@ const LinearScaleBar: React.FC<LinearScaleBarProps> = (props: LinearScaleBarProp
   const viewStyle = StyleSheet.flatten(viewProps.style)
 
   return (
-    <View {...viewProps} style={{ backgroundColor: theme.colors.surfaceDisabled, borderRadius: 20, height: 15, overflow: 'hidden', flexDirection: 'row', ...viewStyle }}>
+    <View {...viewProps} style={{ backgroundColor: 'transparent', borderRadius: 20, height: 15, overflow: 'hidden', flexDirection: 'row', ...viewStyle }}>
       <View style={{ backgroundColor: color, width: `${value}%`, borderTopRightRadius: 20, borderBottomRightRadius: 20 }} />
     </View>
   )

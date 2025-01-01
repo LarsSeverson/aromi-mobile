@@ -1,12 +1,11 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragrance from '@/src/hooks/useFragrance'
 import AromiImage from '@/src/components/utils/AromiImage'
 import { Divider, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon, ThumbDownIcon } from '@/src/constants/Icons'
-import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import BouncyButton from '@/src/components/utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
@@ -18,11 +17,12 @@ import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
 import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceCharacteristics from '@/src/components/fragrance/FragranceCharacteristics'
 import RatingStars from '@/src/components/stats/RatingStars'
+import FragranceHeading from '@/src/components/fragrance/FragranceHeading'
+import FragranceCategory from '@/src/components/fragrance/FragranceCategory'
 
 const FragrancePage = () => {
-  const theme = useAppTheme()
+  const router = useRouter()
   const fragranceId = Number(useLocalSearchParams().fragranceId as string)
-
   const { data: fragrance, loading, error, refresh } = useFragrance(fragranceId)
 
   if (loading || !fragrance) {
@@ -30,6 +30,10 @@ const FragrancePage = () => {
   }
 
   const previewUrl = fragrance.images?.[0]?.s3Key || undefined
+
+  const gotoEditGender = () => {
+    router.push('/(core)/home/fragrance/edit/gender')
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -44,81 +48,41 @@ const FragrancePage = () => {
 
       <Divider />
 
-      <View style={styles.titleWrapper}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <BouncyButton>
-            <View style={{ padding: 5 }}>
-              <ThumbDownIcon />
-            </View>
-          </BouncyButton>
-          <Text>{fragrance.dislikes}</Text>
-        </View>
-        <View style={{ flex: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Text variant='titleMedium' style={{ fontWeight: 500 }}>{fragrance.name}</Text>
-          <Text style={{ marginBottom: 5 }}>{fragrance.brand}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-            <Text variant='titleSmall'>{fragrance.rating}</Text>
-            <RatingStars rating={fragrance.rating} />
-            <Text variant='titleSmall'>(<Text style={{ color: Colors.button }}>{fragrance.reviewCount}</Text>)</Text>
-          </View>
-        </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <BouncyButton>
-            <CIcon name='heart-outline' size={25} style={{ padding: 5 }} color={theme.colors.icon} />
-          </BouncyButton>
-          <Text>{fragrance.likes}</Text>
-        </View>
-      </View>
+      <FragranceHeading
+        name={fragrance.name}
+        brand={fragrance.brand}
+        rating={fragrance.rating}
+        reviewCount={fragrance.reviewCount}
+        dislikes={fragrance.dislikes}
+        likes={fragrance.likes}
+      />
 
-      <Divider />
+      <Divider style={{ marginTop: 10 }} />
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Gender</Text>
-        <ScaleBar value={fragrance.gender} Icon={<GenderIcon />} style={{ marginTop: 10 }} />
+      <FragranceCategory title='Gender' buttonText='masculine or feminine' onButtonPress={gotoEditGender}>
+        <ScaleBar value={fragrance.gender} Icon={<GenderIcon />} />
+      </FragranceCategory>
 
-        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
-          <Text style={{ opacity: 0.8 }}>masculine or feminine?</Text>
-        </BouncyButton>
-      </View>
-
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Top accords</Text>
+      <FragranceCategory title='Top accords' buttonText='how are the accords?'>
         <AccordBars accords={fragrance.accords} />
-        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
-          <Text style={{ opacity: 0.8 }}>how are the accords?</Text>
-        </BouncyButton>
-      </View>
+      </FragranceCategory>
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Notes</Text>
+      <FragranceCategory title='Notes' buttonText='how do the notes develop?'>
         <NotesPyramid notes={fragrance.notes} />
-        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
-          <Text style={{ opacity: 0.8 }}>how do the notes develop?</Text>
-        </BouncyButton>
-      </View>
+      </FragranceCategory>
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Characteristics</Text>
+      <FragranceCategory title='Characteristics' buttonText='what are its characteristics?'>
         <FragranceCharacteristics fragrance={fragrance} />
-        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
-          <Text style={{ opacity: 0.8 }}>what are its characteristics?</Text>
-        </BouncyButton>
-      </View>
+      </FragranceCategory>
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>Reviews</Text>
+      <FragranceCategory title='Reviews' buttonText='write a review'>
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
           <Text variant='titleSmall' style={{ opacity: 0.8 }}>No reviews yet</Text>
           <Text variant='labelMedium' style={{ textAlign: 'center', opacity: 0.8 }}>Tried this fragrance? Help out the community by sharing your experience</Text>
         </View>
-        <BouncyButton style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', height: 48, borderColor: theme.colors.surfaceDisabled, marginVertical: 10 }}>
-          <Text style={{ opacity: 0.8 }}>write a review</Text>
-        </BouncyButton>
-      </View>
+      </FragranceCategory>
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>More like this</Text>
-      </View>
+      <FragranceCategory title='More like this' />
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>
@@ -136,11 +100,5 @@ const styles = StyleSheet.create({
   imageWrapper: {
     height: 400,
     position: 'relative'
-  },
-  titleWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 5
   }
 })
