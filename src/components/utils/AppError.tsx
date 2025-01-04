@@ -1,10 +1,10 @@
-import { View, StyleSheet, Pressable, ViewProps } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
-import CategoryText from './CategoryText'
 import { Text } from 'react-native-paper'
 import ButtonText from './ButtonText'
 import AuthActionGuard from '../auth/AuthActionGuard'
+import EditGenderPage from '@/src/pages/core/home/fragrance/edit/EditGenderPage'
 
 interface AppErrorProps {
   onRetry: () => void
@@ -12,6 +12,8 @@ interface AppErrorProps {
 
 const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
   const { onRetry } = props
+
+  return <EditGenderPage />
 
   return (
     <View style={styles.wrapper}>
