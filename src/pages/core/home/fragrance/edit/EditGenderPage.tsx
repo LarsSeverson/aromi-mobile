@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import MiddleSlider from '@/src/components/stats/MidSlider'
+import MiddleSlider from '@/src/components/stats/MiddleSlider'
 import { GenderIcon } from '@/src/constants/Icons'
 
 const EditGenderPage = () => {

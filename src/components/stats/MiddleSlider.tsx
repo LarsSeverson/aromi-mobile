@@ -55,8 +55,6 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
   }
 
   const snapToFocus = () => {
-    console.log('snapping')
-
     focusPointPositions.forEach((point) => {
       const distance = Math.abs((offset.value + (circleWidth / 2)) - point)
       if (distance < SNAP_THRESHOLD) {
