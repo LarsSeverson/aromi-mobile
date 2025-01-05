@@ -5,18 +5,14 @@ import useFragrance from '@/src/hooks/useFragrance'
 import AromiImage from '@/src/components/utils/AromiImage'
 import { Divider, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
-import { GenderIcon, ThumbDownIcon } from '@/src/constants/Icons'
+import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/utils/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
-import { useAppTheme } from '@/src/constants/Themes'
 import ScaleBar from '@/src/components/stats/ScaleBar'
-import ButtonText from '@/src/components/utils/ButtonText'
 import AccordBars from '@/src/components/fragrance/AccordBars'
 import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
-import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceCharacteristics from '@/src/components/fragrance/FragranceCharacteristics'
-import RatingStars from '@/src/components/stats/RatingStars'
 import FragranceHeading from '@/src/components/fragrance/FragranceHeading'
 import FragranceCategory from '@/src/components/fragrance/FragranceCategory'
 
@@ -32,7 +28,11 @@ const FragrancePage = () => {
   const previewUrl = fragrance.images?.[0]?.s3Key || undefined
 
   const gotoEditGender = () => {
-    router.push('/(core)/home/fragrance/edit/gender')
+    router.push({ pathname: '/(core)/home/fragrance/edit/gender', params: { genderData: fragrance.gender, fragranceId } })
+  }
+
+  const gotoEditAccords = () => {
+    router.push({ pathname: '/(core)/home/fragrance/edit/accords', params: { fragranceId } })
   }
 
   return (
@@ -45,6 +45,8 @@ const FragrancePage = () => {
           <Icon name='bookmark-outline' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>
       </AromiImage>
+
+      <Text>{fragrance.id}</Text>
 
       <Divider />
 
@@ -63,7 +65,7 @@ const FragrancePage = () => {
         <ScaleBar value={fragrance.gender} Icon={<GenderIcon />} />
       </FragranceCategory>
 
-      <FragranceCategory title='Top accords' buttonText='how are the accords?'>
+      <FragranceCategory title='Top accords' buttonText='how are the accords?' onButtonPress={gotoEditAccords}>
         <AccordBars accords={fragrance.accords} />
       </FragranceCategory>
 

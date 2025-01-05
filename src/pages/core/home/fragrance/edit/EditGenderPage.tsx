@@ -1,25 +1,26 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import MiddleSlider from '@/src/components/stats/MiddleSlider'
 import { GenderIcon } from '@/src/constants/Icons'
+import EditFragranceSlider from '@/src/components/fragrance/EditFragranceSlider'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 const EditGenderPage = () => {
-  const value = 50
-  const feminineVotes = 31090
-  const masculineVotes = 29999
+  const router = useRouter()
+  const genderData = Number(useLocalSearchParams().genderData as string)
+
+  const submitGender = (value: number) => {
+    router.dismiss()
+  }
 
   return (
     <View>
-      <MiddleSlider
-        value={value}
-        min={0}
-        max={100}
-        focusPoints={[25, 50, 75]}
-        leftHalfData={feminineVotes}
-        rightHalfData={masculineVotes}
-        leftHalfLabel='feminine'
-        rightHalfLabel='masculine'
-        Icon={<GenderIcon />}
+      <EditFragranceSlider
+        storedValue={genderData || 50}
+        icon={<GenderIcon />}
+        leftLabel='feminine'
+        rightLabel='masculine'
+        style={{ padding: 20 }}
+        onSubmit={submitGender}
       />
     </View>
   )

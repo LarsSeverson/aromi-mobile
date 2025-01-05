@@ -5,6 +5,7 @@ import { Text } from 'react-native-paper'
 import ButtonText from './ButtonText'
 import AuthActionGuard from '../auth/AuthActionGuard'
 import EditGenderPage from '@/src/pages/core/home/fragrance/edit/EditGenderPage'
+import EditAccordsPage from '@/src/pages/core/home/fragrance/edit/EditAccordsPage'
 
 interface AppErrorProps {
   onRetry: () => void
@@ -12,8 +13,6 @@ interface AppErrorProps {
 
 const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
   const { onRetry } = props
-
-  return <EditGenderPage />
 
   return (
     <View style={styles.wrapper}>

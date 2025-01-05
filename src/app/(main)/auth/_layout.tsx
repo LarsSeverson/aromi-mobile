@@ -14,7 +14,7 @@ const AuthLayout = () => {
       headerShadowVisible: false,
       headerTitleStyle: TextStyles.headerTitle,
       headerStyle: { backgroundColor: theme.colors.background },
-      headerLeft: HeaderBackButton
+      headerLeft: () => <HeaderBackButton />
     }}
     >
       <Stack.Screen name='index' options={{ headerShown: false }} />

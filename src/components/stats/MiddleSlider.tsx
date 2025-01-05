@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Colors } from '@/src/constants/Colors'
-import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
@@ -10,13 +9,9 @@ export interface MiddleSliderProps {
   value?: number
   min?: number
   max?: number
-  leftHalfData?: number
-  rightHalfData?: number
-  leftHalfLabel?: string
-  rightHalfLabel?: string
   focusPoints?: Array<number>
-  Icon?: React.ReactNode
   onValueChange?: (value: number) => void
+  onInteracted?: () => void
 }
 
 const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => {
@@ -25,18 +20,10 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
     min = 0,
     max = 100,
     value = max / 2,
-    leftHalfData = 0,
-    rightHalfData = 100,
-    leftHalfLabel = '',
-    rightHalfLabel = '',
-    onValueChange,
     focusPoints = [],
-    Icon
+    onValueChange,
+    onInteracted
   } = props
-
-  const dataTotal = leftHalfData + rightHalfData
-  const leftPercent = (leftHalfData / dataTotal) * 50
-  const rightPercent = (rightHalfData / dataTotal) * 50
 
   const SNAP_THRESHOLD = 20
 
@@ -86,7 +73,8 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
 
       const newValue = min + (offset.value / (maxOffset - minOffset)) * (max - min)
 
-      onValueChange && onValueChange(newValue)
+      onInteracted && runOnJS(onInteracted)()
+      onValueChange && runOnJS(onValueChange)(newValue)
     })
 
   useLayoutEffect(() => {
@@ -115,7 +103,7 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
   const rightFilledAnimatedStyle = useAnimatedStyle(() => {
     return {
       left: 0,
-      width: Math.max((offset.value - containerWidth / 2) + (circleWidth / 2), 0)
+      width: containerWidth ? Math.max((offset.value - containerWidth / 2) + (circleWidth / 2), 0) : 0
     }
   })
 
@@ -134,82 +122,67 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
   }, [containerWidth, circleWidth, focusPoints, max, min])
 
   return (
-    <View style={{ padding: 20, gap: 20 }}>
-      {Icon}
-      <View style={{
-        width: '100%',
-        height: 3,
-        backgroundColor: theme.colors.surfaceDisabled,
-        flexDirection: 'row',
-        borderRadius: 20,
-        overflow: 'hidden',
-        position: 'relative'
-      }}
-      >
-        <View style={{
-          position: 'absolute',
-          left: `${50 - leftPercent}%`,
-          width: `${leftPercent}%`,
-          height: '100%',
-          backgroundColor: Colors.pink
-        }}
-        />
-        <View style={{
-          position: 'absolute',
-          left: '50%',
-          width: `${rightPercent}%`,
-          height: '100%',
-          backgroundColor: Colors.button
-        }}
-        />
-      </View>
+    <GestureDetector gesture={pan}>
+      <View style={styles.sliderContainer} onLayout={(event) => !mounted.current && setContainerWidth(event.nativeEvent.layout.width)}>
 
-      <GestureDetector gesture={pan}>
-        <View style={styles.sliderContainer} onLayout={(event) => !mounted.current && setContainerWidth(event.nativeEvent.layout.width)}>
-
-          <View style={{ height: 20, borderRadius: 10, width: '100%', flexDirection: 'row', overflow: 'hidden' }}>
-            <View style={{ flex: 1, flexDirection: 'row', position: 'relative' }}>
-              <View style={{ flex: 1, backgroundColor: Colors.pink, opacity: 0.1 }} />
-              <Animated.View style={[leftFilledAnimatedStyle, { backgroundColor: Colors.pink, position: 'absolute', zIndex: 2, height: '100%' }]} />
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', position: 'relative' }}>
-              <View style={{ flex: 1, backgroundColor: Colors.button, opacity: 0.1 }} />
-              <Animated.View style={[rightFilledAnimatedStyle, { backgroundColor: Colors.button, position: 'absolute', zIndex: 2, height: '100%' }]} />
-            </View>
+        <View style={styles.trackContainer}>
+          <View style={styles.trackHalfContainer}>
+            <View style={[styles.trackHalfBackground, { backgroundColor: Colors.pink }]} />
+            <Animated.View style={[leftFilledAnimatedStyle, styles.track, { backgroundColor: Colors.pink }]} />
           </View>
-
-          {focusPointPositions.length > 0 && (
-            <View style={styles.focusPointsContainer}>
-              {focusPointPositions.map((position, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.focusPointMark,
-                    {
-                      left: position,
-                      backgroundColor: theme.colors.icon
-                    }
-                  ]}
-                />
-              ))}
-            </View>
-          )}
-
-          <Animated.View style={[styles.circle, thumbAnimatedStyle]} onLayout={(event) => !mounted.current && setCircleWidth(event.nativeEvent.layout.width)} />
+          <View style={styles.trackHalfContainer}>
+            <View style={[styles.trackHalfBackground, { backgroundColor: Colors.button }]} />
+            <Animated.View style={[rightFilledAnimatedStyle, styles.track, { backgroundColor: Colors.button }]} />
+          </View>
         </View>
-      </GestureDetector>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-        <Text variant='titleSmall' style={{ opacity: 0.6 }}>{leftHalfLabel}</Text>
-        <Text variant='titleSmall' style={{ opacity: 0.6 }}>{rightHalfLabel}</Text>
+        {focusPointPositions.length > 0 && (
+          <View style={styles.focusPointsContainer}>
+            {focusPointPositions.map((position, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.focusPointMark,
+                  {
+                    left: position,
+                    backgroundColor: theme.colors.icon
+                  }
+                ]}
+              />
+            ))}
+          </View>
+        )}
+
+        <Animated.View style={[styles.circle, thumbAnimatedStyle]} onLayout={(event) => !mounted.current && setCircleWidth(event.nativeEvent.layout.width)} />
       </View>
-    </View>
+    </GestureDetector>
   )
 }
 
 export default MiddleSlider
 
 const styles = StyleSheet.create({
+  trackContainer: {
+    height: 20,
+    borderRadius: 10,
+    width: '100%',
+    flexDirection: 'row',
+    overflow: 'hidden'
+  },
+  trackHalfContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    position: 'relative'
+  },
+  trackHalfBackground: {
+    flex: 1,
+    opacity: 0.1
+  },
+  track: {
+    position: 'absolute',
+    zIndex: 2,
+    height: '100%'
+  },
   sliderContainer: {
     width: '100%',
     position: 'relative',

@@ -19,8 +19,8 @@ const AuthHelpLayout = () => {
           headerTitle: 'Forgot password',
           headerTitleStyle: TextStyles.headerTitle,
           headerBackVisible: false,
-          headerLeft: HeaderBackButton,
-          headerRight: HeaderCloseButton
+          headerLeft: () => <HeaderBackButton />,
+          headerRight: () => <HeaderCloseButton />
         }}
         >
           <Stack.Screen name='ForgotPassword' options={{ headerLeft: () => null }} />

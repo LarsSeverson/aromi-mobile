@@ -19,8 +19,8 @@ const HomeAuthLayout = () => {
           headerBackVisible: false,
           headerTitleStyle: TextStyles.headerTitle,
           headerTitle: '',
-          headerLeft: HeaderBackButton,
-          headerRight: HeaderCloseButton
+          headerLeft: () => <HeaderBackButton />,
+          headerRight: () => <HeaderCloseButton />
         }}
         >
           <Stack.Screen name='AuthCheck' options={{ headerLeft: () => null }} />
