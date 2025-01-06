@@ -7,7 +7,7 @@ import AccordList from '@/src/components/fragrance/AccordList'
 const EditAccordsPage = () => {
   const router = useRouter()
   const fragranceId = Number(useLocalSearchParams().fragranceId)
-  const LIMIT = 21
+  const LIMIT = 35
   const offset = useRef(0)
 
   const { data: accords, loading, error, refresh } = useFragranceAccords(fragranceId, LIMIT, offset.current)
