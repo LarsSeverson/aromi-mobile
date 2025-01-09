@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { generateClient, GraphQLResult } from 'aws-amplify/api'
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils'
 
@@ -6,49 +6,54 @@ const client = generateClient()
 
 interface UseQueryProps {
   query: string
-  variables?: object
+  variables?: Record<string, any>
   authMode: GraphQLAuthMode
 }
 
 const useQuery = <T, >(props: UseQueryProps) => {
   const { query, variables, authMode } = props
-  const stableVariablesRef = useRef(variables)
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [trigger, setTrigger] = useState(0)
+  const stableVariables = useRef(variables)
+
+  const getData = useCallback(async (variables: Record<string, any> | undefined): Promise<T | null> => {
+    setLoading(true)
+
+    try {
+      const response = await client.graphql<typeof variables>({
+        query,
+        variables,
+        authMode
+      }) as GraphQLResult<T>
+
+      const data = response.data
+
+      setData(data)
+      setError(null)
+
+      return data
+    } catch (err) {
+      const error = err as Error
+
+      setError(error)
+      setData(null)
+
+      return null
+    } finally {
+      setLoading(false)
+    }
+  }, [authMode, query])
 
   useEffect(() => {
-    const getData = async (): Promise<void> => {
-      try {
-        const response = await client.graphql<typeof stableVariablesRef.current>({
-          query,
-          variables: stableVariablesRef.current,
-          authMode
-        }) as GraphQLResult<T>
+    getData(stableVariables.current)
+  }, [getData])
 
-        const data = response.data
-        if (data) {
-          setData(data)
-          setError(null)
-        } else {
-          setError(new Error('Failed to get suggested fragranes'))
-        }
-      } catch (err) {
-        setError(err as Error)
-        setData(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-    getData()
-  }, [authMode, query, trigger])
+  const refresh = useCallback((variables: Record<string, any> | undefined) => {
+    getData(variables)
+  }, [getData])
 
-  const refresh = useCallback(() => {
-    setTrigger(prev => prev + 1)
-  }, [])
-
-  return { data, loading, error, refresh }
+  return { data, loading, error, refresh, getData }
 }
 
 export default useQuery

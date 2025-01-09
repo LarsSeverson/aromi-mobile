@@ -1,33 +1,38 @@
 import { StyleSheet, View, ListRenderItem, ViewProps, ViewStyle } from 'react-native'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FragranceAccord, FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppTheme } from '@/src/constants/Themes'
-import { Text } from 'react-native-paper'
+import { ActivityIndicator, Text } from 'react-native-paper'
 import BouncyButton from '../utils/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
-import ButtonText from '../utils/ButtonText'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 export interface AccordListItemProps {
   accord: FragranceAccord
-  onSelect: (selected: boolean) => void
+  selected?: boolean
+  onSelect?: (id: number) => void
 }
 
 const AccordListItem: React.FC<AccordListItemProps> = (props: AccordListItemProps) => {
-  const { accord, onSelect } = props
-  const [selected, setSelected] = useState(false)
+  const { accord, selected = false, onSelect } = props
+  const [accordSelected, setAccordSelected] = useState(selected)
 
   const toggleSelected = () => {
-    const newSelected = !selected
-    setSelected(newSelected)
-    onSelect(newSelected)
+    if (accord.fragranceId === -1) {
+      return
+    }
+
+    const newSelected = !accordSelected
+    setAccordSelected(newSelected)
+    onSelect?.(accord.accordId)
   }
 
   return (
     <View style={{ flex: 1 }}>
-      <BouncyButton onPress={toggleSelected} style={[styles.selectedAccord, { borderWidth: selected ? 3 : 0 }]}>
-        {!selected && <View style={[styles.item, { backgroundColor: accord.color }]} />}
-        {selected && <View style={[styles.item, { backgroundColor: accord.color, transform: [{ scale: 0.96 }] }]} />}
+      <BouncyButton onPress={toggleSelected} style={[styles.selectedAccord, { borderWidth: accordSelected ? 3 : 0 }]}>
+        {!accordSelected && <View style={[styles.item, { backgroundColor: accord.color }]} />}
+        {accordSelected && <View style={[styles.item, { backgroundColor: accord.color, transform: [{ scale: 0.96 }] }]} />}
       </BouncyButton>
       <View style={styles.accordTextWrapper}>
         <Text numberOfLines={1} ellipsizeMode='tail'>{accord.name.toLowerCase()}</Text>
@@ -49,76 +54,62 @@ const padData = (data: FragranceAccords) => {
 export interface AccordListProps extends ViewProps {
   accords: FragranceAccords
   gap: number
+  searchTerm?: string
+  loading?: boolean
+  hasMore?: boolean
+  noResults?: boolean
+  selectedAccordIds?: Set<number>
+  accordSelected?: (id: number) => void
+  getMoreAccords?: () => void
   style?: ViewStyle
 }
 
 const AccordList: React.FC<AccordListProps> = (props: AccordListProps) => {
   const theme = useAppTheme()
-  const { accords, gap, style } = props
+  const { accords, gap, loading, hasMore, noResults, searchTerm, selectedAccordIds, style, accordSelected, getMoreAccords } = props
   const paddedAccords = padData(accords)
-  const selectedAccords = useRef(new Set())
-  const [selectedCount, setSelectedCount] = useState(0)
-
-  const processSelect = useCallback((id: number) => {
-    if (selectedAccords.current.has(id)) {
-      selectedAccords.current.delete(id)
-      setSelectedCount(prev => prev - 1)
-    } else {
-      selectedAccords.current.add(id)
-      setSelectedCount(prev => prev + 1)
-    }
-  }, [])
 
   const renderAccord: ListRenderItem<FragranceAccord | null> = useCallback(({ item: accord }) => {
-    if (accord === null) {
-      return <View style={[styles.item, { backgroundColor: 'transparent' }]} />
-    }
-
-    return <AccordListItem accord={accord} onSelect={() => processSelect(accord.accordId)} />
-  }, [processSelect])
+    return (
+      <AccordListItem
+        accord={accord || { fragranceId: -1, accordId: 0, name: '', color: 'transparent', votes: 0 }}
+        selected={(accord && selectedAccordIds?.has(accord.accordId)) || false}
+        onSelect={accordSelected}
+      />
+    )
+  }, [accordSelected, selectedAccordIds])
 
   return (
-    <View style={{ position: 'relative' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }} edges={['left', 'right']}>
       <FlatList
         data={paddedAccords}
         renderItem={renderAccord}
+        keyExtractor={(item, index) => item?.accordId.toString() || index.toString()}
         numColumns={NUM_COLUMNS}
-        keyExtractor={(_, index) => index.toString()}
-        contentContainerStyle={StyleSheet.compose({ gap, paddingBottom: 150 }, style)}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={StyleSheet.compose({ gap }, style)}
         columnWrapperStyle={{ gap }}
-        ListFooterComponent={() => (
-          <BouncyButton style={[styles.questionButton, { borderColor: theme.colors.surfaceDisabled }]}>
-            <Text>are we missing something?</Text>
-          </BouncyButton>
-        )}
+        onEndReached={getMoreAccords}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={() => !loading && noResults && <Text style={styles.feedbackText}>No results for "{searchTerm}"</Text>}
+        ListFooterComponent={() => loading
+          ? <ActivityIndicator />
+          : (
+            <>
+              {!noResults && !hasMore && <Text style={[styles.feedbackText, { opacity: 0.8 }]}>End of accords</Text>}
+              <BouncyButton style={[styles.feedbackButton, { borderColor: theme.colors.surfaceDisabled }]}>
+                <Text>are we missing something?</Text>
+              </BouncyButton>
+            </>
+            )}
       />
-      {selectedCount > 0 && (
-        <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background }]}>
-          <ButtonText text={`Submit (${selectedCount})`} color={Colors.button} textColor={Colors.white} style={styles.submit} />
-        </View>
-      )}
-    </View>
+    </SafeAreaView>
   )
 }
 
 export default AccordList
 
 const styles = StyleSheet.create({
-  submitWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 10
-  },
-  submit: {
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
   item: {
     flex: 1,
     aspectRatio: 1,
@@ -135,10 +126,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: Colors.button
   },
-  questionButton: {
+  feedbackButton: {
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 48
+    height: 48,
+    margin: 10
+  },
+  feedbackText: {
+    padding: 10,
+    alignSelf: 'center'
   }
 })

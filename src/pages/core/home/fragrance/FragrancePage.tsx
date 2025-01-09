@@ -46,8 +46,6 @@ const FragrancePage = () => {
         </BouncyButton>
       </AromiImage>
 
-      <Text>{fragrance.id}</Text>
-
       <Divider />
 
       <FragranceHeading
