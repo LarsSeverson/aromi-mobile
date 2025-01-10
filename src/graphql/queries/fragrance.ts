@@ -25,7 +25,7 @@ const fragranceQuery = `#graphql
       notes {
         noteId,
         name,
-        type,
+        layer,
         votes
       }
 

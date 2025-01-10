@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { FragranceBlockProps } from './FragranceBlock'
 import BouncyButton from '../../utils/BouncyButton'
-import FragranceBlockVerticalCardLoading from './utils/FragranceBlockVerticalCardLoading'
 import { Colors } from '@/src/constants/Colors'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import BlockLikeDislike from '../utils/BlockLikeDislike'
@@ -16,22 +15,22 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
 
   if (!fragrance) {
     return (
-      <FragranceBlockVerticalCardLoading />
+      null
     )
   }
 
-  const previewURL = fragrance.images?.length ? fragrance.images[0].s3Key : undefined
+  const previewURL = fragrance?.images?.length ? fragrance?.images[0].s3Key : undefined
 
   return (
     <View style={styles.wrapper}>
       <BouncyButton style={styles.wrapper} onPress={onPress}>
         <AromiImage path={previewURL} style={styles.contentWrapper}>
-          <BlockLikeDislike numLikes={fragrance.likes} numDislikes={fragrance.dislikes} style={styles.contentLikeDislikeWrapper} />
+          <BlockLikeDislike numLikes={fragrance?.likes} numDislikes={fragrance?.dislikes} style={styles.contentLikeDislikeWrapper} />
         </AromiImage>
       </BouncyButton>
       <View style={styles.bottomWrapper}>
         <View style={styles.bottomTop}>
-          <Text numberOfLines={1} ellipsizeMode='tail' style={{ opacity: 0.95, flex: 1 }}>{fragrance.name}</Text>
+          <Text numberOfLines={1} ellipsizeMode='tail' style={{ opacity: 0.95, flex: 1 }}>{fragrance?.name}</Text>
           <View style={styles.blockOptionsWrapper}>
             <BouncyButton scaleTo={0.8}>
               <Icon name='more-horiz' size={20} color={theme.colors.icon} />
@@ -44,7 +43,7 @@ const FragranceBlockVerticalCard: React.FC<FragranceBlockProps> = (props: Fragra
           ellipsizeMode='tail'
           style={{ opacity: 0.9 }}
         >
-          {fragrance.brand}
+          {fragrance?.brand}
         </Text>
       </View>
     </View>
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
     borderRadius: 20,
     backgroundColor: Colors.placeholder,
-    height: 200,
+    aspectRatio: 1,
     overflow: 'hidden',
     position: 'relative'
   },

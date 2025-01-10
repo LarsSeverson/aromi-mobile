@@ -11,11 +11,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 export interface AccordListItemProps {
   accord: FragranceAccord
   selected?: boolean
-  onSelect?: (id: number) => void
+  onSelected?: (id: number) => void
 }
 
 const AccordListItem: React.FC<AccordListItemProps> = (props: AccordListItemProps) => {
-  const { accord, selected = false, onSelect } = props
+  const { accord, selected = false, onSelected } = props
   const [accordSelected, setAccordSelected] = useState(selected)
 
   const toggleSelected = () => {
@@ -25,7 +25,7 @@ const AccordListItem: React.FC<AccordListItemProps> = (props: AccordListItemProp
 
     const newSelected = !accordSelected
     setAccordSelected(newSelected)
-    onSelect?.(accord.accordId)
+    onSelected?.(accord.accordId)
   }
 
   return (
@@ -74,7 +74,7 @@ const AccordList: React.FC<AccordListProps> = (props: AccordListProps) => {
       <AccordListItem
         accord={accord || { fragranceId: -1, accordId: 0, name: '', color: 'transparent', votes: 0 }}
         selected={(accord && selectedAccordIds?.has(accord.accordId)) || false}
-        onSelect={accordSelected}
+        onSelected={accordSelected}
       />
     )
   }, [accordSelected, selectedAccordIds])

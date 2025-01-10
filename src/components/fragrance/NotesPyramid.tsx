@@ -1,6 +1,6 @@
 import { ListRenderItemInfo, StyleSheet, View, FlatList } from 'react-native'
 import React from 'react'
-import { FragranceNote, FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote, FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotePreview from './NotePreview'
 import { Divider, Text } from 'react-native-paper'
 
@@ -15,9 +15,9 @@ const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => 
     return null
   }
 
-  const topNotes = notes.filter(note => note.type === 'Top Notes')
-  const middleNotes = notes.filter(note => note.type === 'Middle Notes')
-  const baseNotes = notes.filter(note => note.type === 'Base Notes')
+  const topNotes = notes.filter(note => note.layer === NoteLayer.TOP)
+  const middleNotes = notes.filter(note => note.layer === NoteLayer.MIDDLE)
+  const baseNotes = notes.filter(note => note.layer === NoteLayer.BASE)
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', overflow: 'hidden', gap: 10 }}>

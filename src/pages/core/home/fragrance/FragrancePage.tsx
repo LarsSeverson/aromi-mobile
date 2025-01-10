@@ -35,6 +35,10 @@ const FragrancePage = () => {
     router.push({ pathname: '/(core)/home/fragrance/edit/accords', params: { fragranceId } })
   }
 
+  const gotoEditNotes = () => {
+    router.push({ pathname: '/(core)/home/fragrance/edit/notes', params: { fragranceId } })
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <AromiImage path={previewUrl} style={styles.imageWrapper}>
@@ -67,7 +71,7 @@ const FragrancePage = () => {
         <AccordBars accords={fragrance.accords} />
       </FragranceCategory>
 
-      <FragranceCategory title='Notes' buttonText='how do the notes develop?'>
+      <FragranceCategory title='Notes' buttonText='how do the notes develop?' onButtonPress={gotoEditNotes}>
         <NotesPyramid notes={fragrance.notes} />
       </FragranceCategory>
 
