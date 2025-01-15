@@ -3,17 +3,14 @@ import React from 'react'
 import { FragranceNote, FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotePreview from './NotePreview'
 import { Divider, Text } from 'react-native-paper'
+import EmptyProperty from './EmptyProperty'
 
 export interface NotesPyramidProps {
-  notes: FragranceNotes | undefined
+  notes: FragranceNotes
 }
 
 const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => {
   const { notes } = props
-
-  if (!notes?.length) {
-    return null
-  }
 
   const topNotes = notes.filter(note => note.layer === NoteLayer.TOP)
   const middleNotes = notes.filter(note => note.layer === NoteLayer.MIDDLE)
@@ -21,6 +18,8 @@ const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => 
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', overflow: 'hidden', gap: 10 }}>
+
+      {!(topNotes.length || middleNotes.length || baseNotes.length) && <EmptyProperty headline='No notes yet' />}
 
       {topNotes.length > 0 && (
         <>

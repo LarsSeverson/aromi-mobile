@@ -3,20 +3,22 @@ import React from 'react'
 import { FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import LinearScaleBar from '../stats/LinearScaleBar'
 import { Text } from 'react-native-paper'
+import EmptyProperty from './EmptyProperty'
 
 export interface AccordBarsProps {
-  accords: FragranceAccords | undefined
+  accords: FragranceAccords
 }
 
 const AccordBars: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
   const { accords } = props
 
-  if (!accords || !accords.length) return null
-
-  const maxVotes = accords[0].votes
+  const maxVotes = accords?.[0]?.votes || 0
 
   return (
     <View style={{ gap: 10 }}>
+
+      {!(accords.length) && <EmptyProperty headline='No accords yet' />}
+
       {accords.map((accord, index) => {
         const width = (accord.votes / maxVotes * 100)
 

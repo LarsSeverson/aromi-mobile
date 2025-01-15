@@ -1,22 +1,22 @@
 import { ListRenderItem, ScrollView, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { FragranceNote, FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { FlatList } from 'react-native-gesture-handler'
 import BouncyButton from '../utils/BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
-import { ActivityIndicator, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { Colors } from '@/src/constants/Colors'
-import Skeleton from 'react-native-reanimated-skeleton'
+import EmptyProperty from './EmptyProperty'
+import TextButton from '../utils/TextButton'
 
-export interface NoteListItemProps extends ViewProps {
+export interface PreviewNotesListItemProps extends ViewProps {
   note: FragranceNote
   selected?: boolean
   onSelected?: (id: number, note: FragranceNote) => void
 }
 
-const NoteListItem: React.FC<NoteListItemProps> = (props: NoteListItemProps) => {
+const PreviewNotesListItem: React.FC<PreviewNotesListItemProps> = (props: PreviewNotesListItemProps) => {
   const theme = useAppTheme()
   const { note, selected, onSelected } = props
   const [noteSelected, setNoteSelected] = useState(selected)
@@ -35,7 +35,7 @@ const NoteListItem: React.FC<NoteListItemProps> = (props: NoteListItemProps) => 
 
   return (
     <View>
-      <BouncyButton onPress={toggleSelected} style={[styles.selectedNote, { borderWidth: noteSelected ? 3 : 0 }]}>
+      <BouncyButton onPress={toggleSelected} style={[styles.noteWrapper, { borderColor: noteSelected ? Colors.button : backgroundColor }]}>
         {!noteSelected && <View style={[styles.noteContentWrapper, { backgroundColor }]} />}
         {noteSelected && <View style={[styles.noteContentWrapper, { backgroundColor, transform: [{ scale: 0.96 }] }]} />}
       </BouncyButton>
@@ -49,44 +49,47 @@ const NoteListItem: React.FC<NoteListItemProps> = (props: NoteListItemProps) => 
   )
 }
 
-// const NotesListLoading = () => {
-//   const theme = useAppTheme()
-
-//   return (
-//     <Skeleton isLoading containerStyle={{ flex: 1, borderWidth: 1 }}>
-//       <View style={{ flexDirection: 'row' }}>
-//         <View style={[{ backgroundColor: theme.colors.surfaceDisabled }, styles.noteContentWrapper]} />
-//         <View style={[{ backgroundColor: theme.colors.surfaceDisabled }, styles.noteContentWrapper]} />
-//       </View>
-//     </Skeleton>
-//   )
-// }
-
-export interface NotesListProps {
+export interface PreviewNotesListProps {
   fragranceId: number
   gap?: number | undefined
+  numRows?: number | undefined
+  numColumns?: number | undefined
 
   layer: NoteLayer
   style?: ViewStyle
 
   onNoteSelected?: (id: number, note: FragranceNote) => void
+  onSeeAll?: (layer: NoteLayer) => void
   onLoad?: () => void
 }
 
-const NotesList: React.FC<NotesListProps> = (props: NotesListProps) => {
+const PreviewNotesList: React.FC<PreviewNotesListProps> = (props: PreviewNotesListProps) => {
   const theme = useAppTheme()
-  const { fragranceId, gap = 10, layer, style, onNoteSelected, onLoad } = props
-  const { notes, loading, error, noResults, hasMore, refresh, search, getMore } = useFragranceNotes({ id: fragranceId, layer })
-  const numColumns = 8
+  const {
+    fragranceId,
+    gap = 10,
+    numRows = 1,
+    numColumns = 8,
+    layer,
+    style,
+    onNoteSelected,
+    onSeeAll,
+    onLoad
+  } = props
+  const { notes, loading, error, refresh } = useFragranceNotes({ id: fragranceId, layer })
 
   const renderNote: ListRenderItem<FragranceNote | null> = useCallback(({ item: note }) => {
+    if (!note) return null
+
     return (
-      <NoteListItem note={note || { fragranceId: -1, noteId: -1, layer: NoteLayer.FILL, name: '', votes: 0 }} />
+      <PreviewNotesListItem note={note} onSelected={onNoteSelected} />
     )
-  }, [])
+  }, [onNoteSelected])
 
   useEffect(() => {
-    if (!loading) onLoad?.()
+    if (!loading) {
+      onLoad?.()
+    }
   }, [loading, onLoad])
 
   // TODO: Skeleton
@@ -95,8 +98,12 @@ const NotesList: React.FC<NotesListProps> = (props: NotesListProps) => {
   }
 
   return (
-    <View style={{ flex: 1, gap }}>
-      <Text variant='titleSmall'>{layer}</Text>
+    <View style={{ flex: 1, margin: 10, gap }}>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Text variant='titleSmall'>{layer}</Text>
+        <TextButton text='see all' onPress={() => onSeeAll?.(layer)} />
+      </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <FlatList
@@ -111,22 +118,17 @@ const NotesList: React.FC<NotesListProps> = (props: NotesListProps) => {
       </ScrollView>
 
       {notes.length === 0 && (
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-          <Text variant='titleSmall'>No {layer} notes yet</Text>
-          <Text variant='labelMedium' style={{ textAlign: 'center', opacity: 0.8 }}>
-            Tried this fragrance? Help out the community by sharing your experience
-          </Text>
-        </View>
+        <EmptyProperty headline={`No ${layer} notes yet`} />
       )}
 
-      <BouncyButton style={[styles.addNotesButton, { borderColor: theme.colors.surfaceDisabled }]}>
+      <BouncyButton style={[styles.addNotesButton, { borderColor: theme.colors.surfaceDisabled }]} onPress={() => onSeeAll?.(layer)}>
         <Text style={{ opacity: 0.8 }}>Add {layer} notes</Text>
       </BouncyButton>
     </View>
   )
 }
 
-export default NotesList
+export default PreviewNotesList
 
 const styles = StyleSheet.create({
   contentContainer: {
@@ -136,18 +138,19 @@ const styles = StyleSheet.create({
   noteContentWrapper: {
     width: 150,
     aspectRatio: 1,
-    borderRadius: 20,
     position: 'relative',
-    padding: 10
+    padding: 10,
+    borderRadius: 10
   },
   noteTextWrapper: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     paddingHorizontal: 10
   },
-  selectedNote: {
+  noteWrapper: {
     borderRadius: 20,
-    borderColor: Colors.button
+    borderWidth: 3,
+    overflow: 'hidden'
   },
   addNotesButton: {
     borderWidth: 1,

@@ -1,11 +1,11 @@
-import { GestureResponderEvent, Pressable, PressableProps, ViewStyle } from 'react-native'
+import { GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle } from 'react-native'
 import React, { ReactNode, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 export interface BouncyButtonProps extends PressableProps {
   children?: ReactNode
   scaleTo?: number
-  contentStyle?: ViewStyle
+  contentStyle?: StyleProp<ViewStyle>
 }
 
 const BouncyButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => {

@@ -68,11 +68,11 @@ const FragrancePage = () => {
       </FragranceCategory>
 
       <FragranceCategory title='Top accords' buttonText='how are the accords?' onButtonPress={gotoEditAccords}>
-        <AccordBars accords={fragrance.accords} />
+        <AccordBars accords={fragrance.accords || []} />
       </FragranceCategory>
 
       <FragranceCategory title='Notes' buttonText='how do the notes develop?' onButtonPress={gotoEditNotes}>
-        <NotesPyramid notes={fragrance.notes} />
+        <NotesPyramid notes={fragrance.notes || []} />
       </FragranceCategory>
 
       <FragranceCategory title='Characteristics' buttonText='what are its characteristics?'>

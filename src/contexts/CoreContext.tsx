@@ -1,7 +1,9 @@
 import React, { createContext, ReactNode, useMemo, useState } from 'react'
 import useCore from '../hooks/useCore'
 
-export type CoreContextProps = ReturnType<typeof useCore>
+export type CoreContextProps = ReturnType<typeof useCore> & {
+  hideNav: () => void
+}
 
 export const CoreContext = createContext<CoreContextProps | null>(null)
 

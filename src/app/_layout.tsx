@@ -21,14 +21,14 @@ Amplify.configure(amplifyConfig)
 Amplify.configure({
   Auth: {
     Cognito: {
-      userPoolId: 'us-east-2_b6DRVfvJw',
-      userPoolClientId: '1aop96ct6tm1oh2dttv8v1j2et',
-      identityPoolId: 'us-east-2:bbae1053-0888-4120-85f4-5692fe6246ee',
+      userPoolId: process.env.EXPO_PUBLIC_USER_POOL_ID || '',
+      userPoolClientId: process.env.EXPO_PUBLIC_USER_POOL_CLIENT_ID || '',
+      identityPoolId: process.env.EXPO_PUBLIC_IDENTITY_POOL_ID || '',
       allowGuestAccess: true,
       signUpVerificationMethod: 'code',
       loginWith: {
         oauth: {
-          domain: 'aromi.auth.us-east-2.amazoncognito.com',
+          domain: process.env.EXPO_PUBLIC_OAUTH_DOMAIN || '',
           scopes: ['email', 'profile', 'openid'],
           redirectSignIn: ['myapp://', 'http://localhost:8081/'],
           redirectSignOut: ['myapp://', 'http://localhost:8081/'],
@@ -39,15 +39,15 @@ Amplify.configure({
   },
   API: {
     GraphQL: {
-      endpoint: 'https://iq7jbu76srexjfq4noopwo7c74.appsync-api.us-east-2.amazonaws.com/graphql',
-      region: 'us-east-2',
+      region: process.env.EXPO_PUBLIC_API_REGION,
+      endpoint: process.env.EXPO_PUBLIC_API_ENDPOINT || '',
       defaultAuthMode: 'userPool'
     }
   },
   Storage: {
     S3: {
-      region: 'us-east-2',
-      bucket: 'aromi-storage'
+      region: process.env.EXPO_PUBLIC_API_REGION,
+      bucket: process.env.EXPO_PUBLIC_BUCKET_NAME
     }
   }
 })

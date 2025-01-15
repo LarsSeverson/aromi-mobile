@@ -2,18 +2,20 @@ import NavBar from '@/src/components/navigation/NavBar'
 import { AuthGuardProvider } from '@/src/contexts/AuthGuardContext'
 import { CoreProvider } from '@/src/contexts/CoreContext'
 import { Tabs } from 'expo-router'
-import React from 'react'
+import React, { useState } from 'react'
 
 const CoreLayout: React.FC = () => {
+  const [showTabBar, setShowTabBar] = useState(true)
+
   const hideNav = () => {
-    console.log('Nav hide')
+    setShowTabBar(false)
   }
 
   return (
     <CoreProvider hideNav={hideNav}>
       <AuthGuardProvider>
         <Tabs
-          tabBar={(props) => <NavBar {...props} />}
+          tabBar={(props) => showTabBar && <NavBar {...props} />}
           screenOptions={
             {
               tabBarShowLabel: false,

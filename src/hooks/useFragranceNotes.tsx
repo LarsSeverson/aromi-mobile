@@ -1,25 +1,38 @@
 import useQuery from './useQuery'
-import { FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { FragranceNote, FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import fragranceNotes from '../graphql/queries/fragranceNotes'
 
 export interface FragranceNotesResult {
-  fragranceNotes: FragranceNotes
+  fragranceNotes: Array<FragranceNote | null>
 }
 
 export interface FragranceNotesParams {
   id: number
+  limit?: number | undefined
+  offset?: number | undefined
+
+  name?: string | undefined
+
+  fill?: boolean | undefined
+
   layer: NoteLayer
-  name?: string
-  limit?: number
-  offset?: number
-  fill?: boolean
 }
 
 const useFragranceNotes = (params: FragranceNotesParams) => {
-  const { id, layer, name, limit = 16, offset = 0, fill = false } = params
+  const {
+    id,
+    limit = 16,
+    offset = 0,
+
+    name,
+
+    fill = false,
+
+    layer
+  } = params
   const localVariables = useRef({ id, layer, name, limit, offset, fill })
-  const [notes, setNotes] = useState<FragranceNotes | null>([])
+  const [notes, setNotes] = useState<Array<FragranceNote | null>>([])
   const [noResults, setNoResults] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
@@ -64,7 +77,16 @@ const useFragranceNotes = (params: FragranceNotesParams) => {
     setHasMore(notesData.length >= localVariables.current.limit)
   }, [data])
 
-  return { notes, loading, error, noResults, hasMore, refresh, search, getMore }
+  return useMemo(() => ({
+    notes,
+    loading,
+    error,
+    noResults,
+    hasMore,
+    refresh,
+    search,
+    getMore
+  }), [error, getMore, hasMore, loading, noResults, notes, refresh, search])
 }
 
 export default useFragranceNotes

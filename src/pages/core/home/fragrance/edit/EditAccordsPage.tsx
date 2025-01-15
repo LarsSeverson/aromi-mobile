@@ -28,19 +28,17 @@ const EditAccordsPage = () => {
     searchAccords(newSearchTerm)
   }
 
-  const processSelected = (id: number | undefined) => {
+  const processSelected = useCallback((id: number | undefined) => {
     if (id === undefined) {
       return
     }
 
-    if (selectedAccords.current.has(id)) {
-      selectedAccords.current.delete(id)
-    } else {
-      selectedAccords.current.add(id)
-    }
+    selectedAccords.current.has(id)
+      ? selectedAccords.current.delete(id)
+      : selectedAccords.current.add(id)
 
     setSelectedCount(selectedAccords.current.size)
-  }
+  }, [])
 
   if (!accords) {
     return null

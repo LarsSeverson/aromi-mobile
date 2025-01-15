@@ -1,6 +1,6 @@
 import useQuery from './useQuery'
 import { FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import fragranceAccords from '../graphql/queries/fragranceAccords'
 
 export interface FragranceAccordsResult {
@@ -54,7 +54,16 @@ const useFragranceAccords = (id: number, name: string, limit: number = 30, offse
     setHasMore(accordsData.length >= localVariables.current.limit)
   }, [data])
 
-  return { accords, loading, error, noResults, hasMore, refresh, search, getMore }
+  return useMemo(() => ({
+    accords,
+    loading,
+    error,
+    noResults,
+    hasMore,
+    refresh,
+    search,
+    getMore
+  }), [accords, error, getMore, hasMore, loading, noResults, refresh, search])
 }
 
 export default useFragranceAccords
