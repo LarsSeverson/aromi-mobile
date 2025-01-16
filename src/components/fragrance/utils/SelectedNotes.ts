@@ -1,7 +1,9 @@
-import { FragranceNotes } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
-interface SelectedNotesState {
-  value: FragranceNotes | null
+export const selectedNotesState = new Map<string, FragranceNote>()
+
+export const getNoteKey = (id: number, layer: NoteLayer): string => {
+  const key = `${id}_${layer}`
+
+  return key
 }
-
-export const selectedNotesState: SelectedNotesState = { value: null }

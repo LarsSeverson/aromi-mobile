@@ -5,6 +5,7 @@ const fragranceNotes = `#graphql
       noteId
       name
       votes
+      layer
     }
   }
 `

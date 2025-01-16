@@ -24,7 +24,7 @@ const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => 
       {topNotes.length > 0 && (
         <>
           <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ flex: 1, textAlign: 'left', width: '100%', opacity: 0.8, marginBottom: 5 }}>top notes</Text>
+            <Text style={{ flex: 1, textAlign: 'left', width: '100%', opacity: 0.8, marginBottom: 5 }}>top</Text>
             <FlatList
               data={topNotes}
               horizontal
@@ -42,7 +42,7 @@ const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => 
       {middleNotes.length > 0 && (
         <>
           <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ flex: 1, textAlign: 'left', width: '100%', opacity: 0.8, marginBottom: 5 }}>middle notes</Text>
+            <Text style={{ flex: 1, textAlign: 'left', width: '100%', opacity: 0.8, marginBottom: 5 }}>middle</Text>
             <FlatList
               data={middleNotes}
               horizontal
@@ -59,7 +59,7 @@ const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => 
 
       {baseNotes.length > 0 && (
         <View style={{ flex: 1, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ flex: 1, width: '100%', opacity: 0.8, marginBottom: 5 }}>base notes</Text>
+          <Text style={{ flex: 1, width: '100%', opacity: 0.8, marginBottom: 5 }}>base</Text>
           <FlatList
             data={baseNotes}
             horizontal

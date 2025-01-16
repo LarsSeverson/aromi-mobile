@@ -17,6 +17,7 @@ const HomeFragranceLayout = () => {
       headerStyle: { backgroundColor: theme.colors.background },
       headerBackVisible: false,
       headerTitle: '',
+      headerShadowVisible: false,
       headerLeft: () => <HeaderBackButton />
     }}
     >

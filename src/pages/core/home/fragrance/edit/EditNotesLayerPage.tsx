@@ -1,26 +1,32 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { selectedNotesState } from '@/src/components/fragrance/utils/SelectedNotes'
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getNoteKey, selectedNotesState } from '@/src/components/fragrance/utils/SelectedNotes'
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import { FragranceNote, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import SelectableList, { SelectableRenderItemProps } from '@/src/components/utils/SelectableList'
 import { useAppTheme } from '@/src/constants/Themes'
 import NotesLayerNote from '@/src/components/fragrance/NotesLayerNote'
 import FeedbackButton from '@/src/components/utils/FeedbackButton'
-import { ScrollView } from 'react-native-gesture-handler'
-import { ActivityIndicator } from 'react-native-paper'
+import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '@/src/components/utils/SearchInput'
+import SelectedButton from '@/src/components/utils/SelectedButton'
 
 const EditNotesLayerPage = () => {
-  const fragranceId = Number(useLocalSearchParams().fragranceId)
-  const layer = useLocalSearchParams().layer as NoteLayer
   const nav = useNavigation()
   const theme = useAppTheme()
-  const selectedNotes = useRef(new Map<number, FragranceNote>())
+
+  const fragranceId = Number(useLocalSearchParams().fragranceId)
+  const layer = useLocalSearchParams().layer as NoteLayer
+
+  const selectedNotes = useRef(selectedNotesState)
   const localSearchTerm = useRef('')
+
   const params = useMemo(() => ({ id: fragranceId, layer, fill: true, limit: 30 }), [fragranceId, layer])
+
+  const [selectedNotesCount, setSelectedNotesCount] = useState(selectedNotes.current.size)
+
   const {
     notes,
     loading,
@@ -33,15 +39,19 @@ const EditNotesLayerPage = () => {
   } = useFragranceNotes(params)
 
   const searchNotes = useCallback(search, [search])
-
   const getMoreNotes = useCallback(() => { !loading && hasMore && getMore() }, [getMore, hasMore, loading])
 
-  const handleSearch = (newSearchTerm: string) => {
-    localSearchTerm.current = newSearchTerm
-    searchNotes(newSearchTerm)
-  }
+  const onNoteSelected = useCallback((id: number, note: FragranceNote) => {
+    const key = getNoteKey(id, layer)
 
-  const renderNoteItem = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
+    selectedNotes.current.has(key)
+      ? selectedNotes.current.delete(key)
+      : selectedNotes.current.set(key, note)
+
+    setSelectedNotesCount(selectedNotes.current.size)
+  }, [layer])
+
+  const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
     return <NotesLayerNote item={item} index={index} selected={selected} />
   }, [])
 
@@ -58,6 +68,11 @@ const EditNotesLayerPage = () => {
     nav.setOptions({ headerTitle: `${layer} notes` })
   }, [nav, layer])
 
+  const handleSearch = (newSearchTerm: string) => {
+    localSearchTerm.current = newSearchTerm
+    searchNotes(newSearchTerm)
+  }
+
   if (!notes) {
     return null
   }
@@ -68,17 +83,23 @@ const EditNotesLayerPage = () => {
       <SelectableList
         data={notes}
         numColumns={3}
+        onEndReachedThreshold={0.5}
+        selectedItems={selectedNotes.current}
         renderItemStyle={{ width: '33.33%' }}
-        renderItem={renderNoteItem}
+        renderItem={onRenderNote}
+        getKey={(item) => getNoteKey(item.id, layer)}
         onEndReached={getMoreNotes}
         ListFooterComponent={onRenderListFooter}
-        onEndReachedThreshold={0.5}
+        onItemSelected={onNoteSelected}
       />
+
+      {selectedNotesCount > 0 && <SelectedButton selectedCount={selectedNotesCount} />}
+
+      {!hasMore && <Text>End of notes</Text>}
     </SafeAreaView>
   )
 }
 
 export default EditNotesLayerPage
 
-const styles = StyleSheet.create({
-})
+const styles = StyleSheet.create({})

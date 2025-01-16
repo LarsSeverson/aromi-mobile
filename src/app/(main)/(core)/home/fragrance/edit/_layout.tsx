@@ -13,15 +13,16 @@ const FragranceEditLayout = () => {
       {
         headerStyle: { backgroundColor: theme.colors.background },
         headerBackVisible: false,
+        headerShadowVisible: false,
         headerTitleStyle: TextStyles.headerTitle,
-        headerLeft: () => <HeaderCancelButton />
+        headerLeft: () => <HeaderBackButton />
       }
     }
     >
       <Stack.Screen name='gender' options={{ headerTitle: 'Gender' }} />
       <Stack.Screen name='accords' options={{ headerTitle: 'Accords' }} />
       <Stack.Screen name='notes' options={{ headerTitle: 'Notes' }} />
-      <Stack.Screen name='notes-layer' options={{ headerTitle: '', headerLeft: () => <HeaderBackButton /> }} />
+      <Stack.Screen name='notes-layer' options={{ headerTitle: '' }} />
     </Stack>
   )
 }

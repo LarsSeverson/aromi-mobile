@@ -4,7 +4,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import RowList, { RowListProps } from './RowList'
 import BouncyButton from './BouncyButton'
 
-export interface SelectableRenderItemProps<T> {
+export interface Identifiable { id: number }
+
+export interface SelectableRenderItemProps<T extends Identifiable> {
   item: T | null
 
   index: number
@@ -12,45 +14,40 @@ export interface SelectableRenderItemProps<T> {
   selected: boolean
 }
 
-export interface SelectableListItemProps<T> extends SelectableRenderItemProps<T> {
+export interface SelectableListItemProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
   disabled?: boolean | undefined
 
   renderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement
 
   style?: StyleProp<ViewStyle>
 
-  onItemSelected?: (newSelected: boolean) => void | undefined
+  onItemSelected?: (id: number, item: T, selected: boolean) => void | undefined
 }
 
-const SelectableListItem = <T, >(props: SelectableListItemProps<T>) => {
+const SelectableListItem = <T extends Identifiable, >(props: SelectableListItemProps<T>) => {
   const {
     item,
     index,
-    selected = false,
+    selected,
     disabled = false,
     style,
     renderItem,
     onItemSelected
   } = props
-  const [itemSelected, setItemSelected] = useState(selected || false)
 
   const handleItemSelected = useCallback(() => {
     if (disabled) return
 
-    const newSelected = !itemSelected
-
-    setItemSelected(newSelected)
-    onItemSelected?.(newSelected)
-  }, [disabled, itemSelected, onItemSelected])
+    item && onItemSelected?.(item.id, item, !selected)
+  }, [disabled, item, onItemSelected, selected])
 
   return (
     <BouncyButton style={style} onPress={handleItemSelected}>
-      {renderItem({ item, index, selected: itemSelected })}
+      {renderItem({ item, index, selected })}
     </BouncyButton>
   )
 }
 
-export interface Identifiable { id: number }
 export interface SelectableListProps<T extends Identifiable> extends Omit<RowListProps<T | null>, 'renderItem'> {
   data: Array<T | null>
 
@@ -62,37 +59,57 @@ export interface SelectableListProps<T extends Identifiable> extends Omit<RowLis
 
   renderItemStyle?: StyleProp<ViewStyle>
 
-  selectedItems?: Map<number, T> | undefined
+  selectedItems?: Map<number | string, T> | undefined
+
+  getKey?: (item: T) => string | undefined
+
+  isSelected?: (item: T) => boolean | undefined
 
   onEndReached?: () => void | undefined
-  onItemSelected?: (id: number, item: T) => void | undefined
+  onItemSelected?: (id: number, item: T, selected: boolean) => void | undefined
 }
 
 const SelectableList = <T extends Identifiable, >(props: SelectableListProps<T>) => {
   const {
     data,
+
     numRows,
     numColumns = 1,
+
     disabled,
+
     renderItemStyle,
+
     selectedItems,
-    renderItem
+
+    getKey,
+
+    isSelected,
+
+    renderItem,
+    onItemSelected
   } = props
 
   const List = numRows ? RowList : FlatList
 
   const renderSelectableItem: ListRenderItem<T | null> = useCallback(({ item, index }) => {
+    if (!item) return null
+
+    const key = getKey?.(item) || item.id
+    const selected = ((isSelected?.(item) || selectedItems?.has(key))) || false
+
     return (
       <SelectableListItem
-        selected={(item && selectedItems?.has(item.id)) || false}
+        selected={selected}
         disabled={disabled}
         item={item}
         index={index}
         style={renderItemStyle}
         renderItem={renderItem}
+        onItemSelected={onItemSelected}
       />
     )
-  }, [selectedItems, disabled, renderItemStyle, renderItem])
+  }, [selectedItems, disabled, renderItemStyle, getKey, isSelected, renderItem, onItemSelected])
 
   const keyExtractor = useCallback((item: T | null, index: number) => {
     return item?.id.toString() || `placeholder-${index}`

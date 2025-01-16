@@ -6,14 +6,13 @@ export interface RowListProps<T> extends FlatListProps<T> {
 }
 
 const RowList = <T, >(props: RowListProps<T>) => {
-  const { numRows = 1, ...restProps } = props
+  const { numRows = 1, numColumns, ...restProps } = props
   const dataLength = restProps?.data?.length || 0
-  const numColumns = Math.ceil(dataLength / numRows)
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <FlatList
-        numColumns={numColumns}
+        numColumns={numColumns || Math.ceil(dataLength / numRows)}
         alwaysBounceVertical={false}
         {...restProps}
       />
