@@ -2,70 +2,89 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragranceAccords from '@/src/hooks/useFragranceAccords'
-import AccordList from '@/src/components/fragrance/AccordList'
-import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import ButtonText from '@/src/components/utils/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 import SearchInput from '@/src/components/utils/SearchInput'
-import BouncyButton from '@/src/components/utils/BouncyButton'
+import SelectableList, { SelectableRenderItemProps } from '@/src/components/utils/SelectableList'
+import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import SelectableAccord from '@/src/components/fragrance/SelectableAccord'
+import { ActivityIndicator, Text } from 'react-native-paper'
+import FeedbackButton from '@/src/components/utils/FeedbackButton'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const EditAccordsPage = () => {
   const theme = useAppTheme()
   const router = useRouter()
+
   const fragranceId = Number(useLocalSearchParams().fragranceId)
+
   const [selectedCount, setSelectedCount] = useState(0)
-  const selectedAccords = useRef(new Set<number>())
+
+  const selectedAccords = useRef(new Map<number, FragranceAccord>())
   const localSearchTerm = useRef('')
-  const { accords, loading, error, noResults, hasMore, refresh, search, getMore } = useFragranceAccords(fragranceId, localSearchTerm.current)
+
+  const {
+    accords,
+    loading,
+    error,
+    noResults,
+    hasMore,
+    refresh,
+    search,
+    getMore
+  } = useFragranceAccords(fragranceId, localSearchTerm.current)
 
   const searchAccords = useCallback(search, [search])
+  const getMoreAccords = useCallback(() => { !loading && hasMore && getMore() }, [loading, hasMore, getMore])
 
-  const getMoreAccords = useCallback(() => !loading && hasMore && getMore(), [loading, hasMore, getMore])
-
-  const processSearch = (newSearchTerm: string) => {
+  const handleSearch = useCallback((newSearchTerm: string) => {
     localSearchTerm.current = newSearchTerm
     searchAccords(newSearchTerm)
-  }
+  }, [searchAccords])
 
-  const processSelected = useCallback((id: number | undefined) => {
-    if (id === undefined) {
-      return
-    }
-
+  const onAccordSelected = useCallback((id: number, accord: FragranceAccord) => {
     selectedAccords.current.has(id)
       ? selectedAccords.current.delete(id)
-      : selectedAccords.current.add(id)
+      : selectedAccords.current.set(id, accord)
 
     setSelectedCount(selectedAccords.current.size)
   }, [])
+
+  const onRenderAccord = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceAccord>) => {
+    return <SelectableAccord item={item} index={index} selected={selected} />
+  }, [])
+
+  const onRenderListFooter = useCallback(() => {
+    return (
+      <View>
+        {loading && <ActivityIndicator />}
+        {!hasMore && <Text style={{ alignSelf: 'center' }}>End of accords</Text>}
+        {!noResults && !hasMore && <FeedbackButton />}
+      </View>
+    )
+  }, [hasMore, loading, noResults])
 
   if (!accords) {
     return null
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <SearchInput onSearch={processSearch} />
+    <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+      <SearchInput onSearch={handleSearch} />
 
-      <AccordList
-        accords={accords}
-        gap={10}
-        loading={loading}
-        noResults={noResults}
-        searchTerm={localSearchTerm.current}
-        selectedAccordIds={selectedAccords.current}
-        style={{ padding: 10 }}
-        accordSelected={processSelected}
-        getMoreAccords={getMoreAccords}
+      <SelectableList
+        data={accords}
+        numColumns={3}
+        onEndReachedThreshold={0.5}
+        selectedItems={selectedAccords.current}
+        renderItemStyle={{ width: '33.33%' }}
+        renderItem={onRenderAccord}
+        onItemSelected={onAccordSelected}
+        onEndReached={getMoreAccords}
+        ListFooterComponent={onRenderListFooter}
       />
-
-      {selectedCount > 0 && (
-        <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background }]}>
-          <ButtonText text={`Submit (${selectedCount})`} color={Colors.button} textColor={Colors.white} style={styles.submit} />
-        </View>
-      )}
-    </View>
+    </SafeAreaView>
   )
 }
 

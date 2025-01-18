@@ -56,6 +56,7 @@ const EditNotesLayerPage = () => {
     return (
       <View>
         {loading && <ActivityIndicator />}
+        {!hasMore && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
         {!noResults && !hasMore && <FeedbackButton />}
       </View>
     )
@@ -88,10 +89,6 @@ const EditNotesLayerPage = () => {
         ListFooterComponent={onRenderListFooter}
         onItemSelected={onNoteSelected}
       />
-
-      {selectedNotesCount > 0 && <SubmitButton text={`Submit (${selectedNotesCount})`} />}
-
-      {!hasMore && <Text>End of notes</Text>}
     </SafeAreaView>
   )
 }

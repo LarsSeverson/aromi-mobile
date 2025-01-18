@@ -87,9 +87,7 @@ const EditCharacteristicsPage = () => {
         />
         <FeedbackButton />
       </ScrollView>
-      {interacted && <SubmitButton />}
     </SafeAreaView>
-
   )
 }
 

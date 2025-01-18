@@ -6,7 +6,7 @@ import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 
-export interface NotesLayerNoteProps<FragranceNote extends Identifiable> extends SelectableRenderItemProps<FragranceNote> {}
+export interface NotesLayerNoteProps<T extends Identifiable> extends SelectableRenderItemProps<T> {}
 
 const NotesLayerNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: NotesLayerNoteProps<FragranceNote>) => {
   const theme = useAppTheme()

@@ -6,26 +6,20 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 
 const EditGenderPage = () => {
   const router = useRouter()
-  const genderData = Number(useLocalSearchParams().genderData as string)
 
-  const submitGender = (value: number) => {
-    router.dismiss()
-  }
+  const genderData = Number(useLocalSearchParams().genderData as string)
 
   return (
     <View>
       <EditFragranceSlider
-        storedValue={genderData || 50}
+        storedValue={genderData}
         icon={<GenderIcon />}
         leftLabel='feminine'
         rightLabel='masculine'
-        style={{ padding: 20 }}
-        onSubmit={submitGender}
+        style={{ padding: 10 }}
       />
     </View>
   )
 }
 
 export default EditGenderPage
-
-const styles = StyleSheet.create({})

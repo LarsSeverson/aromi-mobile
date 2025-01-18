@@ -46,8 +46,8 @@ const useQuery = <T, >(props: UseQueryProps) => {
   }, [authMode, query])
 
   useEffect(() => {
-    getData(stableVariables.current)
-  }, [getData])
+    !data && getData(stableVariables.current)
+  }, [data, getData])
 
   const refresh = useCallback((variables: Record<string, any> | undefined) => {
     getData(variables)
