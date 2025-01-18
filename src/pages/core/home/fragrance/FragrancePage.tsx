@@ -39,6 +39,10 @@ const FragrancePage = () => {
     router.push({ pathname: '/(core)/home/fragrance/edit/notes', params: { fragranceId } })
   }
 
+  const gotoEditCharacteristics = () => {
+    router.push({ pathname: '/(core)/home/fragrance/edit/characteristics', params: { fragranceId } })
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <AromiImage path={previewUrl} style={styles.imageWrapper}>
@@ -75,7 +79,7 @@ const FragrancePage = () => {
         <NotesPyramid notes={fragrance.notes || []} />
       </FragranceCategory>
 
-      <FragranceCategory title='Characteristics' buttonText='what are its characteristics?'>
+      <FragranceCategory title='Characteristics' buttonText='what are its characteristics?' onButtonPress={gotoEditCharacteristics}>
         <FragranceCharacteristics fragrance={fragrance} />
       </FragranceCategory>
 

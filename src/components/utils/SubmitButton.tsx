@@ -5,23 +5,23 @@ import { useAppTheme } from '@/src/constants/Themes'
 import ButtonText from './ButtonText'
 import { BouncyButtonProps } from './BouncyButton'
 
-export interface SelectedButtonProps extends BouncyButtonProps {
-  selectedCount: number
+export interface SubmitButtonProps extends BouncyButtonProps {
+  text?: string | undefined
 }
 
-const SelectedButton = (props: SelectedButtonProps) => {
+const SubmitButton = (props: SubmitButtonProps) => {
   const theme = useAppTheme()
 
-  const { selectedCount, ...rest } = props
+  const { text, ...rest } = props
 
   return (
     <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background }]}>
-      <ButtonText text={`Submit (${selectedCount})`} color={Colors.button} textColor={Colors.white} style={styles.submit} {...rest} />
+      <ButtonText text={text || 'Submit'} color={Colors.button} textColor={Colors.white} style={styles.submit} {...rest} />
     </View>
   )
 }
 
-export default SelectedButton
+export default SubmitButton
 
 const styles = StyleSheet.create({
   submitWrapper: {

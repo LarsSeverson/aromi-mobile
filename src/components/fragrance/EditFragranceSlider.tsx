@@ -1,47 +1,45 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import MiddleSlider from '../stats/MiddleSlider'
-import ButtonText from '../utils/ButtonText'
+import MiddleSlider, { MiddleSliderProps } from '../stats/MiddleSlider'
 import { Colors } from '@/src/constants/Colors'
 
-export interface EditFragranceSliderProps {
-  storedValue?: number
-  leftLabel?: string
-  rightLabel?: string
-  icon?: React.ReactNode
-  style?: ViewStyle
-  onSubmit?: (value: number) => void
+export interface EditFragranceSliderProps extends MiddleSliderProps {
+  storedValue?: number | undefined
+
+  label?: string | undefined
+  leftLabel?: string | undefined
+  rightLabel?: string | undefined
+
+  icon?: React.ReactNode | undefined
+
+  style?: ViewStyle | undefined
 }
 
 const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFragranceSliderProps) => {
-  const { storedValue = 50, leftLabel = '', rightLabel = '', icon, onSubmit, style } = props
-  const [submitDisabled, setSubmitDisabled] = React.useState(true)
+  const { storedValue = 50, label, leftLabel = '', rightLabel = '', icon, style, ...rest } = props
 
   return (
     <View style={StyleSheet.compose(styles.wrapper, style)}>
       {icon}
 
+      {label && <Text style={{ alignSelf: 'center', margin: -10 }}>{label}</Text>}
+
       <View style={styles.storedDataContainer}>
-        <View style={[styles.storedData, { width: 100 - storedValue, backgroundColor: Colors.pink }]} />
-        <View style={[styles.storedData, { width: storedValue, backgroundColor: Colors.button }]} />
+        <View style={[styles.storedDataWrapper, { flexDirection: 'row-reverse' }]}>
+          <View style={{ width: `${100 - storedValue}%`, borderRadius: 20, backgroundColor: Colors.pink }} />
+        </View>
+        <View style={styles.storedDataWrapper}>
+          <View style={{ width: `${storedValue}%`, height: '100%', borderRadius: 20, backgroundColor: Colors.button }} />
+        </View>
       </View>
 
-      <MiddleSlider focusPoints={[25, 50, 75]} onInteracted={() => submitDisabled && setSubmitDisabled(false)} />
+      <MiddleSlider focusPoints={[16, 32, 50, 66, 84]} {...rest} />
 
       <View style={styles.labelsWrapper}>
-        <Text variant='titleSmall' style={{ opacity: 0.6 }}>{leftLabel}</Text>
-        <Text variant='titleSmall' style={{ opacity: 0.6 }}>{rightLabel}</Text>
+        <Text style={{ opacity: 0.6 }}>{leftLabel}</Text>
+        <Text style={{ opacity: 0.6 }}>{rightLabel}</Text>
       </View>
-
-      <ButtonText
-        text='Submit'
-        disabled={submitDisabled}
-        color={Colors.button}
-        textColor={Colors.white}
-        onPress={() => onSubmit?.(storedValue)}
-        style={{ opacity: submitDisabled ? 0.5 : 1 }}
-      />
     </View>
   )
 }
@@ -58,11 +56,12 @@ const styles = StyleSheet.create({
     height: 3,
     borderRadius: 20,
     justifyContent: 'center',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    alignSelf: 'center'
   },
-  storedData: {
-    height: '100%',
-    borderRadius: 20
+  storedDataWrapper: {
+    borderRadius: 20,
+    flex: 1
   },
   labelsWrapper: {
     flexDirection: 'row',
