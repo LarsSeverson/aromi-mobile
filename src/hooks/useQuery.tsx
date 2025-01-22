@@ -1,21 +1,24 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
-import { generateClient, GraphQLResult } from 'aws-amplify/api'
+import { GraphQLResult } from 'aws-amplify/api'
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils'
-
-const client = generateClient()
+import client from './useClient'
 
 interface UseQueryProps {
   query: string
-  variables?: Record<string, any>
+
+  variables?: Record<string, any> | undefined
+
   authMode: GraphQLAuthMode
 }
 
 const useQuery = <T, >(props: UseQueryProps) => {
-  const { query, variables, authMode } = props
+  const { query, variables, authMode } = useMemo(() => props, [props])
+
+  const stableVariables = useRef(variables)
+
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const stableVariables = useRef(variables)
 
   const getData = useCallback(async (variables: Record<string, any> | undefined): Promise<T | null> => {
     setLoading(true)
@@ -46,7 +49,7 @@ const useQuery = <T, >(props: UseQueryProps) => {
   }, [authMode, query])
 
   useEffect(() => {
-    !data && getData(stableVariables.current)
+    !data && stableVariables.current && getData(stableVariables.current)
   }, [data, getData])
 
   const refresh = useCallback((variables: Record<string, any> | undefined) => {

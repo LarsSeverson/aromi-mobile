@@ -17,6 +17,7 @@ export interface SignUpPageProps {
 
 const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
   const { onSignUp, onLogIn } = props
+
   const aromiAuth = useAromiAuthContext()
 
   const [email, setEmail] = useState('')

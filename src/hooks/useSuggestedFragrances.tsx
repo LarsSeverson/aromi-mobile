@@ -1,4 +1,3 @@
-import { FragrancesArgs } from '@/aromi-backend/src/graphql/types/queryArgs'
 import suggestedFragrancesQuery from '../graphql/queries/suggestedFragrances'
 import useQuery from './useQuery'
 import { useMemo } from 'react'
