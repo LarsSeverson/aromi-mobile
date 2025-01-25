@@ -41,15 +41,13 @@ const useAromiAuth = () => {
     getData
   } = useQuery<UserQueryResult>({ query: userQuery, authMode: 'iam' })
 
-  if (error) {
-    console.log(error)
-  }
-
   const userGetInfo = useCallback(async (): Promise<AuthOutput<AuthUserInfo>> => {
     try {
       const { username, userId } = await getCurrentUser()
 
       const userInfo = { email: username, id: userId, state: AuthState.AUTHENTICATED }
+
+      await execute({ cognitoId: userId })
 
       setUserInfo(userInfo)
 
@@ -59,17 +57,13 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [])
+  }, [execute])
 
   const socialSignIn = useCallback(async (provider: 'Google' | 'Apple'): Promise<AuthOutput> => {
     try {
       await signInWithRedirect({ provider })
 
-      const { success, error, data } = await userGetInfo()
-
-      if (success && data && data.id) {
-        const user = await execute({ cognitoId: data.id })
-      }
+      const { success, error } = await userGetInfo()
 
       return { success, error }
     } catch (error: AuthError | any) {
@@ -77,7 +71,7 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [userGetInfo, execute])
+  }, [userGetInfo])
 
   const userSignUp = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
     try {
@@ -115,15 +109,13 @@ const useAromiAuth = () => {
         confirmationCode
       })
 
-      userId && execute({ cognitoId: userId })
-
       return { success: true, error: null }
     } catch (error: AuthError | any) {
       const authError = toConfirmSignUpError(error)
 
       return { success: false, error: authError }
     }
-  }, [userInfo.email, execute])
+  }, [userInfo.email])
 
   const userResendConfirmCode = useCallback(async (): Promise<AuthOutput> => {
     if (!userInfo.email) {
@@ -149,7 +141,7 @@ const useAromiAuth = () => {
     try {
       const { isSignedIn, nextStep } = await autoSignIn()
 
-      setUserInfo({ ...userInfo, state: isSignedIn ? AuthState.AUTHENTICATED : AuthState.UNAUTHENTICATED })
+      await userGetInfo()
 
       if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         const authError = new AromiAuthError("You haven't finished signing up yet.", AuthErrorCode.SIGN_UP_INCOMPLETE)
@@ -162,7 +154,7 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [userInfo])
+  }, [userGetInfo])
 
   const userLogIn = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
     try {
