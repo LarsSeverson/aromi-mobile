@@ -3,13 +3,17 @@ import { GraphQLResult } from 'aws-amplify/api'
 import { DocumentType, GraphQLAuthMode } from '@aws-amplify/core/internals/utils'
 import client from './useClient'
 
-export interface UseMutationProps {
-  mutation: string
+export type ResolverType = 'query' | 'mutation'
+
+export interface UseResolverProps {
+  resolver: string
+
+  type: ResolverType
 
   authMode: GraphQLAuthMode
 }
 
-export interface UseMutationReturn<T, V> {
+export interface UseResolverReturn<T, V> {
   data: T | null
 
   loading: boolean
@@ -20,8 +24,8 @@ export interface UseMutationReturn<T, V> {
   reset: () => void
 }
 
-const useMutation = <T, V>(props: UseMutationProps): UseMutationReturn<T, V> => {
-  const { mutation, authMode } = useMemo(() => props, [props])
+const useResolver = <T, V>(props: UseResolverProps): UseResolverReturn<T, V> => {
+  const { resolver, authMode } = useMemo(() => props, [props])
 
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
@@ -33,7 +37,7 @@ const useMutation = <T, V>(props: UseMutationProps): UseMutationReturn<T, V> => 
 
     try {
       const response = await client.graphql<V | any>({
-        query: mutation,
+        query: resolver,
         variables,
         authMode
       }) as GraphQLResult<T>
@@ -54,7 +58,7 @@ const useMutation = <T, V>(props: UseMutationProps): UseMutationReturn<T, V> => 
     } finally {
       setLoading(false)
     }
-  }, [authMode, mutation])
+  }, [authMode, resolver])
 
   const reset = useCallback(() => {
     setData(null)
@@ -65,4 +69,4 @@ const useMutation = <T, V>(props: UseMutationProps): UseMutationReturn<T, V> => 
   return { data, loading, error, execute, reset }
 }
 
-export default useMutation
+export default useResolver

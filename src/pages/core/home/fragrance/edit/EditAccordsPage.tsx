@@ -12,14 +12,14 @@ import SelectableAccord from '@/src/components/fragrance/SelectableAccord'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import FeedbackButton from '@/src/components/utils/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import useResolver from '@/src/hooks/useResolver'
+import { FragranceAccordUserVotesArgs, fragranceAccordUserVotesQuery, FragranceAccordUserVotesResults } from '@/src/graphql/queries/fragranceAccordUserVotes'
 
 const EditAccordsPage = () => {
   const theme = useAppTheme()
   const router = useRouter()
 
   const fragranceId = Number(useLocalSearchParams().fragranceId)
-
-  const [selectedCount, setSelectedCount] = useState(0)
 
   const selectedAccords = useRef(new Map<number, FragranceAccord>())
   const localSearchTerm = useRef('')
@@ -35,11 +35,25 @@ const EditAccordsPage = () => {
     getMore
   } = useFragranceAccords(fragranceId, localSearchTerm.current)
 
+  const {
+    data,
+    loading: votesLoading,
+    error: votesError,
+    execute,
+    reset
+  } = useResolver<FragranceAccordUserVotesResults, FragranceAccordUserVotesArgs>(
+    {
+      resolver: fragranceAccordUserVotesQuery,
+      type: 'query',
+      authMode: 'userPool'
+    })
+
   const searchAccords = useCallback(search, [search])
   const getMoreAccords = useCallback(() => { !loading && hasMore && getMore() }, [loading, hasMore, getMore])
 
   const handleSearch = useCallback((newSearchTerm: string) => {
     localSearchTerm.current = newSearchTerm
+
     searchAccords(newSearchTerm)
   }, [searchAccords])
 
@@ -47,8 +61,6 @@ const EditAccordsPage = () => {
     selectedAccords.current.has(id)
       ? selectedAccords.current.delete(id)
       : selectedAccords.current.set(id, accord)
-
-    setSelectedCount(selectedAccords.current.size)
   }, [])
 
   const onRenderAccord = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceAccord>) => {
@@ -91,20 +103,5 @@ const EditAccordsPage = () => {
 export default EditAccordsPage
 
 const styles = StyleSheet.create({
-  submitWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 10,
-    marginTop: 'auto'
-  },
-  submit: {
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  }
+
 })

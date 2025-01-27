@@ -3,6 +3,8 @@ import { GraphQLResult } from 'aws-amplify/api'
 import { GraphQLAuthMode } from '@aws-amplify/core/internals/utils'
 import client from './useClient'
 
+// TODO: This is now useResolver. Change all dependencies to use useResolver instead of useQuery
+
 interface UseQueryProps {
   query: string
 

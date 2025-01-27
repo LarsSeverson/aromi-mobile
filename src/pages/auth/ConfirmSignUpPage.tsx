@@ -5,6 +5,7 @@ import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { useLocalSearchParams } from 'expo-router'
 
 export interface ConfirmSignUpPageProps {
   onLogIn: () => void
@@ -13,8 +14,11 @@ export interface ConfirmSignUpPageProps {
 }
 
 const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignUpPageProps) => {
+  const email = useLocalSearchParams().email as string
+
   const { onLogIn, onSuccess, onEdit } = props
-  const { userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userInfo } = useAromiAuthContext()
+
+  const { userConfirmSignUp, userResendConfirmCode, userAutoLogIn } = useAromiAuthContext()
 
   const [loading, setLoading] = useState<boolean | null>(null)
 
@@ -28,7 +32,7 @@ const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignU
 
   const confirm = async (confirmationCode: string) => {
     setLoading(true)
-    const { success, error } = await userConfirmSignUp(confirmationCode)
+    const { success, error } = await userConfirmSignUp(email, confirmationCode)
     setLoading(false)
 
     if (success) {
@@ -50,7 +54,7 @@ const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignU
   }
 
   const resend = async () => {
-    const { success, error } = await userResendConfirmCode()
+    const { success, error } = await userResendConfirmCode(email)
 
     if (success) {
       return
@@ -63,7 +67,7 @@ const ConfirmSignUpPage: React.FC<ConfirmSignUpPageProps> = (props: ConfirmSignU
 
   return (
     <KeyboardScrollView keyboardShouldPersistTaps='always' style={styles.wrapper}>
-      <ConfirmationCode to={userInfo.email || 'WHO ARE YOU'} loading={loading} onCompleted={(code) => confirm(code)} onEdit={edit} onReset={resend} />
+      <ConfirmationCode to={email || 'WHO ARE YOU'} loading={loading} onCompleted={(code) => confirm(code)} onEdit={edit} onReset={resend} />
     </KeyboardScrollView>
   )
 }

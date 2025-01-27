@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
 import ButtonText from '@/src/components/utils/ButtonText'
@@ -10,22 +10,26 @@ import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollv
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
 import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
-export interface LogInPageProps {
-  onLogIn: () => void
-  onConfirmSignUp: () => void
-  onSignUp: () => void
-  onForgotPassword: () => void
-}
-
-const LogInPage: React.FC<LogInPageProps> = (props: LogInPageProps) => {
-  const { onLogIn, onConfirmSignUp, onSignUp, onForgotPassword } = props
+const LogInPage = () => {
+  const router = useRouter()
+  const storedEmail = useLocalSearchParams().email as string
   const aromiAuth = useAromiAuthContext()
-  const [email, setEmail] = useState(aromiAuth.userInfo.email || '')
+
+  const [email, setEmail] = useState(storedEmail || '')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [password, setPassword] = useState('')
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(false)
+
+  const onForgotPassword = useCallback(() => {
+    router.push('/auth/help')
+  }, [router])
+
+  const onSignUp = useCallback(() => {
+    router.push('/auth/SignUp')
+  }, [router])
 
   const logIn = async () => {
     const [e, p] = validate(true, true)
@@ -38,12 +42,12 @@ const LogInPage: React.FC<LogInPageProps> = (props: LogInPageProps) => {
     setLoading(false)
 
     if (success) {
-      return onLogIn()
+      return router.replace('/(core)')
     }
 
     if (error) {
       if (error.code === AuthErrorCode.SIGN_UP_INCOMPLETE) {
-        onConfirmSignUp()
+        router.push({ pathname: '/auth/ConfirmSignUp', params: { email } })
       } else if (error.code === AuthErrorCode.USER_NOT_FOUND) {
         showNotifaction.error(error.message)
       } else {

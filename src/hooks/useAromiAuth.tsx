@@ -1,10 +1,9 @@
 import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
 import { useCallback, useMemo, useState } from 'react'
 import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './utils/AuthErrors'
-import useMutation from './useMutation'
-import createUserMutation, { CreateUserMutationArgs, CreateUserMutationResult } from '../graphql/queries/createUser'
-import useQuery from './useQuery'
-import userQuery, { UserQueryResult } from '../graphql/queries/user'
+import useResolver from './useResolver'
+import createUserMutation, { CreateUserMutationArgs, CreateUserMutationResult } from '../graphql/mutations/createUser'
+import { User } from '@/aromi-backend/src/graphql/types/userTypes'
 
 export enum AuthState {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
@@ -20,44 +19,47 @@ export interface AuthOutput<T = null> {
 }
 
 export interface AuthUserInfo {
-  id: string | null
-  email: string | null
+  user?: User | null
 
   state: AuthState
 }
 
 const useAromiAuth = () => {
-  const [userInfo, setUserInfo] = useState<AuthUserInfo>({ id: null, email: null, state: AuthState.UNAUTHENTICATED })
+  const [userInfo, setUserInfo] = useState<AuthUserInfo>({ user: null, state: AuthState.UNAUTHENTICATED })
 
   const {
-    data: mutData,
-    loading: mutLoading,
-    error,
-    execute
-  } = useMutation<CreateUserMutationResult, CreateUserMutationArgs>({ mutation: createUserMutation, authMode: 'iam' })
-  const {
-    data: queData,
-    loading: queLoading,
-    getData
-  } = useQuery<UserQueryResult>({ query: userQuery, authMode: 'iam' })
+    execute: createUser,
+    error: createUserError
+  } = useResolver<CreateUserMutationResult, CreateUserMutationArgs>(
+    {
+      resolver: createUserMutation,
+      type: 'mutation',
+      authMode: 'userPool'
+    }
+  )
 
   const userGetInfo = useCallback(async (): Promise<AuthOutput<AuthUserInfo>> => {
     try {
       const { username, userId } = await getCurrentUser()
 
-      const userInfo = { email: username, id: userId, state: AuthState.AUTHENTICATED }
+      const user = await createUser({ cognitoId: userId, email: username })
+      const userData = user?.user || null
 
-      await execute({ cognitoId: userId })
+      console.log(userData, createUserError)
 
-      setUserInfo(userInfo)
+      const error = userData ? null : new AromiAuthError('Something went wrong getting this user', AuthErrorCode.USER_NOT_FOUND)
 
-      return { success: true, error: null, data: userInfo }
+      const newUserInfo = error ? { user: userData, state: AuthState.AUTHENTICATED } : userInfo
+
+      !error && setUserInfo(newUserInfo)
+
+      return { success: !error, error, data: newUserInfo }
     } catch (error: AuthError | any) {
       const authError = toGetUserInfoError(error)
 
       return { success: false, error: authError }
     }
-  }, [execute])
+  }, [createUser, createUserError, userInfo])
 
   const socialSignIn = useCallback(async (provider: 'Google' | 'Apple'): Promise<AuthOutput> => {
     try {
@@ -75,7 +77,7 @@ const useAromiAuth = () => {
 
   const userSignUp = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
     try {
-      const { userId } = await signUp({
+      await signUp({
         username: email,
         password,
         options: {
@@ -86,8 +88,6 @@ const useAromiAuth = () => {
         }
       })
 
-      setUserInfo({ id: userId || '', email, state: AuthState.UNAUTHENTICATED })
-
       return { success: true, error: null }
     } catch (error: AuthError | any) {
       const authError = toSignUpError(error)
@@ -96,16 +96,10 @@ const useAromiAuth = () => {
     }
   }, [])
 
-  const userConfirmSignUp = useCallback(async (confirmationCode: string): Promise<AuthOutput> => {
-    if (!userInfo.email) {
-      const authError = new AromiAuthError('You are not authorized to perform this action.', AuthErrorCode.SERVICE_EXCEPTION)
-
-      return { success: false, error: authError }
-    }
-
+  const userConfirmSignUp = useCallback(async (email: string, confirmationCode: string): Promise<AuthOutput> => {
     try {
-      const { userId } = await confirmSignUp({
-        username: userInfo.email,
+      await confirmSignUp({
+        username: email,
         confirmationCode
       })
 
@@ -115,18 +109,12 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [userInfo.email])
+  }, [])
 
-  const userResendConfirmCode = useCallback(async (): Promise<AuthOutput> => {
-    if (!userInfo.email) {
-      const authError = new AromiAuthError('You are not authorized to perform this action.', AuthErrorCode.SERVICE_EXCEPTION)
-
-      return { success: false, error: authError }
-    }
-
+  const userResendConfirmCode = useCallback(async (email: string): Promise<AuthOutput> => {
     try {
       await resendSignUpCode({
-        username: userInfo.email
+        username: email
       })
 
       return { success: true, error: null }
@@ -135,7 +123,7 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [userInfo.email])
+  }, [])
 
   const userAutoLogIn = useCallback(async (): Promise<AuthOutput> => {
     try {
@@ -163,7 +151,7 @@ const useAromiAuth = () => {
         password
       })
 
-      setUserInfo(prev => ({ ...prev, email, state: isSignedIn ? AuthState.AUTHENTICATED : AuthState.UNAUTHENTICATED }))
+      await userGetInfo()
 
       if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
         const authError = new AromiAuthError("You haven't finished signing up yet.", AuthErrorCode.SIGN_UP_INCOMPLETE)
@@ -176,14 +164,14 @@ const useAromiAuth = () => {
 
       return { success: false, error: authError }
     }
-  }, [])
+  }, [userGetInfo])
 
   const userSignOut = useCallback(async (): Promise<AuthOutput> => {
     try {
       await signOut()
       const { success, error } = await userGetInfo()
 
-      setUserInfo({ id: null, email: null, state: AuthState.UNAUTHENTICATED })
+      setUserInfo({ user: null, state: AuthState.UNAUTHENTICATED })
 
       return { success: !success, error }
     } catch (error) {

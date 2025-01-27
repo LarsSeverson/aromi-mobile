@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
 import ButtonText from '@/src/components/utils/ButtonText'
@@ -9,15 +9,10 @@ import { TextStyles } from '@/src/constants/TextStyles'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
+import { useRouter } from 'expo-router'
 
-export interface SignUpPageProps {
-  onSignUp: () => void
-  onLogIn: () => void
-}
-
-const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
-  const { onSignUp, onLogIn } = props
-
+const SignUpPage = () => {
+  const router = useRouter()
   const aromiAuth = useAromiAuthContext()
 
   const [email, setEmail] = useState('')
@@ -29,19 +24,23 @@ const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
   const [loading, setLoading] = useState(false)
   const [continueLevel, setContinueLevel] = useState(0)
 
+  const gotoLogin = useCallback(() => {
+    router.push('/auth/LogIn')
+  }, [router])
+
   const createAccount = async () => {
     setLoading(true)
     const { success, error } = await aromiAuth.userSignUp(email, password)
     setLoading(false)
 
     if (success) {
-      return onSignUp()
+      return router.push({ pathname: '/(main)/auth/ConfirmSignUp', params: { email } })
     }
 
     if (error) {
       showNotifaction.error(error.message)
       if (error.code === AuthErrorCode.USERNAME_EXISTS) {
-        onLogIn()
+        return router.push({ pathname: '/auth/LogIn', params: { email } })
       }
     }
   }
@@ -173,7 +172,7 @@ const SignUpPage: React.FC<SignUpPageProps> = (props: SignUpPageProps) => {
         )}
       </View>
       <ButtonText text='Continue' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} />
-      <ButtonText text='Already have an account?' onPress={onLogIn} />
+      <ButtonText text='Already have an account?' onPress={gotoLogin} />
       <View style={styles.orWrapper}>
         <Divider style={{ flex: 1 }} />
         <Text>or</Text>
