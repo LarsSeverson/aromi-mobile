@@ -28,5 +28,5 @@ export interface FragranceAccordUserVotesResult {
 }
 
 export interface FragranceAccordUserVotesResults {
-  fragranceAccordUserVotesResults: FragranceAccordUserVotesResult[]
+  fragranceAccordUserVotes: FragranceAccordUserVotesResult[]
 }

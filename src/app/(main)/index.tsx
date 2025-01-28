@@ -2,21 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Redirect } from 'expo-router'
 import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import * as SplashScreen from 'expo-splash-screen'
-import { signOut } from 'aws-amplify/auth'
+import { AuthState } from '@/src/hooks/useAromiAuth'
 
 const MainIndex = () => {
-  const { userGetInfo } = useAromiAuthContext()
-  const [authenticated, setAuthenticated] = useState<boolean | null>(null)
+  const { userInfo, initialized } = useAromiAuthContext()
   const [splashHidden, setSplashHidden] = useState(false)
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      const { success } = await userGetInfo()
-      setAuthenticated(success)
-    }
-
-    initializeAuth()
-  }, [userGetInfo])
+  const [authenticated, setAuthenticated] = useState(false)
 
   useEffect(() => {
     const hideSplash = async () => {
@@ -28,12 +19,14 @@ const MainIndex = () => {
       }
     }
 
-    if (authenticated !== null) {
-      hideSplash()
-    }
-  }, [authenticated])
+    const authCheck = initialized && userInfo.state === AuthState.AUTHENTICATED
 
-  if (authenticated === null || !splashHidden) {
+    setAuthenticated(authCheck)
+
+    initialized && hideSplash()
+  }, [initialized, userInfo.state])
+
+  if (!splashHidden) {
     return null
   }
 

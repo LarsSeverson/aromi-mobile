@@ -24,7 +24,7 @@ const EditNotesLayerPage = () => {
 
   const params = useMemo(() => ({ id: fragranceId, layer, fill: true, limit: 30 }), [fragranceId, layer])
 
-  const [selectedNotesCount, setSelectedNotesCount] = useState(selectedNotes.current.size)
+  // const [selectedNotesCount, setSelectedNotesCount] = useState(selectedNotes.current.size)
 
   const {
     notes,
@@ -45,7 +45,7 @@ const EditNotesLayerPage = () => {
       ? selectedNotes.current.delete(id)
       : selectedNotes.current.set(id, note)
 
-    setSelectedNotesCount(selectedNotes.current.size)
+    // setSelectedNotesCount(selectedNotes.current.size)
   }, [])
 
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {

@@ -1,10 +1,12 @@
 import useQuery from './useQuery'
-import { FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceAccord, FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import fragranceAccords, { FragranceAccordsArgs, FragranceAccordsResult } from '../graphql/queries/fragranceAccords'
 import useResolver from './useResolver'
 import { FragranceAccordUserVotesArgs, fragranceAccordUserVotesQuery, FragranceAccordUserVotesResult, FragranceAccordUserVotesResults } from '../graphql/queries/fragranceAccordUserVotes'
 import { useAromiAuthContext } from './useAromiAuthContext'
+import { VoteOnAccordMutationResult } from '../graphql/mutations/voteOnNote'
+import { voteOnAccordMutation, VoteOnAccordMutationArgs } from '../graphql/mutations/voteOnAccord'
 
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
@@ -37,10 +39,11 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
       name
     }
   )
+
   const votesVars = useRef<VotesVars>(
     userInfo.user
       ? {
-          userId: userInfo.user?.id,
+          userId: userInfo.user.id,
           fragranceAccordIds: [],
           limit,
           offset: 0
@@ -52,8 +55,8 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState({ accords: false, votes: false })
   const [error, setError] = useState({ accords: false, votes: false })
-  const [curAccords, setCurAccords] = useState<FragranceAccords>([])
-  const [curVotes, setCurVotes] = useState(new Map<number, FragranceAccordUserVotesResult>())
+  const [curAccords, setCurAccords] = useState<FragranceAccords | null>(null)
+  const [curVotes, setCurVotes] = useState<Map<number, FragranceAccordUserVotesResult> | null>(null)
 
   const {
     data: accords,
@@ -70,6 +73,7 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
   )
 
   const {
+    data: votes,
     loading: votesLoading,
     error: votesError,
     execute: getVotes,
@@ -82,14 +86,34 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     }
   )
 
-  const searchByName = useCallback((name: string) => {
-    accordVars.current.name = name
+  const {
+    execute: voteOnAccord
+  } = useResolver<VoteOnAccordMutationResult, VoteOnAccordMutationArgs>(
+    {
+      resolver: voteOnAccordMutation,
+      type: 'mutation',
+      authMode: 'userPool'
+    }
+  )
+
+  const refresh = useCallback(() => {
+    accordVars.current.name = ''
     accordVars.current.offset = 0
 
     resetAccords()
+    resetVotes()
+
+    setNoResults(false)
+    setHasMore(true)
+  }, [resetAccords, resetVotes])
+
+  const searchByName = useCallback(async (name: string) => {
+    refresh()
+
+    accordVars.current.name = name
 
     getAccords(accordVars.current)
-  }, [resetAccords, getAccords])
+  }, [getAccords, refresh])
 
   const getMore = useCallback(() => {
     const nextOffset = accordVars.current.offset + accordVars.current.limit
@@ -110,37 +134,42 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
   const updateCurrentVotes = useCallback(async (accords: FragranceAccords) => {
     if (!votesVars.current) return
 
-    const fragranceAccordIds = accords.map(accord => accord.fragranceId)
+    const fragranceAccordIds = accords.map(accord => accord.id)
 
     votesVars.current.fragranceAccordIds = fragranceAccordIds
 
     const votesData = await getVotes(votesVars.current)
 
-    if (!(votesData?.fragranceAccordUserVotesResults)) return
+    if (!(votesData?.fragranceAccordUserVotes)) return
 
-    const votes = votesData.fragranceAccordUserVotesResults
+    const votes = votesData.fragranceAccordUserVotes
 
     setCurVotes((prev) => {
-      votes.forEach(vote => prev.set(vote.fragranceAccordId, vote))
+      if (!prev) prev = new Map<number, FragranceAccordUserVotesResult>()
+
+      votes.filter(vote => vote.deletedAt === null).forEach(vote => prev.set(vote.fragranceAccordId, vote))
 
       return new Map(prev)
     })
   }, [getVotes])
 
-  const onAccordsChanged = useCallback((accords?: FragranceAccords | undefined) => {
-    if (!accords) return
+  const onAccordsChanged = useCallback(async (accords?: FragranceAccords | undefined) => {
+    if (!accords || !hasMore) return
 
-    updateCurrentAccords(accords)
     updateCurrentVotes(accords)
+    updateCurrentAccords(accords)
 
     setNoResults(accords.length === 0)
     setHasMore(accords.length >= accordVars.current.limit)
-  }, [updateCurrentAccords, updateCurrentVotes])
+  }, [hasMore, updateCurrentAccords, updateCurrentVotes])
 
-  const refresh = useCallback(() => {
-    resetAccords()
-    resetVotes()
-  }, [resetAccords, resetVotes])
+  const vote = useCallback((fragranceAccordId: number) => {
+    if (!userInfo.user) return
+
+    const userId = userInfo.user.id
+
+    voteOnAccord({ fragranceAccordId, userId })
+  }, [userInfo.user, voteOnAccord])
 
   useEffect(() => {
     onAccordsChanged(accords?.fragranceAccords)
@@ -154,7 +183,19 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     setLoading({ accords: accordsLoading, votes: votesLoading })
   }, [accordsLoading, votesLoading])
 
-  return useMemo(() => ({
+  useEffect(() => {
+    const init = async () => {
+      !accords && await getAccords(accordVars.current)
+
+      if (accords && votesVars.current) {
+        !votes && await getVotes(votesVars.current)
+      }
+    }
+
+    init()
+  }, [accords, votes, getAccords, getVotes])
+
+  return {
     accords: curAccords,
     votes: curVotes,
 
@@ -164,17 +205,11 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     noResults,
     hasMore,
 
-    refresh,
     searchByName,
-    getMore
-  }),
-  [
-    curVotes,
-    curAccords,
-    error, loading,
-    noResults, hasMore,
-    refresh, searchByName, getMore
-  ])
+    getMore,
+    vote,
+    refresh
+  }
 }
 
 export default useFragranceAccords

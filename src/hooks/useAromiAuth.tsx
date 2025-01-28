@@ -1,5 +1,5 @@
 import { AuthError, autoSignIn, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './utils/AuthErrors'
 import useResolver from './useResolver'
 import createUserMutation, { CreateUserMutationArgs, CreateUserMutationResult } from '../graphql/mutations/createUser'
@@ -26,6 +26,7 @@ export interface AuthUserInfo {
 
 const useAromiAuth = () => {
   const [userInfo, setUserInfo] = useState<AuthUserInfo>({ user: null, state: AuthState.UNAUTHENTICATED })
+  const [initialized, setInitialized] = useState(false)
 
   const {
     execute: createUser,
@@ -39,27 +40,30 @@ const useAromiAuth = () => {
   )
 
   const userGetInfo = useCallback(async (): Promise<AuthOutput<AuthUserInfo>> => {
+    const err = new AromiAuthError('Something went wrong getting this user', AuthErrorCode.USER_NOT_FOUND)
+
     try {
-      const { username, userId } = await getCurrentUser()
+      const { userId, signInDetails } = await getCurrentUser()
 
-      const user = await createUser({ cognitoId: userId, email: username })
-      const userData = user?.user || null
+      const email = signInDetails?.loginId
+      if (!email) return { success: false, error: err }
 
-      console.log(userData, createUserError)
+      const user = await createUser({ cognitoId: userId, email })
 
-      const error = userData ? null : new AromiAuthError('Something went wrong getting this user', AuthErrorCode.USER_NOT_FOUND)
+      const userData = user?.createUser || null
+      if (!userData) return { success: false, error: err }
 
-      const newUserInfo = error ? { user: userData, state: AuthState.AUTHENTICATED } : userInfo
+      const newUserInfo = { user: userData, state: AuthState.AUTHENTICATED }
 
-      !error && setUserInfo(newUserInfo)
+      setUserInfo(newUserInfo)
 
-      return { success: !error, error, data: newUserInfo }
+      return { success: true, error: null, data: newUserInfo }
     } catch (error: AuthError | any) {
       const authError = toGetUserInfoError(error)
 
       return { success: false, error: authError }
     }
-  }, [createUser, createUserError, userInfo])
+  }, [createUser])
 
   const socialSignIn = useCallback(async (provider: 'Google' | 'Apple'): Promise<AuthOutput> => {
     try {
@@ -88,13 +92,15 @@ const useAromiAuth = () => {
         }
       })
 
+      userGetInfo()
+
       return { success: true, error: null }
     } catch (error: AuthError | any) {
       const authError = toSignUpError(error)
 
       return { success: false, error: authError }
     }
-  }, [])
+  }, [userGetInfo])
 
   const userConfirmSignUp = useCallback(async (email: string, confirmationCode: string): Promise<AuthOutput> => {
     try {
@@ -125,25 +131,6 @@ const useAromiAuth = () => {
     }
   }, [])
 
-  const userAutoLogIn = useCallback(async (): Promise<AuthOutput> => {
-    try {
-      const { isSignedIn, nextStep } = await autoSignIn()
-
-      await userGetInfo()
-
-      if (nextStep.signInStep === 'CONFIRM_SIGN_UP') {
-        const authError = new AromiAuthError("You haven't finished signing up yet.", AuthErrorCode.SIGN_UP_INCOMPLETE)
-        return { success: false, error: authError }
-      }
-
-      return { success: isSignedIn, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toLogInError(error)
-
-      return { success: false, error: authError }
-    }
-  }, [userGetInfo])
-
   const userLogIn = useCallback(async (email: string, password: string): Promise<AuthOutput> => {
     try {
       const { isSignedIn, nextStep } = await signIn({
@@ -169,17 +156,16 @@ const useAromiAuth = () => {
   const userSignOut = useCallback(async (): Promise<AuthOutput> => {
     try {
       await signOut()
-      const { success, error } = await userGetInfo()
 
       setUserInfo({ user: null, state: AuthState.UNAUTHENTICATED })
 
-      return { success: !success, error }
+      return { success: true, error: null }
     } catch (error) {
       const authError = new AromiAuthError('Something went wrong signing you out. Please try again.', AuthErrorCode.UNKNOWN_ERROR)
 
       return { success: false, error: authError }
     }
-  }, [userGetInfo])
+  }, [])
 
   const validateEmail = useCallback((email: string): boolean => {
     const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
@@ -227,19 +213,33 @@ const useAromiAuth = () => {
     }
   }, [])
 
-  const state = useMemo(() => ({ userInfo }), [userInfo])
+  useEffect(() => {
+    const init = async () => {
+      await userGetInfo()
+      setInitialized(true)
+    }
 
-  const actions = useMemo(() => (
-    { userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, userSignOut, sendResetPasswordCode, userResetPassword }
-  ), [userGetInfo, socialSignIn, userSignUp, userConfirmSignUp, userResendConfirmCode, userAutoLogIn, userLogIn, userSignOut, sendResetPasswordCode, userResetPassword])
+    !initialized && init()
+  }, [initialized, userGetInfo])
 
-  const validators = useMemo(() => (
-    { validateEmail, validatePassword, validateConfirmPassword }
-  ), [validateEmail, validatePassword, validateConfirmPassword])
+  return {
+    userInfo,
+    initialized,
 
-  const aromiAuthValue = useMemo(() => ({ ...state, ...actions, ...validators }), [state, actions, validators])
+    userGetInfo,
+    socialSignIn,
+    userSignUp,
+    userConfirmSignUp,
+    userResendConfirmCode,
+    userLogIn,
+    userSignOut,
+    sendResetPasswordCode,
+    userResetPassword,
 
-  return aromiAuthValue
+    validateEmail,
+    validatePassword,
+    validateConfirmPassword
+  }
 }
 
 export default useAromiAuth

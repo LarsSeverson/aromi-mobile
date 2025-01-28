@@ -18,29 +18,28 @@ export interface AuthPageProps {
 
 const AuthPage: React.FC<AuthPageProps> = (props: AuthPageProps) => {
   const { onSignUp, onLogIn, onHome } = props
-  const { userGetInfo } = useAromiAuthContext()
 
-  useEffect(() => {
-    const unsubscribe = Hub.listen('auth', async ({ payload }) => {
-      switch (payload.event) {
-        case 'signInWithRedirect': {
-          const { success, error } = await userGetInfo()
-          if (success) {
-            return onHome()
-          }
-          if (error) {
-            showNotifaction.error('Something went wrong logging you in')
-          }
-          break
-        }
-        case 'signInWithRedirect_failure':
-          showNotifaction.error('Something went wrong logging you in')
-          break
-      }
-    })
+  // useEffect(() => {
+  //   const unsubscribe = Hub.listen('auth', async ({ payload }) => {
+  //     switch (payload.event) {
+  //       case 'signInWithRedirect': {
+  //         const { success, error } = await userGetInfo()
+  //         if (success) {
+  //           return onHome()
+  //         }
+  //         if (error) {
+  //           showNotifaction.error('Something went wrong logging you in')
+  //         }
+  //         break
+  //       }
+  //       case 'signInWithRedirect_failure':
+  //         showNotifaction.error('Something went wrong logging you in')
+  //         break
+  //     }
+  //   })
 
-    return unsubscribe
-  }, [onHome, userGetInfo])
+  //   return unsubscribe
+  // }, [onHome])
 
   return (
     <View style={styles.wrapper}>
