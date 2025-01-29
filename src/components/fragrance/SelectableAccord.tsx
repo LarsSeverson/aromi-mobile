@@ -22,8 +22,8 @@ const SelectableAccord: React.FC<SelectableAccordProps<FragranceAccord>> = (prop
 
     const votes = accord.votes
 
-    const addOne = (!originallySelected && selected)
-    const subOne = (originallySelected && !selected)
+    const addOne = !originallySelected && selected
+    const subOne = originallySelected && !selected
 
     if (addOne) return votes + 1
     if (subOne) return votes - 1

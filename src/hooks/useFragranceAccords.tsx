@@ -53,8 +53,10 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
 
   const [noResults, setNoResults] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+
   const [loading, setLoading] = useState({ accords: false, votes: false })
   const [error, setError] = useState({ accords: false, votes: false })
+
   const [curAccords, setCurAccords] = useState<FragranceAccords | null>(null)
   const [curVotes, setCurVotes] = useState<Map<number, FragranceAccordUserVotesResult> | null>(null)
 
@@ -107,13 +109,13 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     setHasMore(true)
   }, [resetAccords, resetVotes])
 
-  const searchByName = useCallback(async (name: string) => {
+  const searchByName = useCallback((name: string) => {
     refresh()
 
     accordVars.current.name = name
 
     getAccords(accordVars.current)
-  }, [getAccords, refresh])
+  }, [refresh, getAccords])
 
   const getMore = useCallback(() => {
     const nextOffset = accordVars.current.offset + accordVars.current.limit
@@ -139,10 +141,9 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     votesVars.current.fragranceAccordIds = fragranceAccordIds
 
     const votesData = await getVotes(votesVars.current)
+    const votes = votesData?.fragranceAccordUserVotes || null
 
-    if (!(votesData?.fragranceAccordUserVotes)) return
-
-    const votes = votesData.fragranceAccordUserVotes
+    if (!votes) return
 
     setCurVotes((prev) => {
       if (!prev) prev = new Map<number, FragranceAccordUserVotesResult>()
@@ -153,7 +154,7 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     })
   }, [getVotes])
 
-  const onAccordsChanged = useCallback(async (accords?: FragranceAccords | undefined) => {
+  const onAccordsChanged = useCallback((accords?: FragranceAccords | undefined) => {
     if (!accords || !hasMore) return
 
     updateCurrentVotes(accords)
@@ -161,7 +162,7 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
 
     setNoResults(accords.length === 0)
     setHasMore(accords.length >= accordVars.current.limit)
-  }, [hasMore, updateCurrentAccords, updateCurrentVotes])
+  }, [hasMore, updateCurrentVotes, updateCurrentAccords])
 
   const vote = useCallback((fragranceAccordId: number) => {
     if (!userInfo.user) return

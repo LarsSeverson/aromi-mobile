@@ -30,7 +30,12 @@ const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
     ...rest
   } = props
 
-  const { notes, loading, error, refresh } = useFragranceNotes({ id: fragranceId, layer })
+  const {
+    notes,
+    loading,
+    error,
+    refresh
+  } = useFragranceNotes({ fragranceId, layer, withVotes: false })
 
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
     return (
@@ -39,15 +44,13 @@ const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
   }, [])
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading.notes && !loading.votes) {
       onLoad?.()
     }
   }, [loading, onLoad])
 
-  error && console.log(error)
-
   // TODO: Skeleton
-  if (!notes || loading) {
+  if (!notes) {
     return null
   }
 
@@ -60,6 +63,7 @@ const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
 
       <SelectableList
         data={notes.slice(0, 8)}
+        disabled
         numRows={1}
         numColumns={8}
         renderItem={onRenderNote}

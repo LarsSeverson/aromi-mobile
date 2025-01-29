@@ -73,11 +73,11 @@ const EditAccordsPage = () => {
         onEndReachedThreshold={0.5}
         selectedItems={votes}
         renderItemStyle={{ width: '33.33%' }}
+        style={styles.listWrapper}
         renderItem={onRenderAccord}
         onItemSelected={vote}
         onEndReached={getMoreAccords}
         ListFooterComponent={onRenderListFooter}
-        style={styles.listWrapper}
       />
     </SafeAreaView>
   )

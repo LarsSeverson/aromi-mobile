@@ -1,61 +1,62 @@
-import { View } from 'react-native'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import { FragranceNote, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import SelectableList, { SelectableRenderItemProps } from '@/src/components/utils/SelectableList'
-import { useAppTheme } from '@/src/constants/Themes'
 import NotesLayerNote from '@/src/components/fragrance/NotesLayerNote'
 import FeedbackButton from '@/src/components/utils/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '@/src/components/utils/SearchInput'
-import SubmitButton from '@/src/components/utils/SubmitButton'
 
 const EditNotesLayerPage = () => {
   const nav = useNavigation()
-  const theme = useAppTheme()
-
   const fragranceId = Number(useLocalSearchParams().fragranceId)
   const layer = useLocalSearchParams().layer as NoteLayer
 
-  const selectedNotes = useRef(new Map<number, FragranceNote>())
   const localSearchTerm = useRef('')
-
-  const params = useMemo(() => ({ id: fragranceId, layer, fill: true, limit: 30 }), [fragranceId, layer])
-
-  // const [selectedNotesCount, setSelectedNotesCount] = useState(selectedNotes.current.size)
 
   const {
     notes,
+    votes,
+
     loading,
     error,
+
     noResults,
     hasMore,
-    refresh,
-    search,
-    getMore
-  } = useFragranceNotes(params)
 
-  const searchNotes = useCallback(search, [search])
-  const getMoreNotes = useCallback(() => { !loading && hasMore && getMore() }, [getMore, hasMore, loading])
+    searchByName,
+    getMore,
+    vote,
+    refresh
+  } = useFragranceNotes({ fragranceId, layer, fill: true })
 
-  const onNoteSelected = useCallback((id: number, note: FragranceNote) => {
-    selectedNotes.current.has(id)
-      ? selectedNotes.current.delete(id)
-      : selectedNotes.current.set(id, note)
+  const searchNotes = useCallback(searchByName, [searchByName])
 
-    // setSelectedNotesCount(selectedNotes.current.size)
-  }, [])
+  const getMoreNotes = useCallback(() => {
+    if (!loading.notes && !loading.votes) {
+      hasMore && getMore()
+    }
+  }, [loading, hasMore, getMore])
+
+  const handleSearch = useCallback((newSearchTerm: string) => {
+    localSearchTerm.current = newSearchTerm
+
+    searchNotes(newSearchTerm)
+  }, [searchNotes])
 
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
-    return <NotesLayerNote item={item} index={index} selected={selected} />
-  }, [])
+    const originallySelected = (item && votes?.has(item.id)) || false
+
+    return <NotesLayerNote item={item} index={index} selected={selected} originallySelected={originallySelected} />
+  }, [votes])
 
   const onRenderListFooter = useCallback(() => {
     return (
       <View>
-        {loading && <ActivityIndicator />}
+        {(loading.notes || loading.votes) && <ActivityIndicator />}
         {!hasMore && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
         {!noResults && !hasMore && <FeedbackButton />}
       </View>
@@ -66,31 +67,32 @@ const EditNotesLayerPage = () => {
     nav.setOptions({ headerTitle: `${layer} notes` })
   }, [nav, layer])
 
-  const handleSearch = (newSearchTerm: string) => {
-    localSearchTerm.current = newSearchTerm
-    searchNotes(newSearchTerm)
-  }
-
-  if (!notes) {
-    return null
-  }
+  if (!notes || !votes) return null
 
   return (
     <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
-      <SearchInput style={{ paddingHorizontal: 5 }} onSearch={handleSearch} />
+      <SearchInput onSearch={handleSearch} />
+
       <SelectableList
         data={notes}
         numColumns={3}
         onEndReachedThreshold={0.5}
-        selectedItems={selectedNotes.current}
+        selectedItems={votes}
         renderItemStyle={{ width: '33.33%' }}
+        style={styles.listWrapper}
         renderItem={onRenderNote}
+        onItemSelected={vote}
         onEndReached={getMoreNotes}
         ListFooterComponent={onRenderListFooter}
-        onItemSelected={onNoteSelected}
       />
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  listWrapper: {
+    padding: 5
+  }
+})
 
 export default EditNotesLayerPage

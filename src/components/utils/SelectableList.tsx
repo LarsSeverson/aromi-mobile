@@ -42,9 +42,7 @@ const SelectableListItem = <T extends Identifiable, >(props: SelectableListItemP
   const [itemSelected, setItemSelected] = useState(selected)
 
   const handleItemSelected = useCallback(() => {
-    if (disabled) return
-
-    const newSelected = !itemSelected
+    const newSelected = disabled ? false : !itemSelected
 
     setItemSelected(newSelected)
 

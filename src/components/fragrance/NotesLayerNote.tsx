@@ -1,16 +1,37 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Identifiable, SelectableRenderItemProps } from '../utils/SelectableList'
 import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 
-export interface NotesLayerNoteProps<T extends Identifiable> extends SelectableRenderItemProps<T> {}
+export interface NotesLayerNoteProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
+  originallySelected?: boolean | undefined
+}
 
 const NotesLayerNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: NotesLayerNoteProps<FragranceNote>) => {
   const theme = useAppTheme()
-  const { item: note, selected } = props
+
+  const {
+    item: note,
+    selected,
+    originallySelected = false
+  } = props
+
+  const selectedVotes = useMemo(() => {
+    if (!note) return 0
+
+    const votes = note.votes
+
+    const addOne = !originallySelected && selected
+    const subOne = originallySelected && !selected
+
+    if (addOne) return votes + 1
+    if (subOne) return votes - 1
+
+    return votes
+  }, [note, originallySelected, selected])
 
   return (
     <View style={{ padding: 5 }}>
@@ -25,7 +46,7 @@ const NotesLayerNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: Not
       </View>
       <View style={styles.noteName}>
         <Text numberOfLines={1} ellipsizeMode='tail'>{note?.name.toLowerCase()}</Text>
-        {note && note.votes > 0 && <Text>{note?.votes}</Text>}
+        {selectedVotes > 0 && <Text>{selectedVotes}</Text>}
       </View>
     </View>
   )
