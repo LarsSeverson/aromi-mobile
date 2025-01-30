@@ -33,7 +33,7 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
   const [maxOffset, setMaxOffset] = useState<number>(containerWidth - circleWidth)
   const [minOffset, setMinOffset] = useState<number>(0)
   const pressed = useSharedValue<boolean>(false)
-  const offset = useSharedValue<number>(0)
+  const offset = useSharedValue<number>(value)
 
   const adjustOffset = (x: number, time: number = 0) => {
     const newOffset = Math.round(Math.min(Math.max(x, minOffset), maxOffset))
@@ -78,11 +78,18 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
     })
 
   useLayoutEffect(() => {
-    if (!mounted.current && containerWidth > 0 && circleWidth > 0) {
-      setMaxOffset(containerWidth - circleWidth)
-      setMinOffset(0)
-      offset.value = Math.round(((value - min) / (max - min)) * (containerWidth - circleWidth))
-      mounted.current = true
+    if (containerWidth > 0 && circleWidth > 0) {
+      const newMaxOffset = containerWidth - circleWidth
+      const newMinOffset = 0
+
+      setMaxOffset(newMaxOffset)
+      setMinOffset(newMinOffset)
+
+      const newOffset = Math.round(((value - min) / (max - min)) * newMaxOffset)
+
+      offset.value = newOffset
+
+      if (!mounted.current) mounted.current = true
     }
   }, [circleWidth, containerWidth, max, min, offset, value])
 

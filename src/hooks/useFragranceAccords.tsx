@@ -164,12 +164,13 @@ const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT,
     setHasMore(accords.length >= accordVars.current.limit)
   }, [hasMore, updateCurrentVotes, updateCurrentAccords])
 
-  const vote = useCallback((fragranceAccordId: number) => {
+  const vote = useCallback((_: number, fragranceAccord: FragranceAccord) => {
     if (!userInfo.user) return
 
-    const userId = userInfo.user.id
+    const fragranceId = accordVars.current.id
+    const accordId = fragranceAccord.accordId
 
-    voteOnAccord({ fragranceAccordId, userId })
+    voteOnAccord({ fragranceId, accordId })
   }, [userInfo.user, voteOnAccord])
 
   useEffect(() => {

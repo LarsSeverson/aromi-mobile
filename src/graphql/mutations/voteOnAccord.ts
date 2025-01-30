@@ -1,6 +1,6 @@
 export const voteOnAccordMutation = `#graphql
-  mutation voteOnAccord($fragranceAccordId: Int!, $userId: Int!) {
-    voteOnAccord(fragranceAccordId: $fragranceAccordId, userId: $userId) {
+  mutation voteOnAccord($fragranceId: Int!, $accordId: Int!) {
+    voteOnAccord(fragranceId: $fragranceId, accordId: $accordId) {
       id
       userId
       fragranceAccordId
@@ -10,8 +10,8 @@ export const voteOnAccordMutation = `#graphql
 `
 
 export interface VoteOnAccordMutationArgs {
-  fragranceAccordId: number
-  userId: number
+  fragranceId: number
+  accordId: number
 }
 
 export interface VoteOnAccordMutationResult {

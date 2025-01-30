@@ -1,4 +1,4 @@
-import { FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote, FragranceNotes, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import fragranceNotes, { FragranceNotesArgs, FragranceNotesResult } from '../graphql/queries/fragranceNotes'
 import { useAromiAuthContext } from './useAromiAuthContext'
@@ -202,12 +202,14 @@ const useFragranceNotes = (args: UseFragranceNotesArgs) => {
     setHasMore(notes.length >= notesVars.current.limit)
   }, [hasMore, withVotes, updateCurrentVotes, updateCurrentNotes])
 
-  const vote = useCallback((fragranceNoteId: number) => {
+  const vote = useCallback((_: number, fragranceNote: FragranceNote) => {
     if (!userInfo.user) return
 
-    const userId = userInfo.user.id
+    const fragranceId = notesVars.current.id
+    const noteId = fragranceNote.noteId
+    const layer = notesVars.current.layer
 
-    voteOnNote({ fragranceNoteId, userId })
+    voteOnNote({ fragranceId, noteId, layer })
   }, [userInfo.user, voteOnNote])
 
   useEffect(() => {

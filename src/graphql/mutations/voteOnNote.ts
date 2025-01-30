@@ -1,6 +1,8 @@
+import { NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+
 export const voteOnNoteMutation = `#graphql
-  mutation voteOnNote($fragranceNoteId: Int!, $userId: Int!) {
-    voteOnNote(fragranceNoteId: $fragranceNoteId, userId: $userId) {
+  mutation voteOnNote($fragranceId: Int!, $noteId: Int!, $layer: NoteLayer!) {
+    voteOnNote(fragranceId: $fragranceId, noteId: $noteId, layer: $layer) {
       id
       userId
       fragranceNoteId
@@ -10,8 +12,10 @@ export const voteOnNoteMutation = `#graphql
 `
 
 export interface VoteOnNoteMutationArgs {
-  fragranceNoteId: number
-  userId: number
+  fragranceId: number
+  noteId: number
+
+  layer: NoteLayer
 }
 
 export interface VoteOnAccordMutationResult {

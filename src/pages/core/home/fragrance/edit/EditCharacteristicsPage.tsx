@@ -1,39 +1,94 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useCallback, useMemo, useState } from 'react'
+import { StyleSheet } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import MiddleSlider from '@/src/components/stats/MiddleSlider'
 import EditFragranceSlider from '@/src/components/fragrance/EditFragranceSlider'
 import { useLocalSearchParams } from 'expo-router'
-import useFragranceCharacteristics from '@/src/hooks/useFragranceCharacteristics'
 import { AllureIcon, BalanceIcon, ComplexityIcon, LongevityIcon, SillageIcon } from '@/src/constants/Icons'
 import FeedbackButton from '@/src/components/utils/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SubmitButton from '@/src/components/utils/SubmitButton'
+import useResolver from '@/src/hooks/useResolver'
+import { fragranceTraitsQuery, FragranceTraitsQueryArgs, FragranceTraitsQueryResult } from '@/src/graphql/queries/fragranceTraits'
+import { FragranceTraitType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { voteOnTraitMutation, VoteOnTraitMutationArgs, VoteOnTraitMutationResult } from '@/src/graphql/mutations/voteOnTrait'
+import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import { fragranceTraitVotesQuery, FragranceTraitVotesQueryArgs, FragranceTraitVotesQueryResult } from '@/src/graphql/queries/fraganceTraitVotes'
 
 const EditCharacteristicsPage = () => {
-  const fragranceId = Number(useLocalSearchParams().fragranceId)
+  const { userInfo } = useAromiAuthContext()
 
-  const { fragrance, loading, error, refresh } = useFragranceCharacteristics({ id: fragranceId })
+  const fragranceId = useRef(Number(useLocalSearchParams().fragranceId))
 
-  const characteristics = useMemo(() => ({
-    gender: fragrance?.gender,
-    longevity: fragrance?.longevity,
-    sillage: fragrance?.sillage,
-    complexity: fragrance?.complexity,
-    balance: fragrance?.balance,
-    allure: fragrance?.allure
-  }), [fragrance])
-
-  const [interacted, setInteracted] = useState(false)
-
-  const handleInteracted = useCallback(() => {
-    if (!interacted) {
-      setInteracted(true)
+  const {
+    data: traits,
+    loading: traitsLoading,
+    error: traitsError,
+    execute: getTraits,
+    reset: refreshTraits
+  } = useResolver<FragranceTraitsQueryResult, FragranceTraitsQueryArgs>(
+    {
+      resolver: fragranceTraitsQuery,
+      type: 'query',
+      authMode: 'iam'
     }
-  }, [interacted])
+  )
+
+  const {
+    data: votes,
+    loading: votesLoading,
+    error: votesError,
+    execute: getVotes,
+    reset: refreshvotes
+  } = useResolver<FragranceTraitVotesQueryResult, FragranceTraitVotesQueryArgs>(
+    {
+      resolver: fragranceTraitVotesQuery,
+      type: 'query',
+      authMode: 'userPool'
+    }
+  )
+
+  const {
+    error: voteError,
+    execute: voteOnTrait
+  } = useResolver<VoteOnTraitMutationResult, VoteOnTraitMutationArgs>(
+    {
+      resolver: voteOnTraitMutation,
+      type: 'mutation',
+      authMode: 'userPool'
+    }
+  )
+
+  const averageValues = useMemo<Map<FragranceTraitType, number>>(() => {
+    if (!traits) return new Map()
+
+    const traitMap = new Map(traits.fragranceTraits.map((trait) => [trait.trait, trait.averageValue]))
+
+    return traitMap
+  }, [traits])
+
+  const userVotes = useMemo<Map<FragranceTraitType, number>>(() => {
+    if (!votes || !userInfo.user) return new Map()
+
+    const votesMap = new Map(votes.fragranceTraitVotes.map((vote) => [vote.trait, vote.value]))
+
+    return votesMap
+  }, [votes, userInfo.user])
+
+  const handleVoteChanged = useCallback((value: number, trait: FragranceTraitType) => {
+    if (!userInfo.user) return
+
+    voteOnTrait({ fragranceId: fragranceId.current, trait, value })
+  }, [userInfo.user, voteOnTrait])
+
+  useEffect(() => {
+    !traits && getTraits({ id: fragranceId.current })
+
+    if (userInfo.user) {
+      !votes && getVotes({ fragranceId: fragranceId.current })
+    }
+  }, [traits, votes, userInfo.user, getTraits, getVotes])
 
   // TODO: Skeleton
-  if (!fragrance || loading) {
+  if (!traits || traitsLoading) {
     return null
   }
 
@@ -41,49 +96,59 @@ const EditCharacteristicsPage = () => {
     <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
       <ScrollView style={styles.editSlidesWrapper} showsVerticalScrollIndicator={false}>
         <EditFragranceSlider
+          type={FragranceTraitType.LONGEVITY}
           label='longevity'
           leftLabel='very short'
           rightLabel='very long'
-          storedValue={characteristics.longevity}
+          averageValue={averageValues.get(FragranceTraitType.LONGEVITY)}
+          userValue={userVotes.get(FragranceTraitType.LONGEVITY)}
           icon={<LongevityIcon />}
           style={styles.editSliderWrapper}
-          onInteracted={handleInteracted}
+          onTraitChanged={handleVoteChanged}
         />
         <EditFragranceSlider
+          type={FragranceTraitType.SILLAGE}
           label='sillage'
           leftLabel='intimate'
           rightLabel='expansive'
-          storedValue={characteristics.sillage}
+          averageValue={averageValues.get(FragranceTraitType.SILLAGE)}
+          userValue={userVotes.get(FragranceTraitType.SILLAGE)}
           icon={<SillageIcon />}
           style={styles.editSliderWrapper}
-          onInteracted={handleInteracted}
+          onTraitChanged={handleVoteChanged}
         />
         <EditFragranceSlider
+          type={FragranceTraitType.COMPLEXITY}
           label='complexity'
           leftLabel='simple'
           rightLabel='intricate'
-          storedValue={characteristics.complexity}
+          averageValue={averageValues.get(FragranceTraitType.COMPLEXITY)}
+          userValue={userVotes.get(FragranceTraitType.COMPLEXITY)}
           icon={<ComplexityIcon />}
           style={styles.editSliderWrapper}
-          onInteracted={handleInteracted}
+          onTraitChanged={handleVoteChanged}
         />
         <EditFragranceSlider
+          type={FragranceTraitType.BALANCE}
           label='balance'
           leftLabel='unbalanced'
           rightLabel='harmonious'
-          storedValue={characteristics.balance}
+          averageValue={averageValues.get(FragranceTraitType.BALANCE)}
+          userValue={userVotes.get(FragranceTraitType.BALANCE)}
           icon={<BalanceIcon />}
           style={styles.editSliderWrapper}
-          onInteracted={handleInteracted}
+          onTraitChanged={handleVoteChanged}
         />
         <EditFragranceSlider
+          type={FragranceTraitType.ALLURE}
           label='allure'
           leftLabel='unappealing'
           rightLabel='captivating'
-          storedValue={characteristics.allure}
+          averageValue={averageValues.get(FragranceTraitType.ALLURE)}
+          userValue={userVotes.get(FragranceTraitType.ALLURE)}
           icon={<AllureIcon />}
           style={styles.editSliderWrapper}
-          onInteracted={handleInteracted}
+          onTraitChanged={handleVoteChanged}
         />
         <FeedbackButton />
       </ScrollView>
