@@ -1,6 +1,5 @@
-import useQuery from './useQuery'
 import { FragranceAccord, FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import fragranceAccords, { FragranceAccordsArgs, FragranceAccordsResult } from '../graphql/queries/fragranceAccords'
 import useResolver from './useResolver'
 import { FragranceAccordUserVotesArgs, fragranceAccordUserVotesQuery, FragranceAccordUserVotesResult, FragranceAccordUserVotesResults } from '../graphql/queries/fragranceAccordUserVotes'
