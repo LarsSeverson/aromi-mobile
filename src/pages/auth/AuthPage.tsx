@@ -1,45 +1,27 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Colors } from '@/src/constants/Colors'
-import TextButton from '@/src/components/utils/TextButton'
+import TextButton from '@/src/components/TextButton'
 import LegalAgreement from '@/src/components/auth/LegalAgreement'
-import ButtonText from '@/src/components/utils/ButtonText'
+import ButtonText from '@/src/components/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
-import { Hub } from '@aws-amplify/core'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { useRouter } from 'expo-router'
 
-export interface AuthPageProps {
-  onSignUp: () => void
-  onLogIn: () => void
-  onHome: () => void
-}
+const AuthPage = () => {
+  const router = useRouter()
 
-const AuthPage: React.FC<AuthPageProps> = (props: AuthPageProps) => {
-  const { onSignUp, onLogIn, onHome } = props
+  const onSignUp = () => {
+    router.push('/(main)/auth/SignUp')
+  }
 
-  // useEffect(() => {
-  //   const unsubscribe = Hub.listen('auth', async ({ payload }) => {
-  //     switch (payload.event) {
-  //       case 'signInWithRedirect': {
-  //         const { success, error } = await userGetInfo()
-  //         if (success) {
-  //           return onHome()
-  //         }
-  //         if (error) {
-  //           showNotifaction.error('Something went wrong logging you in')
-  //         }
-  //         break
-  //       }
-  //       case 'signInWithRedirect_failure':
-  //         showNotifaction.error('Something went wrong logging you in')
-  //         break
-  //     }
-  //   })
+  const onLogIn = () => {
+    router.push('/(main)/auth/LogIn')
+  }
 
-  //   return unsubscribe
-  // }, [onHome])
+  const onHome = () => {
+    router.replace('/(core)/home')
+  }
 
   return (
     <View style={styles.wrapper}>

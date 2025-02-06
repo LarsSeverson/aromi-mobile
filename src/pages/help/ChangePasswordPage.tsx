@@ -6,22 +6,19 @@ import { Colors } from '@/src/constants/Colors'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { TextInput, Text } from 'react-native-paper'
 import { TextStyles } from '@/src/constants/TextStyles'
-import TextButton from '@/src/components/utils/TextButton'
-import ButtonText from '@/src/components/utils/ButtonText'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
+import TextButton from '@/src/components/TextButton'
+import ButtonText from '@/src/components/ButtonText'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
-interface ChangePasswordPageProps {
-  onRemembered: () => void
-  onSuccess: () => void
-}
-
-const ChangePasswordPage: React.FC<ChangePasswordPageProps> = (props: ChangePasswordPageProps) => {
-  const { onRemembered, onSuccess } = props
+const ChangePasswordPage = () => {
   const router = useRouter()
-  const { userResetPassword, validatePassword, validateConfirmPassword } = useAromiAuthContext()
+
   const code = useLocalSearchParams().code as string
   const email = useLocalSearchParams().email as string
+
+  const { userResetPassword, validatePassword, validateConfirmPassword } = useAuthContext()
+
   const [newPassword, setNewPassword] = useState('')
   const [newPasswordValid, setNewPasswordValid] = useState<boolean | null>(null)
   const [confirmNewPassword, setConfirmNewPassword] = useState('')

@@ -5,8 +5,8 @@ import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollv
 import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import InvalidPage from '../InvalidPage'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
 export interface ConfirmPasswordResetPageProps {
   onContinue: (email: string, code: string) => void
@@ -15,7 +15,7 @@ export interface ConfirmPasswordResetPageProps {
 const ConfirmPasswordResetPage: React.FC<ConfirmPasswordResetPageProps> = (props: ConfirmPasswordResetPageProps) => {
   const { onContinue } = props
   const router = useRouter()
-  const { sendResetPasswordCode } = useAromiAuthContext()
+  const { sendResetPasswordCode } = useAuthContext()
   const email = useLocalSearchParams().email as string
   const [loading, setLoading] = useState(false)
 

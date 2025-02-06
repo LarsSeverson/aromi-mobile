@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import BouncyButton, { BouncyButtonProps } from '../utils/BouncyButton'
+import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'

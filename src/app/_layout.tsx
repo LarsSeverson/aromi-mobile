@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Amplify } from 'aws-amplify'
 import amplifyConfig from '../amplifyconfiguration.json'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { NotifierWrapper } from 'react-native-notifier'
 import { PaperProvider } from 'react-native-paper'
-import { AromiAuthProvider } from '../contexts/AromiAuthContext'
 import { Asset } from 'expo-asset'
 import { appImages } from '@/src/assets/images/appImages'
 import { Slot, SplashScreen } from 'expo-router'
@@ -12,6 +11,8 @@ import { darkTheme, lightTheme } from '../constants/Themes'
 import { Theme, ThemeProvider } from '@react-navigation/native'
 import { useColorScheme } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
+import { AuthProvider } from '../contexts/providers/AuthProvider'
+import { ClientProvider } from '../contexts/providers/ClientProvider'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -36,13 +37,6 @@ Amplify.configure({
       }
     }
   },
-  API: {
-    GraphQL: {
-      region: process.env.EXPO_PUBLIC_API_REGION,
-      endpoint: process.env.EXPO_PUBLIC_API_ENDPOINT || '',
-      defaultAuthMode: 'userPool'
-    }
-  },
   Storage: {
     S3: {
       region: process.env.EXPO_PUBLIC_API_REGION,
@@ -53,10 +47,11 @@ Amplify.configure({
 
 const RootLayout = () => {
   const colorTheme = useColorScheme()
-  const [mounted, setMounted] = useState(false)
+
+  const [loading, setLoading] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
 
-  const theme = darkMode ? darkTheme : lightTheme
+  const theme = useMemo(() => darkMode ? darkTheme : lightTheme, [darkMode])
 
   useEffect(() => {
     setDarkMode(colorTheme === 'dark')
@@ -70,14 +65,14 @@ const RootLayout = () => {
       } catch (error) {
         console.log(error)
       } finally {
-        setMounted(true)
+        setLoading(false)
       }
     }
 
     loadAssets()
   }, [])
 
-  if (!mounted) {
+  if (loading) {
     return null
   }
 
@@ -88,9 +83,11 @@ const RootLayout = () => {
         <ThemeProvider value={theme as Theme}>
           <PaperProvider theme={theme}>
             <NotifierWrapper>
-              <AromiAuthProvider>
-                <Slot />
-              </AromiAuthProvider>
+              <ClientProvider>
+                <AuthProvider>
+                  <Slot />
+                </AuthProvider>
+              </ClientProvider>
             </NotifierWrapper>
           </PaperProvider>
         </ThemeProvider>

@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { TextInput, Text } from 'react-native-paper'
-import TextButton from '@/src/components/utils/TextButton'
-import ButtonText from '@/src/components/utils/ButtonText'
+import TextButton from '@/src/components/TextButton'
+import ButtonText from '@/src/components/ButtonText'
 import { Colors } from '@/src/constants/Colors'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { TextStyles } from '@/src/constants/TextStyles'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import useAuth from '@/src/hooks/useAuth'
 
 export interface ForgotPasswordProps {
   onContinue: (email: string) => void
@@ -15,7 +15,8 @@ export interface ForgotPasswordProps {
 
 const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPasswordProps) => {
   const { onContinue, onRememberedPassword } = props
-  const { validateEmail, sendResetPasswordCode } = useAromiAuthContext()
+
+  const { validateEmail, sendResetPasswordCode } = useAuth()
   const [email, setEmail] = useState('')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(false)

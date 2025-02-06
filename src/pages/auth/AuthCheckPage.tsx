@@ -2,45 +2,22 @@ import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import { Divider, Text, TextInput } from 'react-native-paper'
-import ButtonText from '@/src/components/utils/ButtonText'
+import ButtonText from '@/src/components/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 import { Icon } from 'react-native-elements'
 import { Hub } from '@aws-amplify/core'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { useRouter } from 'expo-router'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
-export interface AuthCheckPageProps {
-  onSignUp: () => void
-  onLogIn: () => void
-}
-
-const AuthCheckPage: React.FC<AuthCheckPageProps> = (props: AuthCheckPageProps) => {
-  const { onSignUp, onLogIn } = props
-  const { userGetInfo, socialSignIn, userSignUp } = useAromiAuthContext()
+const AuthCheckPage = () => {
   const router = useRouter()
 
-  useEffect(() => {
-    const unsubscribe = Hub.listen('auth', async ({ payload }) => {
-      switch (payload.event) {
-        case 'signInWithRedirect': {
-          const { success, error } = await userGetInfo()
-          if (success) {
-            return router.dismissAll()
-          }
-          if (error) {
-            showNotifaction.error('Something went wrong logging you in')
-          }
-          break
-        }
-        case 'signInWithRedirect_failure':
-          showNotifaction.error('Something went wrong logging you in')
-          break
-      }
-    })
-
-    return unsubscribe
-  }, [router, userGetInfo])
+  const {
+    userGetInfo,
+    socialSignIn,
+    userSignUp
+  } = useAuthContext()
 
   const signUp = () => {
     onSignUp()
@@ -51,16 +28,16 @@ const AuthCheckPage: React.FC<AuthCheckPageProps> = (props: AuthCheckPageProps) 
   }
 
   const continueWithGoogle = async () => {
-    const { success, error } = await socialSignIn('Google')
+    // const { success, error } = await socialSignIn('Google')
 
-    if (success) {
-      //
-      return
-    }
+    // if (success) {
+    //   //
+    //   return
+    // }
 
-    if (error) {
-      showNotifaction.error(error.message)
-    }
+    // if (error) {
+    //   showNotifaction.error(error.message)
+    // }
   }
 
   return (

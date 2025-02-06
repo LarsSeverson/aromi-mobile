@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import BouncyButtonGroup from '@/src/components/utils/BouncyButtonGroup'
+import BouncyButtonGroup from '@/src/components/BouncyButtonGroup'
 import { Colors } from '@/src/constants/Colors'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { useRouter } from 'expo-router'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import useAuth from '@/src/hooks/useAuth'
 
 const ProfileSettingsPage = () => {
   const router = useRouter()
-  const { userSignOut } = useAromiAuthContext()
+  const { userSignOut } = useAuth()
   const [loading, setLoading] = useState(false)
 
   const onSignOut = async () => {

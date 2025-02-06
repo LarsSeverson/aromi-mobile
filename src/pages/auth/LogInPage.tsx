@@ -2,20 +2,22 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
-import ButtonText from '@/src/components/utils/ButtonText'
+import ButtonText from '@/src/components/ButtonText'
 import { Icon } from 'react-native-elements'
 import { TextStyles } from '@/src/constants/TextStyles'
-import TextButton from '@/src/components/utils/TextButton'
+import TextButton from '@/src/components/TextButton'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
 import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const LogInPage = () => {
   const router = useRouter()
+
   const storedEmail = useLocalSearchParams().email as string
-  const aromiAuth = useAromiAuthContext()
+
+  const aromiAuth = useAuthContext()
 
   const [email, setEmail] = useState(storedEmail || '')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)

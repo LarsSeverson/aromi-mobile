@@ -1,60 +1,32 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
-import AppError from '@/src/components/utils/AppError'
-import { RefreshControl, ScrollView } from 'react-native-gesture-handler'
-import { HomeBlock, HomeBlockTypes } from '@/src/components/blocks/home-blocks/HomeBlock'
-import { useRouter } from 'expo-router'
+import BlockList from '@/src/components/BlockList'
+import FragranceBlock from '@/src/components/home/fragrance/FragranceBlock'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 const HomePage = () => {
-  const [refreshing, setRefreshing] = useState(false)
-  const suggestFragrances = useSuggestedFragrances()
-  const router = useRouter()
+  const { suggestedFragrances, loading } = useSuggestedFragrances()
 
-  const errors = [suggestFragrances.error].filter(Boolean)
-  const refreshes = [suggestFragrances.refresh]
+  const onRefresh = useCallback(() => {}, [])
 
-  const handleRefresh = async () => {
-    setRefreshing(true)
-    refreshes.forEach(refresh => refresh())
-    setRefreshing(false)
-  }
+  const onRenderItem = useCallback(({ item }: { item: Fragrance | null }) => {
+    if (!item) return null
 
-  const expandSuggestedForYou = () => {
-    // TODO:
-    console.log('suggested for you')
-    router.navigate('/profile')
-  }
+    return <FragranceBlock fragrance={item} />
+  }, [])
 
-  const expandWhatsPopular = () => {
-    console.log('what popular')
-  }
-
-  const expandYourLikes = () => {
-    // TODO:
-    console.log('your likes')
-  }
-
-  const expandRecentlyViewed = () => {
-    // TODO:
-    console.log('recently viewed')
-  }
-
-  if (errors.length > 0) {
-    console.log(errors)
-
-    return <AppError onRetry={handleRefresh} />
-  }
+  const expandForYou = () => {}
 
   return (
     <View style={styles.wrapper}>
-      <ScrollView
+      <BlockList
+        data={suggestedFragrances}
+        renderItem={onRenderItem}
+        numColumns={2}
+        style={{ padding: 5 }}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
-        contentContainerStyle={styles.homeContentWrapper}
-      >
-        <HomeBlock type={HomeBlockTypes.VerticalCards} title='suggested for you' data={suggestFragrances.data} onSeeAll={expandSuggestedForYou} />
-      </ScrollView>
+      />
     </View>
   )
 }
@@ -63,8 +35,7 @@ export default HomePage
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1,
-    padding: 10
+
   },
   homeContentWrapper: {
     gap: 20

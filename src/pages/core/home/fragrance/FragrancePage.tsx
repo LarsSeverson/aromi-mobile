@@ -2,11 +2,10 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragrance from '@/src/hooks/useFragrance'
-import AromiImage from '@/src/components/utils/AromiImage'
 import { Divider, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
-import BouncyButton from '@/src/components/utils/BouncyButton'
+import BouncyButton from '@/src/components/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
@@ -45,14 +44,14 @@ const FragrancePage = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <AromiImage path={previewUrl} style={styles.imageWrapper}>
+      {/* <S3Image path={previewUrl} style={styles.imageWrapper}>
         <BouncyButton style={{ position: 'absolute', top: 20, right: 20 }}>
           <Icon name='dots-vertical' type='material-community' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>
         <BouncyButton style={{ position: 'absolute', bottom: 20, right: 20 }}>
           <Icon name='bookmark-outline' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>
-      </AromiImage>
+      </S3Image> */}
 
       <Divider />
 

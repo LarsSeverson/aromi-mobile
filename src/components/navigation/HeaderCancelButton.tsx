@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import BouncyButton from '../utils/BouncyButton'
+import BouncyButton from '../BouncyButton'
 import { Text } from 'react-native-paper'
 import { useRouter } from 'expo-router'
 

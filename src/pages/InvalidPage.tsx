@@ -1,19 +1,23 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../constants/Colors'
-import ButtonText from '../components/utils/ButtonText'
+import ButtonText from '../components/ButtonText'
 import { useRouter } from 'expo-router'
 import { Text } from 'react-native-paper'
 
 interface InvalidPageProps {
-  onGoBack?: () => void
   text?: string
+
+  onGoBack?: () => void
 }
 
 const InvalidPage: React.FC<InvalidPageProps> = (props: InvalidPageProps) => {
   const router = useRouter()
 
-  const { onGoBack = () => router.dismiss(), text = 'Hmmm... something went wrong loading this screen.' } = props
+  const {
+    text = 'Hmmm... something went wrong loading this screen.',
+    onGoBack = () => router.dismiss()
+  } = props
 
   return (
     <View style={styles.wrapper}>

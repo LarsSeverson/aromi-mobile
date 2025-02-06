@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, useNavigation } from 'expo-router'
+import { Stack } from 'expo-router'
 import HomeHeader from '@/src/components/home/HomeHeader'
 
 const HomeLayout = () => {

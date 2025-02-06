@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
-import { NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import PreviewNotesList from '@/src/components/fragrance/PreviewNotesList'
 
 const EditNotesPage = () => {
@@ -13,7 +13,7 @@ const EditNotesPage = () => {
   const [midLoaded, setMidLoaded] = useState(false)
   const [basLoaded, setBasLoaded] = useState(false)
 
-  const onSeeAll = useCallback((layer: NoteLayer) => {
+  const onSeeAll = useCallback((layer: NoteLayerType) => {
     router.push({ pathname: '/(core)/home/fragrance/edit/notes-layer', params: { fragranceId, layer } })
   }, [fragranceId, router])
 
@@ -22,24 +22,24 @@ const EditNotesPage = () => {
       <ScrollView showsVerticalScrollIndicator={false} style={{ opacity: topLoaded && midLoaded && basLoaded ? 1 : 0 }}>
         <PreviewNotesList
           fragranceId={fragranceId}
-          layer={NoteLayer.TOP}
+          layer={NoteLayerType.TOP}
           onLoad={() => setTopLoaded(true)}
-          onSeeAll={() => onSeeAll(NoteLayer.TOP)}
-          onItemSelected={() => onSeeAll(NoteLayer.TOP)}
+          onSeeAll={() => onSeeAll(NoteLayerType.TOP)}
+          onItemSelected={() => onSeeAll(NoteLayerType.TOP)}
         />
         <PreviewNotesList
           fragranceId={fragranceId}
-          layer={NoteLayer.MIDDLE}
+          layer={NoteLayerType.MIDDLE}
           onLoad={() => setMidLoaded(true)}
-          onSeeAll={() => onSeeAll(NoteLayer.MIDDLE)}
-          onItemSelected={() => onSeeAll(NoteLayer.MIDDLE)}
+          onSeeAll={() => onSeeAll(NoteLayerType.MIDDLE)}
+          onItemSelected={() => onSeeAll(NoteLayerType.MIDDLE)}
         />
         <PreviewNotesList
           fragranceId={fragranceId}
-          layer={NoteLayer.BASE}
+          layer={NoteLayerType.BASE}
           onLoad={() => setBasLoaded(true)}
-          onSeeAll={() => onSeeAll(NoteLayer.BASE)}
-          onItemSelected={() => onSeeAll(NoteLayer.BASE)}
+          onSeeAll={() => onSeeAll(NoteLayerType.BASE)}
+          onItemSelected={() => onSeeAll(NoteLayerType.BASE)}
         />
       </ScrollView>
     </View>

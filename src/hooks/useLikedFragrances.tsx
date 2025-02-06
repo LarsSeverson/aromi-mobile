@@ -1,5 +1,3 @@
-import { fragrances, FragrancesQueryResult } from '../graphql/queries/fragrances'
-import useQuery from './useQuery'
 import { useMemo } from 'react'
 
 const useLikedFragrances = () => {

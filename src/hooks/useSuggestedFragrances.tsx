@@ -1,26 +1,116 @@
-import suggestedFragrancesQuery from '../graphql/queries/suggestedFragrances'
-import useQuery from './useQuery'
-import { useMemo } from 'react'
-import { Fragrances } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { gql } from '@apollo/client/core'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { useQuery } from '@apollo/client'
 
-interface SuggestedFragrancesResult {
-  fragrances: Fragrances
+const SUGGESTED_FRAGRANCES_QUERY = gql`
+  query SuggestedFragrances($limit: Int, $offset: Int, $imagesLimit: Int, $imagesOffset: Int) {
+    fragrances(limit: $limit, offset: $offset) {
+      id
+      brand
+      name
+
+      reactions {
+        likes
+        dislikes
+      }
+
+      myReactions {
+        like
+        dislike
+      }
+
+      images(limit: $imagesLimit, offset: $imagesOffset) {
+        id
+        url
+      }
+    }
+  }
+`
+
+export interface SuggestedFragrancesVars {
+  limit?: number | undefined
+  offset?: number | undefined
+
+  imagesLimit?: number | undefined
+  imagesOffset?: number | undefined
 }
 
-const useSuggestedFragrances = () => {
-  const variables = { limit: 10, offset: 0 }
+export interface SuggestedFragrancesData {
+  fragrances: Fragrance[]
+}
 
-  const { data, loading, error, refresh } = useQuery<SuggestedFragrancesResult>(
+const BASE_LIMIT = 20
+const BASE_OFFSET = 0
+const BASE_IMGS_LIMIT = 1
+const BASE_IMGS_OFFSET = 0
+
+const useSuggestedFragrances = (vars: SuggestedFragrancesVars = {}) => {
+  const {
+    limit = BASE_LIMIT,
+    offset = BASE_OFFSET,
+    imagesLimit = BASE_IMGS_LIMIT,
+    imagesOffset = BASE_IMGS_OFFSET
+  } = vars
+
+  const fragrancesVars = useRef({ limit, offset, imagesLimit, imagesOffset })
+
+  const [hasMore, setHasMore] = useState(true)
+
+  const {
+    data,
+    loading,
+    error,
+    fetchMore,
+    refetch
+  } = useQuery<SuggestedFragrancesData, SuggestedFragrancesVars>(SUGGESTED_FRAGRANCES_QUERY,
     {
-      query: suggestedFragrancesQuery,
-      variables,
-      authMode: 'iam'
+      variables: fragrancesVars.current
+    })
+
+  const refresh = useCallback(() => {
+    fragrancesVars.current.offset = 0
+
+    refetch(fragrancesVars.current)
+  }, [refetch])
+
+  const getMore = useCallback(() => {
+    const nextOffset = fragrancesVars.current.offset + fragrancesVars.current.limit
+
+    fragrancesVars.current.offset = nextOffset
+
+    fetchMore({
+      variables: { offset: fragrancesVars.current.offset },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+
+        return {
+          fragrances: [
+            ...prev.fragrances,
+            ...fetchMoreResult.fragrances
+          ]
+        }
+      }
+    })
+  }, [fetchMore])
+
+  useEffect(() => {
+    if (data?.fragrances) {
+      setHasMore(data.fragrances.length === limit)
     }
-  )
+  }, [data, limit])
 
-  const suggestedFragrances = data?.fragrances || null
+  return {
+    suggestedFragrances: data?.fragrances || [],
 
-  return { data: suggestedFragrances, loading, error, refresh }
+    error,
+    loading,
+
+    hasMore,
+
+    getMore,
+    refresh
+  }
 }
 
 export default useSuggestedFragrances

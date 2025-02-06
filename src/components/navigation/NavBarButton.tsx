@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import NavBarIcons from '@/src/constants/Icons'
 import { useNavigation } from 'expo-router'
-import BouncyButton from '../utils/BouncyButton'
+import BouncyButton from '../BouncyButton'
 
 interface NavBarButtonProps {
   route: string

@@ -14,6 +14,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@apollo/client": "^3.12.9",
     "@aws-amplify/react-native": "^1.1.6",
     "@aws-amplify/rtn-web-browser": "^1.1.1",
     "@expo/vector-icons": "^14.0.2",

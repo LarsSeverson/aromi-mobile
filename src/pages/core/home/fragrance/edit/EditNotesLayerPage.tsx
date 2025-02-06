@@ -2,18 +2,18 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import { FragranceNote, NoteLayer } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import SelectableList, { SelectableRenderItemProps } from '@/src/components/utils/SelectableList'
+import SelectableList, { SelectableRenderItemProps } from '@/src/components/SelectableList'
+import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesLayerNote from '@/src/components/fragrance/NotesLayerNote'
-import FeedbackButton from '@/src/components/utils/FeedbackButton'
+import FeedbackButton from '@/src/components/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SearchInput from '@/src/components/utils/SearchInput'
+import SearchInput from '@/src/components/SearchInput'
 
 const EditNotesLayerPage = () => {
   const nav = useNavigation()
   const fragranceId = Number(useLocalSearchParams().fragranceId)
-  const layer = useLocalSearchParams().layer as NoteLayer
+  const layer = useLocalSearchParams().layer as NoteLayerType
 
   const localSearchTerm = useRef('')
 

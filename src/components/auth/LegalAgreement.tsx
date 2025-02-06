@@ -1,7 +1,7 @@
 import { StyleSheet, TextStyle, View } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 import React from 'react'
-import TextButton from '../utils/TextButton'
+import TextButton from '../TextButton'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 

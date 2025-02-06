@@ -17,7 +17,7 @@ const ProfileLayout = () => {
         options={{
           headerTitle: 'Settings',
           headerTitleStyle: TextStyles.headerTitle,
-          headerLeft: HeaderBackButton
+          headerLeft: () => <HeaderBackButton />
         }}
       />
     </Stack>

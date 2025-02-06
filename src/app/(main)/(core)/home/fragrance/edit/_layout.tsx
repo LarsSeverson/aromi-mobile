@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Stack } from 'expo-router'
 import { useAppTheme } from '@/src/constants/Themes'
 import { TextStyles } from '@/src/constants/TextStyles'
-import HeaderCancelButton from '@/src/components/navigation/HeaderCancelButton'
 import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 
 const FragranceEditLayout = () => {

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Redirect } from 'expo-router'
-import { useAromiAuthContext } from '@/src/hooks/useAromiAuthContext'
 import * as SplashScreen from 'expo-splash-screen'
-import { AuthState } from '@/src/hooks/useAromiAuth'
+import { AuthState } from '@/src/hooks/useAuth'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const MainIndex = () => {
-  const { userInfo, initialized } = useAromiAuthContext()
+  const { userInfo, initialized } = useAuthContext()
+
   const [splashHidden, setSplashHidden] = useState(false)
   const [authenticated, setAuthenticated] = useState(false)
 
