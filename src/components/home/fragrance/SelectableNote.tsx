@@ -10,7 +10,7 @@ export interface NotesLayerNoteProps<T extends Identifiable> extends SelectableR
   originallySelected?: boolean | undefined
 }
 
-const NotesLayerNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: NotesLayerNoteProps<FragranceNote>) => {
+const SelectableNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: NotesLayerNoteProps<FragranceNote>) => {
   const theme = useAppTheme()
 
   const {
@@ -52,7 +52,7 @@ const NotesLayerNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: Not
   )
 }
 
-export default NotesLayerNote
+export default SelectableNote
 
 const styles = StyleSheet.create({
   noteItemWrapper: {

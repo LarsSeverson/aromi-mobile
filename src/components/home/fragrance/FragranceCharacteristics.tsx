@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import ScaleBar from '../stats/ScaleBar'
+import ScaleBar from '../../stats/ScaleBar'
 import { AllureIcon, BalanceIcon, ComplexityIcon, LongevityIcon, SillageIcon } from '@/src/constants/Icons'
 
 export interface FragranceCharacteristicsProps {

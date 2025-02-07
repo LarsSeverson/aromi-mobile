@@ -9,11 +9,11 @@ import BouncyButton from '@/src/components/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
-import AccordBars from '@/src/components/fragrance/AccordBars'
-import NotesPyramid from '@/src/components/fragrance/NotesPyramid'
-import FragranceCharacteristics from '@/src/components/fragrance/FragranceCharacteristics'
-import FragranceHeading from '@/src/components/fragrance/FragranceHeading'
-import FragranceCategory from '@/src/components/fragrance/FragranceCategory'
+import AccordBars from '@/src/components/home/fragrance/AccordBars'
+import NotesPyramid from '@/src/components/home/fragrance/NotesPyramid'
+import FragranceCharacteristics from '@/src/components/home/fragrance/FragranceCharacteristics'
+import FragranceHeading from '@/src/components/home/fragrance/FragranceHeading'
+import FragranceCategory from '@/src/components/home/fragrance/FragranceCategory'
 
 const FragrancePage = () => {
   const router = useRouter()

@@ -1,7 +1,7 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useCallback } from 'react'
-import MiddleSlider, { MiddleSliderProps } from '../stats/MiddleSlider'
+import MiddleSlider, { MiddleSliderProps } from '../../stats/MiddleSlider'
 import { Colors } from '@/src/constants/Colors'
 import { FragranceTraitType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 

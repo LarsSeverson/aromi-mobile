@@ -25,6 +25,9 @@ const FragranceBlock: React.FC<FragranceBlockProps> = (props: FragranceBlockProp
         <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
           <Image source={{ uri: path || undefined }} style={styles.imgWrapper} />
           <FragranceReactions
+            fragranceId={fragrance.id}
+            liked={fragrance.myReactions.like}
+            disliked={fragrance.myReactions.dislike}
             numLikes={fragrance.reactions.likes}
             numDislikes={fragrance.reactions.dislikes}
             style={styles.reactionsWrapper}

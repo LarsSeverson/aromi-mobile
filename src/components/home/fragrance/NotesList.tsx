@@ -4,12 +4,12 @@ import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
-import TextButton from '../TextButton'
-import FeedbackButton from '../FeedbackButton'
-import SelectableList, { Identifiable, SelectableListProps, SelectableRenderItemProps } from '../SelectableList'
-import NotesLayerNote from './NotesLayerNote'
+import TextButton from '../../TextButton'
+import FeedbackButton from '../../FeedbackButton'
+import SelectableList, { Identifiable, SelectableListProps, SelectableRenderItemProps } from '../../SelectableList'
+import SelectableNote from './SelectableNote'
 
-export interface PreviewNotesListProps<T extends Identifiable> extends Omit<SelectableListProps<T>, 'data' | 'renderItem'> {
+export interface NotesListProps<T extends Identifiable> extends Omit<SelectableListProps<T>, 'data' | 'renderItem'> {
   fragranceId: number
 
   layer: NoteLayerType
@@ -18,7 +18,7 @@ export interface PreviewNotesListProps<T extends Identifiable> extends Omit<Sele
   onSeeAll?: () => void | undefined
 }
 
-const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
+const NotesList = (props: NotesListProps<FragranceNote>) => {
   const {
     fragranceId,
 
@@ -39,7 +39,7 @@ const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
 
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
     return (
-      <NotesLayerNote item={item} index={index} selected={selected} />
+      <SelectableNote item={item} index={index} selected={selected} />
     )
   }, [])
 
@@ -78,7 +78,7 @@ const PreviewNotesList = (props: PreviewNotesListProps<FragranceNote>) => {
   )
 }
 
-export default PreviewNotesList
+export default NotesList
 
 const styles = StyleSheet.create({
   wrapper: {

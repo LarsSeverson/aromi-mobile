@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 export interface UseClientReturn {
   client: ApolloClient<NormalizedCacheObject>
 
-  refresh: () => void
+  refresh: () => Promise<void>
   reset: () => void
 }
 
@@ -14,14 +14,16 @@ export const useClient = (): UseClientReturn => {
   const [token, setToken] = useState<string | null>(null)
   const [tokenExpiration, setTokenExpiration] = useState<number | null>(null)
 
-  const authLink = useMemo(() => setContext((_, { headers }) => {
-    return {
-      headers: {
+  const authLink = useMemo(() =>
+    setContext((_, { headers }) => {
+      const newHeaders = {
         ...headers,
-        authorization: token ? `Bearer ${token}` : ''
+        Authorization: token ? `Bearer ${token}` : ''
       }
-    }
-  }), [token])
+
+      return { headers: newHeaders }
+    })
+  , [token])
 
   const client = useMemo(() => new ApolloClient({
     link: authLink.concat(new HttpLink({ uri: 'http://localhost:3000/dev/graphql' })),
@@ -30,21 +32,21 @@ export const useClient = (): UseClientReturn => {
 
   const getToken = useCallback(async () => {
     try {
-      const session = await fetchAuthSession()
+      const session = await fetchAuthSession({ forceRefresh: true })
       const token = session.tokens?.accessToken.toString() || null
       const expiration = session.tokens?.accessToken.payload.exp || null
+
+      console.log(token)
 
       setToken(token)
       setTokenExpiration(expiration)
     } catch (error) {
-      console.log(error)
-
       setToken(null)
       setTokenExpiration(null)
     }
   }, [])
 
-  const refresh = useCallback(getToken, [getToken])
+  const refresh = useCallback(async () => await getToken(), [getToken])
 
   const reset = useCallback(() => {
     setToken(null)
@@ -55,7 +57,7 @@ export const useClient = (): UseClientReturn => {
     if (!tokenExpiration) return
 
     const now = Math.floor(Date.now() / 1000)
-    const delay = (tokenExpiration - now) * 1000
+    const delay = (tokenExpiration - now - 60) * 1000
     const timer = setTimeout(getToken, delay)
 
     return () => clearTimeout(timer)

@@ -22,20 +22,8 @@ export interface UpsertUserData {
   upsertUser: User
 }
 
-const useUpsertUser = (vars: UpsertUserVars = { email: '', cognitoId: '' }) => {
-  const {
-    email,
-    cognitoId
-  } = vars
-
-  const [execute, {
-    data,
-    loading,
-    error
-  }] = useMutation<UpsertUserData, UpsertUserVars>(UPSERT_USER_MUTATION,
-    {
-      variables: { email, cognitoId }
-    })
+const useUpsertUser = () => {
+  const [execute, { data, loading, error }] = useMutation<UpsertUserData, UpsertUserVars>(UPSERT_USER_MUTATION)
 
   return {
     user: data?.upsertUser,

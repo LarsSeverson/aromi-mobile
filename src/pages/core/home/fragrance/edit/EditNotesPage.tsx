@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
 import { NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import PreviewNotesList from '@/src/components/fragrance/PreviewNotesList'
+import NotesList from '@/src/components/home/fragrance/NotesList'
 
 const EditNotesPage = () => {
   const router = useRouter()
@@ -20,21 +20,21 @@ const EditNotesPage = () => {
   return (
     <View style={styles.wrapper}>
       <ScrollView showsVerticalScrollIndicator={false} style={{ opacity: topLoaded && midLoaded && basLoaded ? 1 : 0 }}>
-        <PreviewNotesList
+        <NotesList
           fragranceId={fragranceId}
           layer={NoteLayerType.TOP}
           onLoad={() => setTopLoaded(true)}
           onSeeAll={() => onSeeAll(NoteLayerType.TOP)}
           onItemSelected={() => onSeeAll(NoteLayerType.TOP)}
         />
-        <PreviewNotesList
+        <NotesList
           fragranceId={fragranceId}
           layer={NoteLayerType.MIDDLE}
           onLoad={() => setMidLoaded(true)}
           onSeeAll={() => onSeeAll(NoteLayerType.MIDDLE)}
           onItemSelected={() => onSeeAll(NoteLayerType.MIDDLE)}
         />
-        <PreviewNotesList
+        <NotesList
           fragranceId={fragranceId}
           layer={NoteLayerType.BASE}
           onLoad={() => setBasLoaded(true)}

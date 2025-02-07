@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import BouncyButton from '../BouncyButton'
+import BouncyButton from '../../BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
 
 export interface FragranceCategoryProps {

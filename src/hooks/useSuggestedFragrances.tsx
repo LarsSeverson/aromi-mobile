@@ -17,7 +17,6 @@ const SUGGESTED_FRAGRANCES_QUERY = gql`
 
       myReactions {
         like
-        dislike
       }
 
       images(limit: $imagesLimit, offset: $imagesOffset) {

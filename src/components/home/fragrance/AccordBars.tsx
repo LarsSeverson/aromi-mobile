@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { FragranceAccords } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import LinearScaleBar from '../stats/LinearScaleBar'
+import LinearScaleBar from '../../stats/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
 

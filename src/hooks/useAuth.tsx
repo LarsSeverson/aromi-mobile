@@ -56,15 +56,13 @@ const useAuth = (): UseAuthReturn => {
 
     try {
       const { userId, signInDetails } = await getCurrentUser()
-      refresh()
+      await refresh()
 
       const email = signInDetails?.loginId
       if (!email) return { success: false, error: err }
 
       const upsertUserRes = await upsertUser({ variables: { email, cognitoId: userId } })
       const user = upsertUserRes.data?.upsertUser || null
-
-      console.log(upsertUserRes)
 
       if (!user) return { success: false, error: err }
 

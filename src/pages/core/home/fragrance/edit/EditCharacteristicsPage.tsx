@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import EditFragranceSlider from '@/src/components/fragrance/EditFragranceSlider'
+import EditFragranceSlider from '@/src/components/home/fragrance/EditFragranceSlider'
 import { useLocalSearchParams } from 'expo-router'
 import { AllureIcon, BalanceIcon, ComplexityIcon, LongevityIcon, SillageIcon } from '@/src/constants/Icons'
 import FeedbackButton from '@/src/components/FeedbackButton'

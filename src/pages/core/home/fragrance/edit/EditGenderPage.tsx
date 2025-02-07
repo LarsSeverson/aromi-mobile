@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { GenderIcon } from '@/src/constants/Icons'
-import EditFragranceSlider from '@/src/components/fragrance/EditFragranceSlider'
+import EditFragranceSlider from '@/src/components/home/fragrance/EditFragranceSlider'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { FragranceTraitType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import useAuth from '@/src/hooks/useAuth'

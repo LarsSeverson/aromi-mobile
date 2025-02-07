@@ -1,15 +1,20 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAppTheme } from '@/src/constants/Themes'
 import BouncyButton from '../../BouncyButton'
 import { Divider } from 'react-native-elements'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Colors } from '@/src/constants/Colors'
+import useReactToFragrance from '@/src/hooks/useReactToFragance'
+import { FragranceReactionType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 export interface FragranceReactionsProps {
+  fragranceId: number
   numLikes: number
   numDislikes: number
+
+  liked?: boolean | undefined
 
   size?: number | undefined
 
@@ -20,47 +25,77 @@ const FragranceReactions: React.FC<FragranceReactionsProps> = (props: FragranceR
   const theme = useAppTheme()
 
   const {
+    fragranceId,
     numLikes,
     numDislikes,
+    liked = false,
     size = 15,
     style
   } = props
 
-  const [liked, setLiked] = useState<boolean | null>(null)
+  const { reaction, loading, error, reactToFragrance } = useReactToFragrance()
+
+  const [curLiked, setCurLiked] = useState<boolean | null>(liked)
 
   const curLikes = useMemo(() => {
     const count = numLikes - numDislikes
 
-    if (liked) return count + 1
-    if (liked === false) return count - 1
+    const getReactionValue = (reaction: boolean | null) =>
+      reaction === true
+        ? 1
+        : reaction === false
+          ? -1
+          : 0
 
-    return count
-  }, [liked, numLikes, numDislikes])
+    return count - getReactionValue(liked) + getReactionValue(curLiked)
+  }, [numLikes, numDislikes, liked, curLiked])
 
   const onLiked = () => {
-    setLiked(liked ? null : true)
+    const newLiked = curLiked ? null : true
+
+    setCurLiked(newLiked)
+    reactToFragrance(
+      {
+        fragranceId,
+        reaction: FragranceReactionType.LIKE,
+        myReaction: newLiked
+      })
   }
 
   const onDisliked = () => {
-    setLiked(liked === false ? null : false)
+    const newLiked = curLiked === false ? null : false
+
+    setCurLiked(newLiked)
+    reactToFragrance({
+      fragranceId,
+      reaction: FragranceReactionType.LIKE,
+      myReaction: newLiked
+    })
   }
 
   return (
     <View style={[StyleSheet.compose(styles.wrapper, style), { backgroundColor: theme.colors.background }]}>
-      <BouncyButton style={styles.contentBtnWrapper} contentStyle={styles.contentWrapper}>
+      <BouncyButton
+        style={styles.contentBtnWrapper}
+        contentStyle={styles.contentWrapper}
+        onPress={onLiked}
+      >
         <CIcon
-          name={liked ? 'heart' : 'heart-outline'}
+          name={curLiked ? 'heart' : 'heart-outline'}
           size={size}
-          color={liked ? Colors.heart : theme.colors.icon}
+          color={curLiked ? Colors.heart : theme.colors.icon}
         />
         <Text style={styles.contentTxtWrapper}>{curLikes}</Text>
       </BouncyButton>
       <Divider orientation='vertical' width={1} color={theme.colors.icon} />
-      <BouncyButton style={styles.contentBtnWrapper}>
+      <BouncyButton
+        style={styles.contentBtnWrapper}
+        onPress={onDisliked}
+      >
         <AIcon
-          name={liked === false ? 'dislike1' : 'dislike2'}
+          name={curLiked === false ? 'dislike1' : 'dislike2'}
           size={size}
-          color={liked === false ? Colors.som : theme.colors.icon}
+          color={curLiked === false ? Colors.som : theme.colors.icon}
         />
       </BouncyButton>
     </View>
