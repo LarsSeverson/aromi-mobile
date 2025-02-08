@@ -1,6 +1,6 @@
 import { Fragrance, FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
@@ -37,6 +37,7 @@ interface FragranceAccordsData {
 const VOTE_ON_ACCORD = gql`
   mutation VoteOnAccord($fragranceId: Int!, $accordId: Int!, $myVote: Boolean!) {
     voteOnAccord(fragranceId: $fragranceId, accordId: $accordId, myVote: $myVote) {
+      id
       votes
       myVote
     }
@@ -54,7 +55,7 @@ export interface VoteOnAccordData {
 }
 
 const useFragranceAccords = (variables: FragranceAccordsVars) => {
-  const localVariables = useRef<FragranceAccordsVars>({
+  const localVariables = useRef({
     id: variables.id,
     limit: variables.limit ?? DEFAULT_LIMIT,
     offset: variables.offset ?? DEFAULT_OFFSET,
@@ -65,23 +66,78 @@ const useFragranceAccords = (variables: FragranceAccordsVars) => {
     data,
     loading: accordsLoading,
     error: accordsError,
-    refetch
+    refetch,
+    fetchMore
   } = useQuery<FragranceAccordsData, FragranceAccordsVars>(FRAGRANCE_ACCORDS_QUERY, { variables: localVariables.current })
 
-  const [execute, {
+  const [voteOnAccordMutation, {
     loading: voteLoading,
     error: voteError
-  }] = useMutation<FragranceAccordsData, FragranceAccordsVars>(VOTE_ON_ACCORD)
+  }] = useMutation<VoteOnAccordData, VoteOnAccordVars>(VOTE_ON_ACCORD)
+
+  const [hasMore, setHasMore] = useState(true)
+
+  const voteOnAccord = useCallback((variables: VoteOnAccordVars, accord: FragranceAccord) => {
+    const curVotes = accord.votes
+
+    return voteOnAccordMutation({
+      variables,
+      optimisticResponse: {
+        voteOnAccord: {
+          ...accord,
+          votes: variables.myVote ? curVotes + 1 : curVotes - 1,
+          myVote: variables.myVote
+        }
+      }
+    })
+  }, [voteOnAccordMutation])
 
   const refresh = useCallback((variables: FragranceAccordsVars) => {
+    localVariables.current.offset = 0
     refetch(variables)
   }, [refetch])
 
+  const getMore = useCallback(() => {
+    if (!hasMore) return
+
+    const nextOffset = localVariables.current.offset + localVariables.current.limit
+
+    localVariables.current.offset = nextOffset
+
+    fetchMore({
+      variables: { offset: localVariables.current.offset },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
+
+        const oldAccords = prev.fragrance.accords
+        const newAccords = fetchMoreResult.fragrance.accords
+
+        if (newAccords.length < localVariables.current.limit) {
+          setHasMore(false)
+        }
+
+        return {
+          fragrance: {
+            ...prev.fragrance,
+            accords: [
+              ...oldAccords,
+              ...newAccords
+            ]
+          }
+        }
+      }
+    })
+  }, [hasMore, fetchMore])
+
   return {
     accords: data?.fragrance.accords || [],
-    loading,
-    error,
-    refresh
+    loading: { accordsLoading, voteLoading },
+    errors: { accordsError, voteError },
+    hasMore,
+
+    refresh,
+    getMore,
+    voteOnAccord
   }
 }
 

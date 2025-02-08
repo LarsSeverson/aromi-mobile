@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import useFragranceAccords from '@/src/hooks/useFragranceAccords'
 import SearchInput from '@/src/components/SearchInput'
@@ -15,50 +15,65 @@ const EditAccordsPage = () => {
 
   const localSearchTerm = useRef('')
 
-  const getMoreAccords = useCallback(() => {
-    if (!loading.accords && !loading.votes) {
-      hasMore && getMore()
-    }
-  }, [loading, hasMore, getMore])
+  const {
+    accords,
+    loading,
+    errors,
+    hasMore,
+    getMore,
+    voteOnAccord
+  } = useFragranceAccords({ id: fragranceId, fill: true })
 
   const handleSearch = useCallback((newSearchTerm: string) => {
     localSearchTerm.current = newSearchTerm
 
-    searchAccords(newSearchTerm)
-  }, [searchAccords])
+    // searchAccords(newSearchTerm)
+  }, [])
+
+  const isAccordSelected = useCallback((accord: FragranceAccord) => {
+    return accord.myVote
+  }, [])
+
+  const onAccordSelected = useCallback((_: number, fragranceAccord: FragranceAccord, myVote: boolean) => {
+    voteOnAccord({
+      fragranceId,
+      accordId: fragranceAccord.accordId,
+      myVote
+    }, fragranceAccord)
+  }, [fragranceId, voteOnAccord])
 
   const onRenderAccord = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceAccord>) => {
-    const originallySelected = (item && votes?.has(item.id)) || false
+    if (!item) return null
 
-    return <SelectableAccord item={item} index={index} selected={selected} originallySelected={originallySelected} />
-  }, [votes])
+    return <SelectableAccord item={item} index={index} selected={selected} originallySelected={item.myVote} />
+  }, [])
 
   const onRenderListFooter = useCallback(() => {
     return (
       <View>
-        {(loading.accords || loading.votes) && <ActivityIndicator />}
+        {loading.accordsLoading && <ActivityIndicator />}
         {!hasMore && <Text style={{ alignSelf: 'center' }}>End of accords</Text>}
-        {!noResults && !hasMore && <FeedbackButton />}
+        {!hasMore && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading.accords, loading.votes, noResults])
+  }, [hasMore, loading.accordsLoading])
 
-  if (!accords || !votes) return null
+  if (!accords) return null
 
   return (
-    <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
-      <SearchInput onSearch={handleSearch} />
+    <SafeAreaView edges={[]} style={{ flex: 1 }}>
+      {/* <SearchInput onSearch={handleSearch} /> */}
 
       <SelectableList
         data={accords}
         numColumns={3}
         onEndReachedThreshold={0.5}
-        selectedItems={votes}
         renderItemStyle={{ width: '33.33%' }}
         style={styles.listWrapper}
+        isSelected={isAccordSelected}
         renderItem={onRenderAccord}
-        onItemSelected={vote}
-        onEndReached={getMoreAccords}
+        onItemSelected={onAccordSelected}
+        onEndReached={getMore}
         ListFooterComponent={onRenderListFooter}
       />
     </SafeAreaView>

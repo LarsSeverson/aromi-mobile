@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { Identifiable, SelectableRenderItemProps } from '../utils/SelectableList'
+import { Identifiable, SelectableRenderItemProps } from '../../SelectableList'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
@@ -13,7 +13,11 @@ export interface SelectableAccordProps<T extends Identifiable> extends Selectabl
 const SelectableAccord: React.FC<SelectableAccordProps<FragranceAccord>> = (props: SelectableAccordProps<FragranceAccord>) => {
   const theme = useAppTheme()
 
-  const { item: accord, selected, originallySelected } = props
+  const {
+    item: accord,
+    selected,
+    originallySelected
+  } = props
 
   const bg = accord?.color || theme.colors.surfaceDisabled
 

@@ -1,5 +1,4 @@
 import { FlatList, ListRenderItem, StyleProp, ViewStyle } from 'react-native'
-import { ActivityIndicator, Text } from 'react-native-paper'
 import React, { useCallback, useMemo, useState } from 'react'
 import BouncyButton from './BouncyButton'
 import RowList, { RowListProps } from './RowList'
@@ -19,7 +18,7 @@ export interface SelectableListItemProps<T extends Identifiable> extends Selecta
 
   style?: StyleProp<ViewStyle>
 
-  onRenderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement
+  onRenderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement | null
 
   onItemSelected?: (id: number, item: T, selected: boolean) => void | undefined
 }
@@ -63,7 +62,7 @@ export interface SelectableListProps<T extends Identifiable> extends Omit<RowLis
 
   disabled?: boolean | undefined
 
-  renderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement
+  renderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement | null
 
   renderItemStyle?: StyleProp<ViewStyle>
 
@@ -124,7 +123,7 @@ const SelectableList = <T extends Identifiable, >(props: SelectableListProps<T>)
   }, [selectedItems, disabled, renderItemStyle, getKey, isSelected, renderItem, handleItemSelected])
 
   const keyExtractor = useCallback((item: T | null, index: number) => {
-    return item?.id.toString() || `placeholder-${index}`
+    return `${item?.id}-${index}` || `placeholder-${index}`
   }, [])
 
   return (

@@ -73,7 +73,7 @@ const useFragranceTraits = (variables: FragranceTraitsVars) => {
     refetch
   } = useQuery<FragranceTraitsData, FragranceTraitsVars>(FRAGRANCE_TRAITS_QUERY, { variables })
 
-  const [execute, {
+  const [voteOnTrait, {
     loading: voteLoading,
     error: voteError
   }] = useMutation<VoteOnTraitData, VoteOnTraitVars>(VOTE_ON_TRAIT)
@@ -89,7 +89,7 @@ const useFragranceTraits = (variables: FragranceTraitsVars) => {
     error: { traitsError, voteError },
 
     refresh,
-    voteOnTrait: execute
+    voteOnTrait
   }
 }
 
