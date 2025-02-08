@@ -1,12 +1,11 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import useFragrance from '@/src/hooks/useFragrance'
+import useFragrance, { FragranceVars } from '@/src/hooks/useFragrance'
 import { Divider, Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/BouncyButton'
-import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
 import AccordBars from '@/src/components/home/fragrance/AccordBars'
@@ -14,72 +13,124 @@ import NotesPyramid from '@/src/components/home/fragrance/NotesPyramid'
 import FragranceCharacteristics from '@/src/components/home/fragrance/FragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance/FragranceCategory'
+import useS3Image from '@/src/hooks/useS3Image'
+import { Image } from 'expo-image'
+import { Icon } from 'react-native-elements'
+
+const BASE_IMAGES_LIMIT = 5
+const BASE_NOTES_LIMIT = 10
+const BASE_ACCORDS_LIMIT = 8
+const BASE_OFFSET = 0
+const BASE_FILL = false
 
 const FragrancePage = () => {
   const router = useRouter()
   const fragranceId = Number(useLocalSearchParams().fragranceId as string)
-  const { data: fragrance, loading, error, refresh } = useFragrance(fragranceId)
+
+  const fragranceVariables = useRef<FragranceVars>(
+    {
+      id: fragranceId,
+      imagesLimit: BASE_IMAGES_LIMIT,
+      imagesOffset: BASE_OFFSET,
+
+      notesLimit: BASE_NOTES_LIMIT,
+      notesOffset: BASE_OFFSET,
+      notesFill: BASE_FILL,
+
+      accordsLimit: BASE_ACCORDS_LIMIT,
+      accordsOffset: BASE_OFFSET,
+      accordsFill: BASE_FILL
+    })
+
+  const {
+    fragrance,
+    loading,
+    error,
+    refresh
+  } = useFragrance(fragranceVariables.current)
+
+  // Temp
+  const { path, loading: imgLoading } = useS3Image(fragrance?.images?.at(0)?.url)
 
   if (loading || !fragrance) {
     return null
   }
 
-  const previewUrl = fragrance.images?.[0]?.s3Key || undefined
-
   const gotoEditGender = () => {
-    router.push({ pathname: '/(core)/home/fragrance/edit/gender', params: { genderData: fragrance.gender, fragranceId } })
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/characteristics',
+      params: {
+        fragranceId
+      }
+    })
   }
 
   const gotoEditAccords = () => {
-    router.push({ pathname: '/(core)/home/fragrance/edit/accords', params: { fragranceId } })
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/accords',
+      params: {
+        fragranceId
+      }
+    })
   }
 
   const gotoEditNotes = () => {
-    router.push({ pathname: '/(core)/home/fragrance/edit/notes', params: { fragranceId } })
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/notes',
+      params: {
+        fragranceId
+      }
+    })
   }
 
   const gotoEditCharacteristics = () => {
-    router.push({ pathname: '/(core)/home/fragrance/edit/characteristics', params: { fragranceId } })
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/characteristics',
+      params: {
+        fragranceId
+      }
+    })
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {/* <S3Image path={previewUrl} style={styles.imageWrapper}>
+      <View style={styles.imageWrapper}>
+        {path && <Image source={{ uri: path }} style={styles.image} />}
         <BouncyButton style={{ position: 'absolute', top: 20, right: 20 }}>
           <Icon name='dots-vertical' type='material-community' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>
         <BouncyButton style={{ position: 'absolute', bottom: 20, right: 20 }}>
           <Icon name='bookmark-outline' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>
-      </S3Image> */}
+      </View>
 
       <Divider />
 
       <FragranceHeading
         name={fragrance.name}
         brand={fragrance.brand}
-        rating={fragrance.rating}
-        reviewCount={fragrance.reviewCount}
-        dislikes={fragrance.dislikes}
-        likes={fragrance.likes}
+        rating={fragrance.reactions.rating}
+        reviewCount={fragrance.reactions.reviews}
+        dislikes={fragrance.reactions.dislikes}
+        likes={fragrance.reactions.likes}
       />
 
       <Divider style={{ marginTop: 10 }} />
 
       <FragranceCategory title='Gender' buttonText='masculine or feminine' onButtonPress={gotoEditGender}>
-        <ScaleBar value={fragrance.gender} Icon={<GenderIcon />} />
+        <ScaleBar value={fragrance.traits.gender.value} Icon={<GenderIcon />} />
       </FragranceCategory>
 
       <FragranceCategory title='Top accords' buttonText='how are the accords?' onButtonPress={gotoEditAccords}>
-        <AccordBars accords={fragrance.accords || []} />
+        <AccordBars accords={fragrance.accords} />
       </FragranceCategory>
 
       <FragranceCategory title='Notes' buttonText='how do the notes develop?' onButtonPress={gotoEditNotes}>
-        <NotesPyramid notes={fragrance.notes || []} />
+        <NotesPyramid notes={fragrance.notes} />
       </FragranceCategory>
 
       <FragranceCategory title='Characteristics' buttonText='what are its characteristics?' onButtonPress={gotoEditCharacteristics}>
-        <FragranceCharacteristics fragrance={fragrance} />
+        <FragranceCharacteristics traits={fragrance.traits} />
       </FragranceCategory>
 
       <FragranceCategory title='Reviews' buttonText='write a review'>
@@ -107,5 +158,8 @@ const styles = StyleSheet.create({
   imageWrapper: {
     height: 400,
     position: 'relative'
+  },
+  image: {
+    flex: 1
   }
 })

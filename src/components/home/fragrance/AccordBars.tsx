@@ -3,9 +3,10 @@ import React from 'react'
 import LinearScaleBar from '../../stats/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
+import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 export interface AccordBarsProps {
-  accords: FragranceAccords
+  accords: FragranceAccord[]
 }
 
 const AccordBars: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {

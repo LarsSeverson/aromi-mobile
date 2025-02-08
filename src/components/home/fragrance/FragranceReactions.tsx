@@ -40,12 +40,7 @@ const FragranceReactions: React.FC<FragranceReactionsProps> = (props: FragranceR
   const curLikes = useMemo(() => {
     const count = numLikes - numDislikes
 
-    const getReactionValue = (reaction: boolean | null) =>
-      reaction === true
-        ? 1
-        : reaction === false
-          ? -1
-          : 0
+    const getReactionValue = (reaction: boolean | null) => reaction === true ? 1 : reaction === false ? -1 : 0
 
     return count - getReactionValue(liked) + getReactionValue(curLiked)
   }, [numLikes, numDislikes, liked, curLiked])

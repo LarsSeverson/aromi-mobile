@@ -18,7 +18,6 @@ const FragranceEditLayout = () => {
       }
     }
     >
-      <Stack.Screen name='gender' options={{ headerTitle: 'Gender' }} />
       <Stack.Screen name='accords' options={{ headerTitle: 'Accords' }} />
       <Stack.Screen name='notes' options={{ headerTitle: 'Notes' }} />
       <Stack.Screen name='notes-layer' options={{ headerTitle: '' }} />

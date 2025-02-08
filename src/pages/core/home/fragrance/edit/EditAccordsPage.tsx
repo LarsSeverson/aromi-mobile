@@ -15,24 +15,6 @@ const EditAccordsPage = () => {
 
   const localSearchTerm = useRef('')
 
-  const {
-    accords,
-    votes,
-
-    error,
-    loading,
-
-    noResults,
-    hasMore,
-
-    searchByName,
-    getMore,
-    vote,
-    refresh
-  } = useFragranceAccords(fragranceId)
-
-  const searchAccords = useCallback(searchByName, [searchByName])
-
   const getMoreAccords = useCallback(() => {
     if (!loading.accords && !loading.votes) {
       hasMore && getMore()

@@ -12,9 +12,9 @@ export interface NotesPyramidProps {
 const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => {
   const { notes } = props
 
-  const topNotes = notes.filter(note => note.layer === NoteLayerType.TOP)
-  const middleNotes = notes.filter(note => note.layer === NoteLayerType.MIDDLE)
-  const baseNotes = notes.filter(note => note.layer === NoteLayerType.BASE)
+  const topNotes = notes.top
+  const middleNotes = notes.middle
+  const baseNotes = notes.base
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', overflow: 'hidden', gap: 10 }}>

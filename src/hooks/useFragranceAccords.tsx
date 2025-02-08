@@ -1,210 +1,87 @@
-import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useAuthContext } from '../contexts/AuthContext'
+import { Fragrance, FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { useCallback, useRef } from 'react'
 
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0
-const DEFAULT_NAME = ''
+const DEFAULT_FILL = false
 
-interface AccordsVars {
-  id: number
-  limit: number
-  offset: number
+const FRAGRANCE_ACCORDS_QUERY = gql`
+  query FragranceAccords($id: Int!, $limit: Int, $offset: Int, $fill: Boolean) {
+    fragrance(id: $id) {
+      id
 
-  name: string
-}
-
-interface VotesVars {
-  userId: number
-  limit: number
-  offset: number
-
-  fragranceAccordIds: number[]
-}
-
-const useFragranceAccords = (fragranceId: number, limit: number = DEFAULT_LIMIT, offset: number = DEFAULT_OFFSET, name: string = DEFAULT_NAME) => {
-  const { userInfo } = useAuthContext()
-
-  const accordVars = useRef<AccordsVars>(
-    {
-      id: fragranceId,
-      limit,
-      offset,
-      name
+      accords(limit: $limit, offset: $offset, fill: $fill) {
+        id
+        accordId
+        name
+        color
+        votes
+        myVote
+      }
     }
-  )
+  }
+`
 
-  const votesVars = useRef<VotesVars>(
-    userInfo.user
-      ? {
-          userId: userInfo.user.id,
-          fragranceAccordIds: [],
-          limit,
-          offset: 0
-        }
-      : null
-  )
+export interface FragranceAccordsVars {
+  id: number
+  limit?: number | undefined
+  offset?: number | undefined
+  fill?: boolean | undefined
+}
 
-  const [noResults, setNoResults] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+interface FragranceAccordsData {
+  fragrance: Fragrance
+}
 
-  const [loading, setLoading] = useState({ accords: false, votes: false })
-  const [error, setError] = useState({ accords: false, votes: false })
+const VOTE_ON_ACCORD = gql`
+  mutation VoteOnAccord($fragranceId: Int!, $accordId: Int!, $myVote: Boolean!) {
+    voteOnAccord(fragranceId: $fragranceId, accordId: $accordId, myVote: $myVote) {
+      votes
+      myVote
+    }
+  }
+`
 
-  const [curAccords, setCurAccords] = useState<FragranceAccord | null>(null)
-  // const [curVotes, setCurVotes] = useState<Map<number, FragranceAccordUserVotesResult> | null>(null)
+export interface VoteOnAccordVars {
+  fragranceId: number
+  accordId: number
+  myVote: boolean
+}
 
-  // const {
-  //   data: accords,
-  //   loading: accordsLoading,
-  //   error: accordsError,
-  //   execute: getAccords,
-  //   reset: resetAccords
-  // } = useResolver<FragranceAccordsResult, FragranceAccordsArgs>(
-  //   {
-  //     resolver: fragranceAccords,
-  //     type: 'query',
-  //     authMode: 'iam'
-  //   }
-  // )
+export interface VoteOnAccordData {
+  voteOnAccord: FragranceAccord
+}
 
-  // const {
-  //   data: votes,
-  //   loading: votesLoading,
-  //   error: votesError,
-  //   execute: getVotes,
-  //   reset: resetVotes
-  // } = useResolver<FragranceAccordUserVotesResults, FragranceAccordUserVotesArgs>(
-  //   {
-  //     resolver: fragranceAccordUserVotesQuery,
-  //     type: 'query',
-  //     authMode: 'userPool'
-  //   }
-  // )
+const useFragranceAccords = (variables: FragranceAccordsVars) => {
+  const localVariables = useRef<FragranceAccordsVars>({
+    id: variables.id,
+    limit: variables.limit ?? DEFAULT_LIMIT,
+    offset: variables.offset ?? DEFAULT_OFFSET,
+    fill: variables.fill ?? DEFAULT_FILL
+  })
 
-  // const {
-  //   execute: voteOnAccord
-  // } = useResolver<VoteOnAccordMutationResult, VoteOnAccordMutationArgs>(
-  //   {
-  //     resolver: voteOnAccordMutation,
-  //     type: 'mutation',
-  //     authMode: 'userPool'
-  //   }
-  // )
+  const {
+    data,
+    loading: accordsLoading,
+    error: accordsError,
+    refetch
+  } = useQuery<FragranceAccordsData, FragranceAccordsVars>(FRAGRANCE_ACCORDS_QUERY, { variables: localVariables.current })
 
-  // const refresh = useCallback(() => {
-  //   accordVars.current.name = ''
-  //   accordVars.current.offset = 0
+  const [execute, {
+    loading: voteLoading,
+    error: voteError
+  }] = useMutation<FragranceAccordsData, FragranceAccordsVars>(VOTE_ON_ACCORD)
 
-  //   resetAccords()
-  //   resetVotes()
-
-  //   setNoResults(false)
-  //   setHasMore(true)
-  // }, [resetAccords, resetVotes])
-
-  // const searchByName = useCallback((name: string) => {
-  //   refresh()
-
-  //   accordVars.current.name = name
-
-  //   getAccords(accordVars.current)
-  // }, [refresh, getAccords])
-
-  // const getMore = useCallback(() => {
-  //   const nextOffset = accordVars.current.offset + accordVars.current.limit
-
-  //   accordVars.current.offset = nextOffset
-
-  //   getAccords(accordVars.current)
-  // }, [getAccords])
-
-  // const updateCurrentAccords = useCallback((accords: FragranceAccords) => {
-  //   const replace = accordVars.current.offset === 0
-
-  //   replace
-  //     ? setCurAccords(accords)
-  //     : setCurAccords((prev) => [...(prev || []), ...accords])
-  // }, [])
-
-  // const updateCurrentVotes = useCallback(async (accords: FragranceAccords) => {
-  //   if (!votesVars.current) return
-
-  //   const fragranceAccordIds = accords.map(accord => accord.id)
-
-  //   votesVars.current.fragranceAccordIds = fragranceAccordIds
-
-  //   const votesData = await getVotes(votesVars.current)
-  //   const votes = votesData?.fragranceAccordUserVotes || null
-
-  //   if (!votes) return
-
-  //   setCurVotes((prev) => {
-  //     if (!prev) prev = new Map<number, FragranceAccordUserVotesResult>()
-
-  //     votes.filter(vote => vote.deletedAt === null).forEach(vote => prev.set(vote.fragranceAccordId, vote))
-
-  //     return new Map(prev)
-  //   })
-  // }, [getVotes])
-
-  // const onAccordsChanged = useCallback((accords?: FragranceAccords | undefined) => {
-  //   if (!accords || !hasMore) return
-
-  //   updateCurrentVotes(accords)
-  //   updateCurrentAccords(accords)
-
-  //   setNoResults(accords.length === 0)
-  //   setHasMore(accords.length >= accordVars.current.limit)
-  // }, [hasMore, updateCurrentVotes, updateCurrentAccords])
-
-  // const vote = useCallback((_: number, fragranceAccord: FragranceAccord) => {
-  //   if (!userInfo.user) return
-
-  //   const fragranceId = accordVars.current.id
-  //   const accordId = fragranceAccord.accordId
-
-  //   voteOnAccord({ fragranceId, accordId })
-  // }, [userInfo.user, voteOnAccord])
-
-  // useEffect(() => {
-  //   onAccordsChanged(accords?.fragranceAccords)
-  // }, [accords, onAccordsChanged])
-
-  // useEffect(() => {
-  //   setError({ accords: accordsError !== null, votes: votesError !== null })
-  // }, [accordsError, votesError])
-
-  // useEffect(() => {
-  //   setLoading({ accords: accordsLoading, votes: votesLoading })
-  // }, [accordsLoading, votesLoading])
-
-  // useEffect(() => {
-  //   const init = async () => {
-  //     !accords && await getAccords(accordVars.current)
-
-  //     if (accords && votesVars.current) {
-  //       !votes && await getVotes(votesVars.current)
-  //     }
-  //   }
-
-  //   init()
-  // }, [accords, votes, getAccords, getVotes])
+  const refresh = useCallback((variables: FragranceAccordsVars) => {
+    refetch(variables)
+  }, [refetch])
 
   return {
-    accords: curAccords,
-    // votes: curVotes,
-
-    error,
+    accords: data?.fragrance.accords || [],
     loading,
-
-    noResults,
-    hasMore
-
-    // searchByName,
-    // getMore,
-    // vote,
-    // refresh
+    error,
+    refresh
   }
 }
 
