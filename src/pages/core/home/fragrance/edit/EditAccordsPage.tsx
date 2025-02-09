@@ -30,6 +30,10 @@ const EditAccordsPage = () => {
     // searchAccords(newSearchTerm)
   }, [])
 
+  const getMoreAccords = useCallback(() => {
+    !loading.accordsLoading && getMore()
+  }, [loading.accordsLoading, getMore])
+
   const isAccordSelected = useCallback((accord: FragranceAccord) => {
     return accord.myVote
   }, [])
@@ -73,7 +77,7 @@ const EditAccordsPage = () => {
         isSelected={isAccordSelected}
         renderItem={onRenderAccord}
         onItemSelected={onAccordSelected}
-        onEndReached={getMore}
+        onEndReached={getMoreAccords}
         ListFooterComponent={onRenderListFooter}
       />
     </SafeAreaView>
@@ -84,6 +88,6 @@ export default EditAccordsPage
 
 const styles = StyleSheet.create({
   listWrapper: {
-    padding: 5
+    padding: 10
   }
 })

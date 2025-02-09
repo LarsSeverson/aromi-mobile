@@ -1,43 +1,54 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import React, { useCallback } from 'react'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesList from '@/src/components/home/fragrance/NotesList'
+import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 
 const EditNotesPage = () => {
   const router = useRouter()
 
   const fragranceId = Number(useLocalSearchParams().fragranceId)
 
-  const [topLoaded, setTopLoaded] = useState(false)
-  const [midLoaded, setMidLoaded] = useState(false)
-  const [basLoaded, setBasLoaded] = useState(false)
+  const {
+    notes,
+    loading,
+    errors
+  } = useFragranceNotes({ id: fragranceId, layers: [NoteLayerType.TOP, NoteLayerType.MIDDLE, NoteLayerType.BASE] })
 
   const onSeeAll = useCallback((layer: NoteLayerType) => {
-    router.push({ pathname: '/(core)/home/fragrance/edit/notes-layer', params: { fragranceId, layer } })
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/notes-layer',
+      params: {
+        fragranceId,
+        layer
+      }
+    })
   }, [fragranceId, router])
+
+  // TODO
+  if (loading.notesLoading || !notes) {
+    return null
+  }
 
   return (
     <View style={styles.wrapper}>
-      <ScrollView showsVerticalScrollIndicator={false} style={{ opacity: topLoaded && midLoaded && basLoaded ? 1 : 0 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <NotesList
-          fragranceId={fragranceId}
+          notes={notes.top}
           layer={NoteLayerType.TOP}
-          onLoad={() => setTopLoaded(true)}
           onSeeAll={() => onSeeAll(NoteLayerType.TOP)}
           onItemSelected={() => onSeeAll(NoteLayerType.TOP)}
         />
         <NotesList
-          fragranceId={fragranceId}
+          notes={notes.middle}
           layer={NoteLayerType.MIDDLE}
-          onLoad={() => setMidLoaded(true)}
           onSeeAll={() => onSeeAll(NoteLayerType.MIDDLE)}
           onItemSelected={() => onSeeAll(NoteLayerType.MIDDLE)}
         />
         <NotesList
-          fragranceId={fragranceId}
+          notes={notes.base}
           layer={NoteLayerType.BASE}
-          onLoad={() => setBasLoaded(true)}
           onSeeAll={() => onSeeAll(NoteLayerType.BASE)}
           onItemSelected={() => onSeeAll(NoteLayerType.BASE)}
         />
@@ -50,6 +61,7 @@ export default EditNotesPage
 
 const styles = StyleSheet.create({
   wrapper: {
-    flex: 1
+    flex: 1,
+    padding: 10
   }
 })

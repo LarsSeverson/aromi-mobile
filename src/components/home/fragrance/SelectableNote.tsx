@@ -1,16 +1,16 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { Identifiable, SelectableRenderItemProps } from '../utils/SelectableList'
+import { Identifiable, SelectableRenderItemProps } from '../../SelectableList'
 import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 
-export interface NotesLayerNoteProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
+export interface SelectableNoteProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
   originallySelected?: boolean | undefined
 }
 
-const SelectableNote: React.FC<NotesLayerNoteProps<FragranceNote>> = (props: NotesLayerNoteProps<FragranceNote>) => {
+const SelectableNote: React.FC<SelectableNoteProps<FragranceNote>> = (props: SelectableNoteProps<FragranceNote>) => {
   const theme = useAppTheme()
 
   const {

@@ -27,7 +27,42 @@ export const useClient = (): UseClientReturn => {
 
   const client = useMemo(() => new ApolloClient({
     link: authLink.concat(new HttpLink({ uri: 'http://localhost:3000/dev/graphql' })),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      typePolicies: {
+        Fragrance: {
+          fields: {
+            notes: {
+              merge (existing = {}, incoming) {
+                return incoming
+              }
+            }
+          }
+        },
+        FragranceNotes: {
+          keyFields: false,
+          fields: {
+            top: {
+              keyArgs: ['limit', 'offset', 'fill'],
+              merge (existing = [], incoming) {
+                return [...existing, ...incoming]
+              }
+            },
+            middle: {
+              keyArgs: ['limit', 'offset', 'fill'],
+              merge (existing = [], incoming) {
+                return [...existing, ...incoming]
+              }
+            },
+            base: {
+              keyArgs: ['limit', 'offset', 'fill'],
+              merge (existing = [], incoming) {
+                return [...existing, ...incoming]
+              }
+            }
+          }
+        }
+      }
+    })
   }), [authLink])
 
   const getToken = useCallback(async () => {

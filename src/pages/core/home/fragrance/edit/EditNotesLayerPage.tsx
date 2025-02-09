@@ -10,6 +10,8 @@ import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '@/src/components/SearchInput'
 
+const DEFAULT_LIMIT = 30
+
 const EditNotesLayerPage = () => {
   const nav = useNavigation()
   const fragranceId = Number(useLocalSearchParams().fragranceId)
@@ -19,69 +21,71 @@ const EditNotesLayerPage = () => {
 
   const {
     notes,
-    votes,
-
     loading,
-    error,
-
-    noResults,
+    errors,
     hasMore,
-
-    searchByName,
     getMore,
-    vote,
-    refresh
-  } = useFragranceNotes({ fragranceId, layer, fill: true })
-
-  const searchNotes = useCallback(searchByName, [searchByName])
-
-  const getMoreNotes = useCallback(() => {
-    if (!loading.notes && !loading.votes) {
-      hasMore && getMore()
-    }
-  }, [loading, hasMore, getMore])
+    voteOnNote
+  } = useFragranceNotes({ id: fragranceId, layers: [layer], fill: true, limit: DEFAULT_LIMIT })
 
   const handleSearch = useCallback((newSearchTerm: string) => {
     localSearchTerm.current = newSearchTerm
+  }, [])
 
-    searchNotes(newSearchTerm)
-  }, [searchNotes])
+  const getMoreNotes = useCallback(() => {
+    !loading.notesLoading && getMore()
+  }, [loading.notesLoading, getMore])
+
+  const isNoteSelected = useCallback((note: FragranceNote) => {
+    return note.myVote
+  }, [])
+
+  const onNoteSelected = useCallback((_: number, fragranceNote: FragranceNote, myVote: boolean) => {
+    voteOnNote({
+      fragranceId,
+      noteId: fragranceNote.noteId,
+      layer: fragranceNote.layer,
+      myVote
+    }, fragranceNote)
+  }, [fragranceId, voteOnNote])
 
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
-    const originallySelected = (item && votes?.has(item.id)) || false
+    if (!item) return null
+
+    const originallySelected = item.myVote
 
     return <SelectableNote item={item} index={index} selected={selected} originallySelected={originallySelected} />
-  }, [votes])
+  }, [])
 
   const onRenderListFooter = useCallback(() => {
     return (
       <View>
-        {(loading.notes || loading.votes) && <ActivityIndicator />}
+        {loading.notesLoading && <ActivityIndicator />}
         {!hasMore && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
-        {!noResults && !hasMore && <FeedbackButton />}
+        {!hasMore && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading, noResults])
+  }, [hasMore, loading.notesLoading])
 
   useEffect(() => {
     nav.setOptions({ headerTitle: `${layer} notes` })
   }, [nav, layer])
 
-  if (!notes || !votes) return null
+  if (!notes) return null
 
   return (
-    <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
-      <SearchInput onSearch={handleSearch} />
+    <SafeAreaView edges={[]} style={{ flex: 1 }}>
+      {/* <SearchInput onSearch={handleSearch} /> */}
 
       <SelectableList
-        data={notes}
+        data={notes[layer]}
         numColumns={3}
         onEndReachedThreshold={0.5}
-        selectedItems={votes}
         renderItemStyle={{ width: '33.33%' }}
         style={styles.listWrapper}
+        isSelected={isNoteSelected}
         renderItem={onRenderNote}
-        onItemSelected={vote}
+        onItemSelected={onNoteSelected}
         onEndReached={getMoreNotes}
         ListFooterComponent={onRenderListFooter}
       />

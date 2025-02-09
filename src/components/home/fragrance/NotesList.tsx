@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
 import TextButton from '../../TextButton'
@@ -10,8 +9,7 @@ import SelectableList, { Identifiable, SelectableListProps, SelectableRenderItem
 import SelectableNote from './SelectableNote'
 
 export interface NotesListProps<T extends Identifiable> extends Omit<SelectableListProps<T>, 'data' | 'renderItem'> {
-  fragranceId: number
-
+  notes: FragranceNote[]
   layer: NoteLayerType
 
   onLoad?: () => void | undefined
@@ -20,8 +18,7 @@ export interface NotesListProps<T extends Identifiable> extends Omit<SelectableL
 
 const NotesList = (props: NotesListProps<FragranceNote>) => {
   const {
-    fragranceId,
-
+    notes,
     layer,
 
     onLoad,
@@ -30,29 +27,11 @@ const NotesList = (props: NotesListProps<FragranceNote>) => {
     ...rest
   } = props
 
-  const {
-    notes,
-    loading,
-    error,
-    refresh
-  } = useFragranceNotes({ fragranceId, layer, withVotes: false })
-
   const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
     return (
       <SelectableNote item={item} index={index} selected={selected} />
     )
   }, [])
-
-  useEffect(() => {
-    if (!loading.notes && !loading.votes) {
-      onLoad?.()
-    }
-  }, [loading, onLoad])
-
-  // TODO: Skeleton
-  if (!notes) {
-    return null
-  }
 
   return (
     <View style={styles.wrapper}>
@@ -62,7 +41,7 @@ const NotesList = (props: NotesListProps<FragranceNote>) => {
       </View>
 
       <SelectableList
-        data={notes.slice(0, 8)}
+        data={notes}
         disabled
         numRows={1}
         numColumns={8}
@@ -83,7 +62,6 @@ export default NotesList
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    padding: 5,
     gap: 10
   },
   heading: {

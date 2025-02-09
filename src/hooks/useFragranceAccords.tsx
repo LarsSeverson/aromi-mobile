@@ -70,6 +70,8 @@ const useFragranceAccords = (variables: FragranceAccordsVars) => {
     fetchMore
   } = useQuery<FragranceAccordsData, FragranceAccordsVars>(FRAGRANCE_ACCORDS_QUERY, { variables: localVariables.current })
 
+  accordsError && console.log(accordsError)
+
   const [voteOnAccordMutation, {
     loading: voteLoading,
     error: voteError
@@ -99,18 +101,18 @@ const useFragranceAccords = (variables: FragranceAccordsVars) => {
 
   const getMore = useCallback(() => {
     if (!hasMore) return
+    const { offset, limit } = localVariables.current
 
-    const nextOffset = localVariables.current.offset + localVariables.current.limit
-
+    const nextOffset = offset + limit
     localVariables.current.offset = nextOffset
 
     fetchMore({
-      variables: { offset: localVariables.current.offset },
+      variables: { offset: nextOffset },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev
 
-        const oldAccords = prev.fragrance.accords
-        const newAccords = fetchMoreResult.fragrance.accords
+        const oldAccords = prev.fragrance?.accords || []
+        const newAccords = fetchMoreResult.fragrance?.accords || []
 
         if (newAccords.length < localVariables.current.limit) {
           setHasMore(false)

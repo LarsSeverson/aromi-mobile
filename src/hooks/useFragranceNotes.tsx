@@ -1,252 +1,214 @@
-import { FragranceNote, FragranceNotes, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useAuthContext } from '../contexts/AuthContext'
+import { Fragrance, FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { useCallback, useRef, useState } from 'react'
 
-const DEFAULT_LIMIT = 30
+const DEFAULT_LIMIT = 12
 const DEFAULT_OFFSET = 0
-
 const DEFAULT_FILL = false
-const DEFAULT_QUERY_ON_LOAD = true
-const DEFAULT_WITH_VOTES = true
 
-const DEFAULT_NAME = ''
+const FRAGRANCE_NOTES_QUERY = gql`
+  query FragranceNotes(
+    $id: Int!, 
+    $limit: Int, 
+    $offset: Int, 
+    $fill: Boolean,
+    $includeTop: Boolean!,
+    $includeMiddle: Boolean!,
+    $includeBase: Boolean!
+  ) {
+    fragrance(id: $id) {
+      id
 
-export interface UseFragranceNotesArgs {
-  fragranceId: number
+      notes {
+        top(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeTop) {
+          id
+          noteId
+          name
+          layer
+          votes
+          myVote
+        }
+        middle(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeMiddle) {
+          id
+          noteId
+          name
+          layer
+          votes
+          myVote
+        }
+        base(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeBase) {
+          id
+          noteId
+          name
+          layer
+          votes
+          myVote
+        }
+      } 
+    }
+  }
+`
+
+export interface FragranceNotesVars {
+  id: number
   limit?: number | undefined
   offset?: number | undefined
-
-  name?: string | undefined
-
   fill?: boolean | undefined
-  queryOnLoad?: boolean | undefined
-  withVotes?: boolean | undefined
 
-  layer: NoteLayerType
+  includeTop: boolean
+  includeMiddle: boolean
+  includeBase: boolean
 }
 
-interface NotesVars {
+interface FragranceNotesData {
+  fragrance: Fragrance
+}
+
+const VOTE_ON_NOTE = gql`
+  mutation VoteOnNote($fragranceId: Int!, $noteId: Int!, $layer: NoteLayer!, $myVote: Boolean!) {
+    voteOnNote(fragranceId: $fragranceId, noteId: $noteId, layer: $layer, myVote: $myVote) {
+      id
+      noteId
+      name
+      layer
+      votes
+      myVote
+    }
+  }
+`
+
+export interface VoteOnNoteVars {
+  fragranceId: number
+  noteId: number
+  layer: NoteLayerType
+  myVote: boolean
+}
+
+export interface VoteOnNoteData {
+  voteOnNote: FragranceNote
+}
+
+export interface UseFragranceNotesVars {
   id: number
-  limit: number
-  offset: number
-
-  fill: boolean
-
-  name: string
-
-  layer: NoteLayerType
+  layers: NoteLayerType[]
+  fill?: boolean | undefined
+  limit?: number | undefined
+  offset?: number | undefined
 }
 
-interface VotesVars {
-  userId: number
-  limit: number
-  offset: number
+const useFragranceNotes = (vars: UseFragranceNotesVars) => {
+  const {
+    id,
+    layers,
+    fill,
+    limit,
+    offset
+  } = vars
 
-  fragranceNoteIds: number[]
-}
+  const includeTop = layers.includes(NoteLayerType.TOP)
+  const includeMiddle = layers.includes(NoteLayerType.MIDDLE)
+  const includeBase = layers.includes(NoteLayerType.BASE)
 
-const useFragranceNotes = (args: UseFragranceNotesArgs) => {
-  // const { userInfo } = useAuthContext()
+  const localVariables = useRef({
+    id,
+    limit: limit ?? DEFAULT_LIMIT,
+    offset: offset ?? DEFAULT_OFFSET,
+    fill: fill ?? DEFAULT_FILL,
+    includeTop,
+    includeMiddle,
+    includeBase
+  })
 
-  // const {
-  //   fragranceId,
-  //   limit = DEFAULT_LIMIT,
-  //   offset = DEFAULT_OFFSET,
+  const {
+    data,
+    loading: notesLoading,
+    error: notesError,
+    refetch,
+    fetchMore
+  } = useQuery<FragranceNotesData, FragranceNotesVars>(FRAGRANCE_NOTES_QUERY, { variables: localVariables.current })
 
-  //   name = DEFAULT_NAME,
+  const [voteOnNoteMutation, {
+    loading: voteLoading,
+    error: voteError
+  }] = useMutation<VoteOnNoteData, VoteOnNoteVars>(VOTE_ON_NOTE)
 
-  //   fill = DEFAULT_FILL,
-  //   queryOnLoad = DEFAULT_QUERY_ON_LOAD,
-  //   withVotes = DEFAULT_WITH_VOTES,
+  const [hasMore, setHasMore] = useState({ top: true, middle: true, base: true })
 
-  //   layer
-  // } = args
+  const voteOnNote = useCallback((variables: VoteOnNoteVars, note: FragranceNote) => {
+    const curVotes = note.votes
 
-  // const notesVars = useRef<NotesVars>(
-  //   {
-  //     id: fragranceId,
-  //     limit,
-  //     offset,
-  //     fill,
-  //     name,
-  //     layer
-  //   }
-  // )
+    return voteOnNoteMutation({
+      variables,
+      optimisticResponse: {
+        voteOnNote: {
+          ...note,
+          votes: variables.myVote ? curVotes + 1 : curVotes - 1,
+          myVote: variables.myVote
+        }
+      }
+    })
+  }, [voteOnNoteMutation])
 
-  // const votesVars = useRef<VotesVars>(
-  //   userInfo.user
-  //     ? {
-  //         userId: userInfo.user.id,
-  //         fragranceNoteIds: [],
-  //         limit,
-  //         offset: 0
-  //       }
-  //     : null
-  // )
+  const refresh = useCallback((variables: FragranceNotesVars) => {
+    localVariables.current.offset = 0
+    refetch(variables)
+  }, [refetch])
 
-  // const [noResults, setNoResults] = useState(false)
-  // const [hasMore, setHasMore] = useState(true)
+  const getMore = useCallback(() => {
+    const { offset, limit, includeTop, includeMiddle, includeBase } = localVariables.current
+    const canFetch =
+      (includeTop ? hasMore.top : false) ||
+      (includeMiddle ? hasMore.middle : false) ||
+      (includeBase ? hasMore.base : false)
+    if (!canFetch) return
 
-  // const [loading, setLoading] = useState({ notes: false, votes: false })
-  // const [error, setError] = useState({ notes: false, votes: false })
+    const nextOffset = offset + limit
+    localVariables.current.offset = nextOffset
 
-  // const [curNotes, setCurNotes] = useState<FragranceNotes | null>(null)
-  // const [curVotes, setCurVotes] = useState<Map<number, FragranceNoteUserVotesResult> | null>(null)
+    fetchMore({
+      variables: { offset: nextOffset },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev
 
-  // const {
-  //   data: notes,
-  //   loading: notesLoading,
-  //   error: notesError,
-  //   execute: getNotes,
-  //   reset: resetNotes
-  // } = useResolver<FragranceNotesResult, FragranceNotesArgs>(
-  //   {
-  //     resolver: fragranceNotes,
-  //     type: 'query',
-  //     authMode: 'iam'
-  //   }
-  // )
+        const oldTopNotes = prev.fragrance.notes.top || []
+        const oldMiddleNotes = prev.fragrance.notes.middle || []
+        const oldBaseNotes = prev.fragrance.notes.base || []
 
-  // const {
-  //   data: votes,
-  //   loading: votesLoading,
-  //   error: votesError,
-  //   execute: getVotes,
-  //   reset: resetVotes
-  // } = useResolver<FragranceNoteUserVotesResults, FragranceNoteUserVotesArgs>(
-  //   {
-  //     resolver: fragranceNoteUserVotesQuery,
-  //     type: 'query',
-  //     authMode: 'userPool'
-  //   }
-  // )
+        const newTopNotes = includeTop ? fetchMoreResult.fragrance.notes.top || [] : []
+        const newMiddleNotes = includeMiddle ? fetchMoreResult.fragrance.notes.middle || [] : []
+        const newBaseNotes = includeBase ? fetchMoreResult.fragrance.notes.base || [] : []
 
-  // const {
-  //   execute: voteOnNote
-  // } = useResolver<VoteOnAccordMutationResult, VoteOnNoteMutationArgs>(
-  //   {
-  //     resolver: voteOnNoteMutation,
-  //     type: 'mutation',
-  //     authMode: 'userPool'
-  //   }
-  // )
+        setHasMore({
+          top: includeTop ? newTopNotes.length > 0 : false,
+          middle: includeMiddle ? newMiddleNotes.length > 0 : false,
+          base: includeBase ? newBaseNotes.length > 0 : false
+        })
 
-  // const refresh = useCallback(() => {
-  //   notesVars.current.name = ''
-  //   notesVars.current.offset = 0
+        return {
+          fragrance: {
+            ...prev.fragrance,
+            notes: {
+              top: includeTop ? [...oldTopNotes, ...newTopNotes] : oldTopNotes,
+              middle: includeMiddle ? [...oldMiddleNotes, ...newMiddleNotes] : oldMiddleNotes,
+              base: includeBase ? [...oldBaseNotes, ...newBaseNotes] : oldBaseNotes
+            }
+          }
+        }
+      }
+    })
+  }, [hasMore, fetchMore])
 
-  //   resetNotes()
-  //   resetVotes()
-
-  //   setNoResults(false)
-  //   setHasMore(true)
-  // }, [resetNotes, resetVotes])
-
-  // const searchByName = useCallback((name: string) => {
-  //   refresh()
-
-  //   notesVars.current.name = name
-
-  //   getNotes(notesVars.current)
-  // }, [refresh, getNotes])
-
-  // const getMore = useCallback(() => {
-  //   const nextOffset = notesVars.current.offset + notesVars.current.limit
-
-  //   notesVars.current.offset = nextOffset
-
-  //   getNotes(notesVars.current)
-  // }, [getNotes])
-
-  // const updateCurrentNotes = useCallback((notes: FragranceNotes) => {
-  //   const replace = notesVars.current.offset = 0
-
-  //   replace
-  //     ? setCurNotes(notes)
-  //     : setCurNotes((prev) => [...(prev || []), ...notes])
-  // }, [])
-
-  // const updateCurrentVotes = useCallback(async (notes: FragranceNotes) => {
-  //   if (!votesVars.current) return
-
-  //   const fragranceNoteIds = notes.map(note => note.id)
-
-  //   votesVars.current.fragranceNoteIds = fragranceNoteIds
-
-  //   const votesData = await getVotes(votesVars.current)
-  //   const votes = votesData?.fragranceNoteUserVotes || null
-
-  //   if (!votes) return
-
-  //   setCurVotes((prev) => {
-  //     if (!prev) prev = new Map<number, FragranceNoteUserVotesResult>()
-
-  //     votes.filter(vote => vote.deletedAt === null).forEach(vote => prev?.set(vote.fragranceNoteId, vote))
-
-  //     return new Map(prev)
-  //   })
-  // }, [getVotes])
-
-  // const onNotesChanged = useCallback((notes?: FragranceNotes | undefined) => {
-  //   if (!notes || !hasMore) return
-
-  //   withVotes && updateCurrentVotes(notes)
-  //   updateCurrentNotes(notes)
-
-  //   setNoResults(notes.length === 0)
-  //   setHasMore(notes.length >= notesVars.current.limit)
-  // }, [hasMore, withVotes, updateCurrentVotes, updateCurrentNotes])
-
-  // const vote = useCallback((_: number, fragranceNote: FragranceNote) => {
-  //   if (!userInfo.user) return
-
-  //   const fragranceId = notesVars.current.id
-  //   const noteId = fragranceNote.noteId
-  //   const layer = notesVars.current.layer
-
-  //   voteOnNote({ fragranceId, noteId, layer })
-  // }, [userInfo.user, voteOnNote])
-
-  // useEffect(() => {
-  //   onNotesChanged(notes?.fragranceNotes)
-  // }, [notes, onNotesChanged])
-
-  // useEffect(() => {
-  //   setError({ notes: notesError !== null, votes: votesError !== null })
-  // }, [notesError, votesError])
-
-  // useEffect(() => {
-  //   setLoading({ notes: notesLoading, votes: votesLoading })
-  // }, [notesLoading, votesLoading])
-
-  // useEffect(() => {
-  //   if (!queryOnLoad) return
-
-  //   const init = async () => {
-  //     !notes && await getNotes(notesVars.current)
-
-  //     if (withVotes && notes && votesVars.current) {
-  //       !votes && await getVotes(votesVars.current)
-  //     }
-  //   }
-
-  //   init()
-  // }, [queryOnLoad, notes, withVotes, votes, getNotes, getVotes])
+  notesError && console.log(notesError)
 
   return {
-    // notes: curNotes,
-    // votes: curVotes,
+    notes: data?.fragrance.notes,
+    loading: { notesLoading, voteLoading },
+    errors: { notesError, voteError },
+    hasMore,
 
-    // error,
-    // loading,
-
-    // noResults,
-    // hasMore,
-
-    // searchByName,
-    // getMore,
-    // vote,
-    // refresh
+    refresh,
+    getMore,
+    voteOnNote
   }
 }
 
