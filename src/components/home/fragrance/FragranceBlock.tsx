@@ -6,36 +6,37 @@ import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
-import FragranceReactions from './FragranceReactions'
+import FragranceVoteButton from './FragranceVoteButton'
 
 export interface FragranceBlockProps extends BouncyButtonProps {
   fragrance: Fragrance
 
   onFragrancePress?: (fragranceId: number) => void
+  onFragranceVote?: (fragrance: Fragrance, myVote: boolean | null) => void
 }
 
 const FragranceBlock: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
   const theme = useAppTheme()
-
-  const { fragrance, onFragrancePress, ...rest } = props
+  const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
+  const { path, loading: imgLoading } = useS3Image(fragrance.images?.[0]?.url)
 
   const handlePress = useCallback(() => {
     onFragrancePress?.(fragrance.id)
   }, [fragrance.id, onFragrancePress])
 
-  const { path, loading: imgLoading } = useS3Image(fragrance.images?.[0]?.url)
+  const handleVote = useCallback((myVote: boolean | null) => {
+    onFragranceVote?.(fragrance, myVote)
+  }, [fragrance, onFragranceVote])
 
   return (
     <View style={styles.wrapper}>
       <BouncyButton onPress={handlePress} {...rest}>
         <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
           <Image source={{ uri: path || undefined }} style={styles.imgWrapper} />
-          <FragranceReactions
-            fragranceId={fragrance.id}
-            liked={fragrance.myReactions.like}
-            numLikes={fragrance.reactions.likes}
-            numDislikes={fragrance.reactions.dislikes}
+          <FragranceVoteButton
+            vote={fragrance.vote}
             style={styles.reactionsWrapper}
+            onVote={handleVote}
           />
         </View>
       </BouncyButton>
@@ -71,7 +72,8 @@ const styles = StyleSheet.create({
   },
   previewWrapper: {
     aspectRatio: 1,
-    borderRadius: 15
+    borderRadius: 15,
+    overflow: 'hidden'
   },
   imgWrapper: {
     position: 'relative',

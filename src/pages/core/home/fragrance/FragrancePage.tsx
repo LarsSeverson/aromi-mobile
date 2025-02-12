@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragrance, { FragranceVars } from '@/src/hooks/useFragrance'
 import { Divider, Text } from 'react-native-paper'
@@ -46,15 +46,19 @@ const FragrancePage = () => {
     fragrance,
     loading,
     error,
-    refresh
+    refresh,
+    voteOnFragrance
   } = useFragrance(fragranceVariables.current)
 
   // Temp
   const { path, loading: imgLoading } = useS3Image(fragrance?.images?.at(0)?.url)
 
-  if (loading || !fragrance) {
-    return null
-  }
+  const onFragranceVote = useCallback((myVote: boolean | null) => {
+    if (!fragrance) return
+
+    const vars = { fragranceId: fragrance.id, myVote }
+    voteOnFragrance(vars, fragrance.vote)
+  }, [fragrance, voteOnFragrance])
 
   const gotoEditGender = () => {
     router.push({
@@ -92,6 +96,10 @@ const FragrancePage = () => {
     })
   }
 
+  if (loading.fragranceLoading || !fragrance) {
+    return null
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.imageWrapper}>
@@ -109,16 +117,21 @@ const FragrancePage = () => {
       <FragranceHeading
         name={fragrance.name}
         brand={fragrance.brand}
-        rating={fragrance.reactions.rating}
-        reviewCount={fragrance.reactions.reviews}
-        dislikes={fragrance.reactions.dislikes}
-        likes={fragrance.reactions.likes}
+        rating={fragrance.rating}
+        reviewsCount={fragrance.reviews}
+        vote={fragrance.vote}
+        onVote={onFragranceVote}
       />
 
       <Divider style={{ marginTop: 10 }} />
 
       <FragranceCategory title='Gender' buttonText='masculine or feminine' onButtonPress={gotoEditGender}>
-        <ScaleBar value={fragrance.traits.gender.value} Icon={<GenderIcon />} />
+        <ScaleBar
+          value={fragrance.traits.gender.value}
+          Icon={<GenderIcon />}
+          lessLabel='feminine'
+          greaterLabel='masculine'
+        />
       </FragranceCategory>
 
       <FragranceCategory title='Top accords' buttonText='how are the accords?' onButtonPress={gotoEditAccords}>

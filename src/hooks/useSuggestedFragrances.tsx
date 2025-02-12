@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gql } from '@apollo/client/core'
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useQuery } from '@apollo/client'
+import { Fragrance, FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { useMutation, useQuery } from '@apollo/client'
+import useVoteOnFragrance from './useVoteOnFragrance'
 
 const DEFAULT_LIMIT = 20
 const DEFAULT_OFFSET = 0
@@ -14,14 +15,12 @@ const SUGGESTED_FRAGRANCES_QUERY = gql`
       brand
       name
 
-      reactions {
+      vote {
+        id
         likes
         dislikes
-      }
-
-      myReactions {
-        like
-      }
+        myVote
+      } 
 
       images(limit: $imagesLimit, offset: $imagesOffset) {
         id
@@ -53,11 +52,17 @@ const useSuggestedFragrances = (variables: SuggestedFragrancesVars = {}) => {
 
   const {
     data,
-    loading,
-    error,
+    loading: fragrancesLoading,
+    error: fragrancesError,
     fetchMore,
     refetch
   } = useQuery<SuggestedFragrancesData, SuggestedFragrancesVars>(SUGGESTED_FRAGRANCES_QUERY, { variables: localVariables.current })
+
+  const {
+    loading: voteLoading,
+    error: voteError,
+    voteOnFragrance
+  } = useVoteOnFragrance()
 
   const [hasMore, setHasMore] = useState(true)
 
@@ -95,13 +100,14 @@ const useSuggestedFragrances = (variables: SuggestedFragrancesVars = {}) => {
   return {
     suggestedFragrances: data?.fragrances || [],
 
-    error,
-    loading,
+    errors: { fragrancesError, voteError },
+    loading: { fragrancesLoading, voteLoading },
 
     hasMore,
 
     getMore,
-    refresh
+    refresh,
+    voteOnFragrance
   }
 }
 

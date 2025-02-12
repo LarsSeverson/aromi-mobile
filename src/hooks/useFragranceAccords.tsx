@@ -70,8 +70,6 @@ const useFragranceAccords = (variables: FragranceAccordsVars) => {
     fetchMore
   } = useQuery<FragranceAccordsData, FragranceAccordsVars>(FRAGRANCE_ACCORDS_QUERY, { variables: localVariables.current })
 
-  accordsError && console.log(accordsError)
-
   const [voteOnAccordMutation, {
     loading: voteLoading,
     error: voteError

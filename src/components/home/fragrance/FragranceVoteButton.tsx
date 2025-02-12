@@ -6,66 +6,46 @@ import { Divider } from 'react-native-elements'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Colors } from '@/src/constants/Colors'
-import useReactToFragrance from '@/src/hooks/useReactToFragance'
-import { FragranceReactionType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 export interface FragranceReactionsProps {
-  fragranceId: number
-  numLikes: number
-  numDislikes: number
-
-  liked?: boolean | undefined
-
+  vote: FragranceVote
   size?: number | undefined
-
   style?: ViewStyle
+
+  onVote?: (myVote: boolean | null) => void
 }
 
 const FragranceReactions: React.FC<FragranceReactionsProps> = (props: FragranceReactionsProps) => {
   const theme = useAppTheme()
 
   const {
-    fragranceId,
-    numLikes,
-    numDislikes,
-    liked = false,
+    vote,
     size = 15,
-    style
+    style,
+
+    onVote
   } = props
 
-  const { reaction, loading, error, reactToFragrance } = useReactToFragrance()
-
-  const [curLiked, setCurLiked] = useState<boolean | null>(liked)
+  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote)
 
   const curLikes = useMemo(() => {
-    const count = numLikes - numDislikes
-
+    const count = vote.likes - vote.dislikes
     const getReactionValue = (reaction: boolean | null) => reaction === true ? 1 : reaction === false ? -1 : 0
 
-    return count - getReactionValue(liked) + getReactionValue(curLiked)
-  }, [numLikes, numDislikes, liked, curLiked])
+    return count - getReactionValue(vote.myVote) + getReactionValue(curLiked)
+  }, [vote, curLiked])
 
-  const onLiked = () => {
+  const onLike = () => {
     const newLiked = curLiked ? null : true
-
     setCurLiked(newLiked)
-    reactToFragrance(
-      {
-        fragranceId,
-        reaction: FragranceReactionType.LIKE,
-        myReaction: newLiked
-      })
+    onVote?.(newLiked)
   }
 
-  const onDisliked = () => {
+  const onDislike = () => {
     const newLiked = curLiked === false ? null : false
-
     setCurLiked(newLiked)
-    reactToFragrance({
-      fragranceId,
-      reaction: FragranceReactionType.LIKE,
-      myReaction: newLiked
-    })
+    onVote?.(newLiked)
   }
 
   return (
@@ -73,7 +53,7 @@ const FragranceReactions: React.FC<FragranceReactionsProps> = (props: FragranceR
       <BouncyButton
         style={styles.contentBtnWrapper}
         contentStyle={styles.contentWrapper}
-        onPress={onLiked}
+        onPress={onLike}
       >
         <CIcon
           name={curLiked ? 'heart' : 'heart-outline'}
@@ -85,7 +65,7 @@ const FragranceReactions: React.FC<FragranceReactionsProps> = (props: FragranceR
       <Divider orientation='vertical' width={1} color={theme.colors.icon} />
       <BouncyButton
         style={styles.contentBtnWrapper}
-        onPress={onDisliked}
+        onPress={onDislike}
       >
         <AIcon
           name={curLiked === false ? 'dislike1' : 'dislike2'}

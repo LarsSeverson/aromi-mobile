@@ -4,13 +4,24 @@ import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/BlockList'
 import FragranceBlock from '@/src/components/home/fragrance/FragranceBlock'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 
 const HomePage = () => {
   const router = useRouter()
-  const { suggestedFragrances, error, loading } = useSuggestedFragrances()
+  const {
+    suggestedFragrances,
+    errors,
+    loading,
+    voteOnFragrance
+  } = useSuggestedFragrances()
 
   const onRefresh = useCallback(() => {}, [])
+
+  const onFragranceVote = useCallback((fragrance: Fragrance, myVote: boolean | null) => {
+    const vars = { fragranceId: fragrance.id, myVote }
+    const vote = fragrance.vote
+    voteOnFragrance(vars, vote)
+  }, [voteOnFragrance])
 
   const openFragrance = useCallback((fragranceId: number) => {
     router.push({ pathname: '/(core)/home/fragrance/', params: { fragranceId } })
@@ -19,8 +30,14 @@ const HomePage = () => {
   const onRenderItem = useCallback(({ item }: { item: Fragrance | null }) => {
     if (!item) return null
 
-    return <FragranceBlock fragrance={item} onFragrancePress={openFragrance} />
-  }, [openFragrance])
+    return (
+      <FragranceBlock
+        fragrance={item}
+        onFragrancePress={openFragrance}
+        onFragranceVote={onFragranceVote}
+      />
+    )
+  }, [onFragranceVote, openFragrance])
 
   const expandForYou = () => {}
 

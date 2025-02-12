@@ -3,13 +3,10 @@ import { Text } from 'react-native-paper'
 import React, { useCallback } from 'react'
 import MiddleSlider, { MiddleSliderProps } from '../../stats/MiddleSlider'
 import { Colors } from '@/src/constants/Colors'
-import { FragranceTraitType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceTrait } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 export interface EditFragranceSliderProps extends MiddleSliderProps {
-  type: FragranceTraitType
-
-  averageValue?: number | undefined
-  userValue?: number | undefined
+  trait: FragranceTrait
 
   label?: string | undefined
   leftLabel?: string | undefined
@@ -19,14 +16,12 @@ export interface EditFragranceSliderProps extends MiddleSliderProps {
 
   style?: ViewStyle | undefined
 
-  onTraitChanged?: (value: number, type: FragranceTraitType) => void | undefined
+  onTraitChanged?: (value: number, trait: FragranceTrait) => void | undefined
 }
 
 const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFragranceSliderProps) => {
   const {
-    type,
-    averageValue = 50,
-    userValue = 50,
+    trait,
     label,
     leftLabel = '',
     rightLabel = '',
@@ -37,8 +32,8 @@ const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFrag
   } = props
 
   const handleValueChanged = useCallback((value: number) => {
-    onTraitChanged?.(value, type)
-  }, [type, onTraitChanged])
+    onTraitChanged?.(value, trait)
+  }, [trait, onTraitChanged])
 
   return (
     <View style={StyleSheet.compose(styles.wrapper, style)}>
@@ -48,14 +43,14 @@ const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFrag
 
       <View style={styles.storedDataContainer}>
         <View style={[styles.storedDataWrapper, { flexDirection: 'row-reverse' }]}>
-          <View style={{ width: `${100 - averageValue}%`, borderRadius: 20, backgroundColor: Colors.pink }} />
+          <View style={{ width: `${100 - trait.value}%`, borderRadius: 20, backgroundColor: Colors.pink }} />
         </View>
         <View style={styles.storedDataWrapper}>
-          <View style={{ width: `${averageValue}%`, height: '100%', borderRadius: 20, backgroundColor: Colors.button }} />
+          <View style={{ width: `${trait.value}%`, height: '100%', borderRadius: 20, backgroundColor: Colors.button }} />
         </View>
       </View>
 
-      <MiddleSlider value={userValue} focusPoints={[16, 32, 50, 66, 84]} {...rest} onValueChange={handleValueChanged} />
+      <MiddleSlider value={trait.myVote} focusPoints={[16, 32, 50, 66, 84]} {...rest} onValueChange={handleValueChanged} />
 
       <View style={styles.labelsWrapper}>
         <Text style={{ opacity: 0.6 }}>{leftLabel}</Text>

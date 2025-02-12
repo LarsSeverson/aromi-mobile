@@ -8,29 +8,40 @@ const FRAGRANCE_TRAITS_QUERY = gql`
       id
       traits {
         gender {
+          id
           trait
           value
           myVote
         }
         longevity {
+          id
           trait
           value
+          myVote
         }
         sillage {
+          id
           trait
           value
+          myVote
         }
         complexity {
+          id
           trait
           value
+          myVote
         }
         balance {
+          id
           trait
           value
+          myVote
         }
         allure {
+          id
           trait
           value
+          myVote
         }
       }
     }
@@ -48,6 +59,7 @@ export interface FragranceTraitsData {
 const VOTE_ON_TRAIT = gql`
   mutation VoteOnTrait($fragranceId: Int!, $trait: FragranceTraitType!, $myVote: Float!) {
     voteOnTrait(fragranceId: $fragranceId, trait: $trait, myVote: $myVote) {
+      id
       trait
       value
       myVote
@@ -73,10 +85,22 @@ const useFragranceTraits = (variables: FragranceTraitsVars) => {
     refetch
   } = useQuery<FragranceTraitsData, FragranceTraitsVars>(FRAGRANCE_TRAITS_QUERY, { variables })
 
-  const [voteOnTrait, {
+  const [voteOnTraitMutation, {
     loading: voteLoading,
     error: voteError
   }] = useMutation<VoteOnTraitData, VoteOnTraitVars>(VOTE_ON_TRAIT)
+
+  const voteOnTrait = useCallback((variables: VoteOnTraitVars, trait: FragranceTrait) => {
+    return voteOnTraitMutation({
+      variables,
+      optimisticResponse: {
+        voteOnTrait: {
+          ...trait,
+          myVote: variables.myVote
+        }
+      }
+    })
+  }, [voteOnTraitMutation])
 
   const refresh = useCallback((variables: FragranceTraitsVars) => {
     refetch(variables)

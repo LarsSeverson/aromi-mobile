@@ -1,6 +1,7 @@
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { gql, useQuery } from '@apollo/client'
+import { Fragrance, FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { useCallback, useRef } from 'react'
+import useVoteOnFragrance from './useVoteOnFragrance'
 
 const FRAGRANCE_QUERY = gql`
   query Fragrance(
@@ -17,16 +18,14 @@ const FRAGRANCE_QUERY = gql`
       id
       brand
       name
+      rating
+      reviews
 
-      reactions {
+      vote {
+        id
         likes
         dislikes
-        reviews
-        rating
-      }
-
-      myReactions {
-        like
+        myVote
       }
 
       images(limit: $imagesLimit, offset: $imagesOffset) {
@@ -127,10 +126,16 @@ const useFragrance = (variables: FragranceVars) => {
 
   const {
     data,
-    loading,
-    error,
+    loading: fragranceLoading,
+    error: fragranceError,
     refetch
   } = useQuery<FragranceData, FragranceVars>(FRAGRANCE_QUERY, { variables: localVariables.current })
+
+  const {
+    loading: voteLoading,
+    error: voteError,
+    voteOnFragrance
+  } = useVoteOnFragrance()
 
   const refresh = useCallback((variables: FragranceVars) => {
     refetch(variables)
@@ -138,9 +143,11 @@ const useFragrance = (variables: FragranceVars) => {
 
   return {
     fragrance: data?.fragrance,
-    loading,
-    error,
-    refresh
+    loading: { fragranceLoading, voteLoading },
+    error: { fragranceError, voteError },
+
+    refresh,
+    voteOnFragrance
   }
 }
 

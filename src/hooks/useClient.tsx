@@ -1,6 +1,6 @@
 import { fetchAuthSession } from 'aws-amplify/auth'
 import { setContext } from '@apollo/client/link/context'
-import { ApolloClient, HttpLink, InMemoryCache, NormalizedCache, NormalizedCacheObject } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export interface UseClientReturn {
