@@ -8,11 +8,11 @@ import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
-import AccordBars from '@/src/components/home/fragrance/AccordBars'
-import NotesPyramid from '@/src/components/home/fragrance/NotesPyramid'
-import FragranceCharacteristics from '@/src/components/home/fragrance/FragranceCharacteristics'
-import FragranceHeading from '@/src/components/home/fragrance/FragranceHeading'
-import FragranceCategory from '@/src/components/home/fragrance/FragranceCategory'
+import AccordsLadder from '@/src/components/home/fragrance-page/AccordsLadder'
+import NotesPyramid from '@/src/components/home/fragrance-page/NotesPyramid'
+import FragranceCharacteristics from '@/src/components/home/fragrance-page/FragranceCharacteristics'
+import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
+import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
 import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { Icon } from 'react-native-elements'
@@ -27,20 +27,19 @@ const FragrancePage = () => {
   const router = useRouter()
   const fragranceId = Number(useLocalSearchParams().fragranceId as string)
 
-  const fragranceVariables = useRef<FragranceVars>(
-    {
-      id: fragranceId,
-      imagesLimit: BASE_IMAGES_LIMIT,
-      imagesOffset: BASE_OFFSET,
+  const fragranceVariables = useRef<FragranceVars>({
+    id: fragranceId,
+    imagesLimit: BASE_IMAGES_LIMIT,
+    imagesOffset: BASE_OFFSET,
 
-      notesLimit: BASE_NOTES_LIMIT,
-      notesOffset: BASE_OFFSET,
-      notesFill: BASE_FILL,
+    notesLimit: BASE_NOTES_LIMIT,
+    notesOffset: BASE_OFFSET,
+    notesFill: BASE_FILL,
 
-      accordsLimit: BASE_ACCORDS_LIMIT,
-      accordsOffset: BASE_OFFSET,
-      accordsFill: BASE_FILL
-    })
+    accordsLimit: BASE_ACCORDS_LIMIT,
+    accordsOffset: BASE_OFFSET,
+    accordsFill: BASE_FILL
+  })
 
   const {
     fragrance,
@@ -118,14 +117,14 @@ const FragrancePage = () => {
         name={fragrance.name}
         brand={fragrance.brand}
         rating={fragrance.rating}
-        reviewsCount={fragrance.reviews}
+        reviewsCount={fragrance.reviewsCount}
         vote={fragrance.vote}
         onVote={onFragranceVote}
       />
 
       <Divider style={{ marginTop: 10 }} />
 
-      <FragranceCategory title='Gender' buttonText='masculine or feminine' onButtonPress={gotoEditGender}>
+      <FragranceCategory title='Gender' expandText='masculine or feminine' onExpand={gotoEditGender}>
         <ScaleBar
           value={fragrance.traits.gender.value}
           Icon={<GenderIcon />}
@@ -134,19 +133,19 @@ const FragrancePage = () => {
         />
       </FragranceCategory>
 
-      <FragranceCategory title='Top accords' buttonText='how are the accords?' onButtonPress={gotoEditAccords}>
-        <AccordBars accords={fragrance.accords} />
+      <FragranceCategory title='Top accords' expandText='how are the accords?' onExpand={gotoEditAccords}>
+        <AccordsLadder accords={fragrance.accords} />
       </FragranceCategory>
 
-      <FragranceCategory title='Notes' buttonText='how do the notes develop?' onButtonPress={gotoEditNotes}>
+      <FragranceCategory title='Notes' expandText='how do the notes develop?' onExpand={gotoEditNotes}>
         <NotesPyramid notes={fragrance.notes} />
       </FragranceCategory>
 
-      <FragranceCategory title='Characteristics' buttonText='what are its characteristics?' onButtonPress={gotoEditCharacteristics}>
+      <FragranceCategory title='Characteristics' expandText='what are its characteristics?' onExpand={gotoEditCharacteristics}>
         <FragranceCharacteristics traits={fragrance.traits} />
       </FragranceCategory>
 
-      <FragranceCategory title='Reviews' buttonText='write a review'>
+      <FragranceCategory title='Reviews' expandText='write a review'>
         <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
           <Text variant='titleSmall' style={{ opacity: 0.8 }}>No reviews yet</Text>
           <Text variant='labelMedium' style={{ textAlign: 'center', opacity: 0.8 }}>Tried this fragrance? Help out the community by sharing your experience</Text>

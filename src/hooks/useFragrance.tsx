@@ -3,6 +3,13 @@ import { gql, useMutation, useQuery } from '@apollo/client'
 import { useCallback, useRef } from 'react'
 import useVoteOnFragrance from './useVoteOnFragrance'
 
+const DEFAULT_IMAGES_LIMIT = 5
+const DEFAULT_ACCORDS_LIMIT = 8
+const DEFAULT_NOTES_LIMIT = 8
+const DEFAULT_REVIEWS_LIMIT = 15
+const DEFAULT_OFFSET = 0
+const DEFAULT_FILL = false
+
 const FRAGRANCE_QUERY = gql`
   query Fragrance(
     $id: Int!, 
@@ -13,13 +20,15 @@ const FRAGRANCE_QUERY = gql`
     $notesFill: Boolean,
     $accordsLimit: Int,
     $accordsOffset: Int,
-    $accordsFill: Boolean) {
+    $accordsFill: Boolean,
+    $reviewsLimit: Int,
+    $reviewsOffset: Int) {
     fragrance(id: $id) {
       id
       brand
       name
       rating
-      reviews
+      reviewsCount
 
       vote {
         id
@@ -89,6 +98,19 @@ const FRAGRANCE_QUERY = gql`
         votes
         myVote
       }
+
+      reviews(limit: $reviewsLimit, offset: $reviewsOffset) {
+        id
+        rating
+        review
+        dCreated
+        dModified
+        dDeleted
+        user {
+          id
+          username
+        }
+      }
     }
   }
 `
@@ -102,6 +124,8 @@ export interface FragranceVars {
   notesOffset?: number | undefined
   accordsLimit?: number | undefined
   accordsOffset?: number | undefined
+  reviewsLimit?: number | undefined
+  reviewsOffset?: number | undefined
 
   notesFill?: boolean | undefined
   accordsFill?: boolean | undefined
@@ -114,14 +138,16 @@ export interface FragranceData {
 const useFragrance = (variables: FragranceVars) => {
   const localVariables = useRef<FragranceVars>({
     id: variables.id,
-    imagesLimit: variables.imagesLimit ?? 10,
-    imagesOffset: variables.imagesOffset ?? 0,
-    notesLimit: variables.notesLimit ?? 8,
-    notesOffset: variables.notesOffset ?? 0,
-    accordsLimit: variables.accordsLimit ?? 8,
-    accordsOffset: variables.accordsOffset ?? 0,
-    notesFill: variables.notesFill ?? false,
-    accordsFill: variables.accordsFill ?? false
+    imagesLimit: variables.imagesLimit ?? DEFAULT_IMAGES_LIMIT,
+    notesLimit: variables.notesLimit ?? DEFAULT_NOTES_LIMIT,
+    accordsLimit: variables.accordsLimit ?? DEFAULT_ACCORDS_LIMIT,
+    reviewsLimit: variables.reviewsLimit ?? DEFAULT_REVIEWS_LIMIT,
+    imagesOffset: variables.imagesOffset ?? DEFAULT_OFFSET,
+    notesOffset: variables.notesOffset ?? DEFAULT_OFFSET,
+    accordsOffset: variables.accordsOffset ?? DEFAULT_OFFSET,
+    reviewsOffset: variables.reviewsOffset ?? DEFAULT_OFFSET,
+    notesFill: variables.notesFill ?? DEFAULT_FILL,
+    accordsFill: variables.accordsFill ?? DEFAULT_FILL
   })
 
   const {

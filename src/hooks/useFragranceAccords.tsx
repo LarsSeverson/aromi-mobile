@@ -1,6 +1,6 @@
 import { Fragrance, FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 const DEFAULT_LIMIT = 30
 const DEFAULT_OFFSET = 0

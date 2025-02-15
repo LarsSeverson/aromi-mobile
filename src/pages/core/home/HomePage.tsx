@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/BlockList'
-import FragranceBlock from '@/src/components/home/fragrance/FragranceBlock'
+import FragranceBlock from '@/src/components/home/fragrance-page/FragranceBlock'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { useFocusEffect, useRouter } from 'expo-router'
 

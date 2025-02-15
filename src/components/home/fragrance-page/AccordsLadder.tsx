@@ -9,7 +9,7 @@ export interface AccordBarsProps {
   accords: FragranceAccord[]
 }
 
-const AccordBars: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
+const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
   const { accords } = props
 
   const maxVotes = accords?.[0]?.votes || 0
@@ -33,6 +33,6 @@ const AccordBars: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
   )
 }
 
-export default AccordBars
+export default AccordsLadder
 
 const styles = StyleSheet.create({})
