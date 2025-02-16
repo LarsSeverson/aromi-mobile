@@ -1,21 +1,21 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import BouncyButton, { BouncyButtonProps } from '../../BouncyButton'
+import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
 import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
-import FragranceVoteButton from './FragranceVoteButton'
+import FragranceVoteButton from './fragrance-page/FragranceVoteButton'
 
-export interface FragranceBlockProps extends BouncyButtonProps {
+export interface FragrancePreviewProps extends BouncyButtonProps {
   fragrance: Fragrance
 
   onFragrancePress?: (fragranceId: number) => void
   onFragranceVote?: (fragrance: Fragrance, myVote: boolean | null) => void
 }
 
-const FragranceBlock: React.FC<FragranceBlockProps> = (props: FragranceBlockProps) => {
+const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePreviewProps) => {
   const theme = useAppTheme()
   const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
   const { path, loading: imgLoading } = useS3Image(fragrance.images?.[0]?.url)
@@ -62,7 +62,7 @@ const FragranceBlock: React.FC<FragranceBlockProps> = (props: FragranceBlockProp
   )
 }
 
-export default FragranceBlock
+export default FragrancePreview
 
 const styles = StyleSheet.create({
   wrapper: {

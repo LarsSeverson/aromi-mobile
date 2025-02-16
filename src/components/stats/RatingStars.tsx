@@ -1,5 +1,5 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native'
-import React from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import React, { useCallback } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { useAppTheme } from '@/src/constants/Themes'
 
@@ -15,7 +15,7 @@ const RatingStars: React.FC<RatingStarsProps> = (props: RatingStarsProps) => {
   const theme = useAppTheme()
   const { rating, size = 15, filledColor = theme.colors.card, emptyColor = theme.colors.card, style } = props
 
-  const transformFillPercentage = (percentage: number): number => {
+  const transformFillPercentage = useCallback((percentage: number): number => {
     const center = 50
 
     if (percentage <= center) {
@@ -27,7 +27,7 @@ const RatingStars: React.FC<RatingStarsProps> = (props: RatingStarsProps) => {
     const adjusted = center + deviation * scalingFactor
 
     return Math.max(0, Math.min(100, adjusted))
-  }
+  }, [])
 
   const stars = Array.from({ length: 5 }, (_, index) => {
     const startNumber = index + 1

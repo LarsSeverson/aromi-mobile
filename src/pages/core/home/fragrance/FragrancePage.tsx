@@ -8,14 +8,15 @@ import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
-import AccordsLadder from '@/src/components/home/fragrance-page/AccordsLadder'
-import NotesPyramid from '@/src/components/home/fragrance-page/NotesPyramid'
-import FragranceCharacteristics from '@/src/components/home/fragrance-page/FragranceCharacteristics'
+import FragranceCharacteristicsPreview from '@/src/components/home/fragrance-page/FragranceCharacteristicsPreview'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
 import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { Icon } from 'react-native-elements'
+import FragranceNotesPreview from '@/src/components/home/fragrance-page/FragranceNotesPreview'
+import FragranceAccordsPreview from '@/src/components/home/fragrance-page/FragranceAccordsPreview'
+import FragranceReviewsPreview from '@/src/components/home/fragrance-page/FragranceReviewsPreview'
 
 const BASE_IMAGES_LIMIT = 5
 const BASE_NOTES_LIMIT = 10
@@ -133,26 +134,10 @@ const FragrancePage = () => {
         />
       </FragranceCategory>
 
-      <FragranceCategory title='Top accords' expandText='how are the accords?' onExpand={gotoEditAccords}>
-        <AccordsLadder accords={fragrance.accords} />
-      </FragranceCategory>
-
-      <FragranceCategory title='Notes' expandText='how do the notes develop?' onExpand={gotoEditNotes}>
-        <NotesPyramid notes={fragrance.notes} />
-      </FragranceCategory>
-
-      <FragranceCategory title='Characteristics' expandText='what are its characteristics?' onExpand={gotoEditCharacteristics}>
-        <FragranceCharacteristics traits={fragrance.traits} />
-      </FragranceCategory>
-
-      <FragranceCategory title='Reviews' expandText='write a review'>
-        <View style={{ alignItems: 'center', justifyContent: 'center', padding: 10 }}>
-          <Text variant='titleSmall' style={{ opacity: 0.8 }}>No reviews yet</Text>
-          <Text variant='labelMedium' style={{ textAlign: 'center', opacity: 0.8 }}>Tried this fragrance? Help out the community by sharing your experience</Text>
-        </View>
-      </FragranceCategory>
-
-      <FragranceCategory title='More like this' />
+      <FragranceAccordsPreview accords={fragrance.accords} onExpand={gotoEditAccords} />
+      <FragranceNotesPreview notes={fragrance.notes} onExpand={gotoEditNotes} />
+      <FragranceCharacteristicsPreview traits={fragrance.traits} onExpand={gotoEditCharacteristics} />
+      <FragranceReviewsPreview reviews={fragrance.reviews} />
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>

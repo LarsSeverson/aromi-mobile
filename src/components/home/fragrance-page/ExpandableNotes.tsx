@@ -8,6 +8,7 @@ import TextButton from '../../TextButton'
 import NotesTrack from './NotesTrack'
 import FragranceEmpty from './FragranceEmpty'
 import FeedbackButton from '../../FeedbackButton'
+import { PressableRenderItemProps } from '../../PressableList'
 
 export interface ExpandableNotesProps {
   notes: FragranceNote[]
@@ -19,11 +20,9 @@ const ExpandableNotes = (props: ExpandableNotesProps) => {
   const theme = useAppTheme()
   const { notes, layer, onExpanded } = props
 
-  const handleOnExpanded = useCallback(() => {
-    onExpanded?.(layer)
-  }, [layer, onExpanded])
+  const handleOnNotePressed = useCallback(() => onExpanded?.(layer), [layer, onExpanded])
 
-  const onRenderNote = useCallback(({ item: note }: SelectableRenderItemProps<FragranceNote>) => {
+  const onRenderNote = useCallback(({ item: note }: PressableRenderItemProps<FragranceNote>) => {
     if (!note) return null
 
     return (
@@ -50,16 +49,16 @@ const ExpandableNotes = (props: ExpandableNotesProps) => {
     <View style={styles.wrapper}>
       <View style={styles.heading}>
         <Text variant='titleSmall'>{layer}</Text>
-        {notes.length > 0 && <TextButton text='see all' onPress={handleOnExpanded} />}
+        {notes.length > 0 && <TextButton text='see all' onPress={handleOnNotePressed} />}
       </View>
       <NotesTrack
         notes={notes}
-        onRenderNote={onRenderNote}
         style={styles.trackWrapper}
-        onItemSelected={handleOnExpanded}
+        onRenderNote={onRenderNote}
+        onItemPressed={handleOnNotePressed}
       />
       {notes.length === 0 && <FragranceEmpty headline={`There are no ${layer} notes yet`} />}
-      <FeedbackButton onPress={handleOnExpanded} text='share your opinion' />
+      <FeedbackButton onPress={handleOnNotePressed} text='how do the notes develop?' />
     </View>
   )
 }

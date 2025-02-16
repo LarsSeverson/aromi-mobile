@@ -2,9 +2,9 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesTrack from './NotesTrack'
-import { SelectableRenderItemProps } from '../../SelectableList'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
+import { PressableRenderItemProps } from '../../PressableList'
 
 export interface NotesPyramidRowProps {
   notes: FragranceNote[]
@@ -15,7 +15,7 @@ const NotesPyramidRow = (props: NotesPyramidRowProps) => {
   const theme = useAppTheme()
   const { notes, layer } = props
 
-  const onRenderRowNote = useCallback(({ item: note }: SelectableRenderItemProps<FragranceNote>) => {
+  const onRenderRowNote = useCallback(({ item: note }: PressableRenderItemProps<FragranceNote>) => {
     if (!note) return null
 
     return (

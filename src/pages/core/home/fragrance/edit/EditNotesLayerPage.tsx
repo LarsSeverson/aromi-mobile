@@ -84,7 +84,7 @@ const EditNotesLayerPage = () => {
         renderItemStyle={{ width: '33.33%' }}
         style={styles.listWrapper}
         isSelected={isNoteSelected}
-        renderItem={onRenderNote}
+        onRenderItem={onRenderNote}
         onItemSelected={onNoteSelected}
         onEndReached={getMoreNotes}
         ListFooterComponent={onRenderListFooter}

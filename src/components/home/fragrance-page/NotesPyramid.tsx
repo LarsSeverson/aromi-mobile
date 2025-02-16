@@ -1,26 +1,20 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { FragranceNotes, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import FragranceEmpty from './FragranceEmpty'
+import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesPyramidRow from './NotesPyramidRow'
 import { Divider } from 'react-native-paper'
 
+export interface NotesPyramidLayer {
+  layer: NoteLayerType
+  notes: FragranceNote[]
+}
+
 export interface NotesPyramidProps {
-  notes: FragranceNotes
+  layers: NotesPyramidLayer[]
 }
 
 const NotesPyramid: React.FC<NotesPyramidProps> = (props: NotesPyramidProps) => {
-  const { notes } = props
-
-  const layers = [
-    { layer: NoteLayerType.TOP, notes: notes.top },
-    { layer: NoteLayerType.MIDDLE, notes: notes.middle },
-    { layer: NoteLayerType.BASE, notes: notes.base }
-  ].filter(item => item.notes.length > 0)
-
-  if (!layers.length) {
-    return <FragranceEmpty headline='No notes yet' />
-  }
+  const { layers } = props
 
   return (
     <View style={styles.wrapper}>

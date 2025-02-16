@@ -75,7 +75,7 @@ const EditAccordsPage = () => {
         renderItemStyle={{ width: '33.33%' }}
         style={styles.listWrapper}
         isSelected={isAccordSelected}
-        renderItem={onRenderAccord}
+        onRenderItem={onRenderAccord}
         onItemSelected={onAccordSelected}
         onEndReached={getMoreAccords}
         ListFooterComponent={onRenderListFooter}

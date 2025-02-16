@@ -7,9 +7,7 @@ export interface Identifiable { id: number }
 
 export interface SelectableRenderItemProps<T extends Identifiable> {
   item: T | null
-
   index: number
-
   selected: boolean
 }
 
@@ -26,12 +24,9 @@ export interface SelectableListItemProps<T extends Identifiable> extends Selecta
 const SelectableListItem = <T extends Identifiable, >(props: SelectableListItemProps<T>) => {
   const {
     item,
-
     index,
-
     selected,
     disabled = false,
-
     style,
 
     onRenderItem,
@@ -55,23 +50,19 @@ const SelectableListItem = <T extends Identifiable, >(props: SelectableListItemP
   )
 }
 
-export interface SelectableListProps<T extends Identifiable> extends Omit<RowListProps<T | null>, 'renderItem'> {
+export interface SelectableListProps<T extends Identifiable> extends Omit<RowListProps<T | null>, 'renderItem' | 'data'> {
   data: Array<T | null>
 
   numRows?: number | undefined
-
   disabled?: boolean | undefined
 
-  renderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement | null
-
   renderItemStyle?: StyleProp<ViewStyle>
-
   selectedItems?: Map<number | string, Identifiable> | undefined
 
   getKey?: (item: T) => string | undefined
-
   isSelected?: (item: T) => boolean | undefined
 
+  onRenderItem: (info: SelectableRenderItemProps<T>) => React.ReactElement | null
   onEndReached?: () => void | undefined
   onItemSelected?: (id: number, item: T, selected: boolean) => void | undefined
 }
@@ -93,7 +84,7 @@ const SelectableList = <T extends Identifiable, >(props: SelectableListProps<T>)
 
     isSelected,
 
-    renderItem,
+    onRenderItem: renderItem,
     onItemSelected
   } = props
 
@@ -128,10 +119,10 @@ const SelectableList = <T extends Identifiable, >(props: SelectableListProps<T>)
 
   return (
     <List
-      keyExtractor={keyExtractor}
-      numColumns={numColumns}
       {...props}
       data={data}
+      keyExtractor={keyExtractor}
+      numColumns={numColumns}
       renderItem={renderSelectableItem}
     />
   )

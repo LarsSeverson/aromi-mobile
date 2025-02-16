@@ -1,13 +1,13 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import React from 'react'
 import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import SelectableList, { SelectableListProps, SelectableRenderItemProps } from '../../SelectableList'
+import PressableList, { PressableListProps, PressableRenderItemProps } from '../../PressableList'
 
-export interface NotesTrackProps extends Omit<SelectableListProps<FragranceNote>, 'data' | 'renderItem' | 'style'> {
+export interface NotesTrackProps extends Omit<PressableListProps<FragranceNote>, 'data' | 'style' | 'onRenderItem'> {
   notes: FragranceNote[]
   wrapperStyle?: ViewStyle | undefined
   style?: ViewStyle | undefined
-  onRenderNote: ({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => React.JSX.Element | null
+  onRenderNote: (info: PressableRenderItemProps<FragranceNote>) => React.JSX.Element | null
 }
 
 const NotesTrack = (props: NotesTrackProps) => {
@@ -15,22 +15,22 @@ const NotesTrack = (props: NotesTrackProps) => {
     notes,
     wrapperStyle,
     style,
-    onRenderNote,
 
+    onRenderNote,
     ...rest
   } = props
 
-  if (!notes.length) return null
+  const columnProps = notes.length > 1 ? { columnWrapperStyle: style } : {}
 
   return (
     <View style={StyleSheet.compose(styles.wrapper, wrapperStyle)}>
-      <SelectableList
+      <PressableList
         {...rest}
         data={notes}
         numRows={1}
         numColumns={notes.length}
-        renderItem={onRenderNote}
-        columnWrapperStyle={style}
+        {...columnProps}
+        onRenderItem={onRenderNote}
       />
     </View>
   )

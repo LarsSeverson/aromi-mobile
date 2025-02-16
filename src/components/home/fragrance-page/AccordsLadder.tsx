@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import { View } from 'react-native'
+import React, { useCallback } from 'react'
 import LinearScaleBar from '../../stats/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
@@ -7,12 +7,15 @@ import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceType
 
 export interface AccordBarsProps {
   accords: FragranceAccord[]
+  maxVote: number
 }
 
 const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
-  const { accords } = props
+  const { accords, maxVote } = props
 
-  const maxVotes = accords?.[0]?.votes || 0
+  const getWidth = useCallback((votes: number) => {
+    return votes / maxVote * 100
+  }, [maxVote])
 
   return (
     <View style={{ gap: 10 }}>
@@ -20,12 +23,10 @@ const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
       {!(accords.length) && <FragranceEmpty headline='No accords yet' />}
 
       {accords.map((accord, index) => {
-        const width = (accord.votes / maxVotes * 100)
-
         return (
           <View key={index}>
             <Text style={{ marginHorizontal: 10 }}>{accord.name}</Text>
-            <LinearScaleBar key={index} value={width} color={accord.color} />
+            <LinearScaleBar key={index} value={getWidth(accord.votes)} color={accord.color} />
           </View>
         )
       })}
@@ -34,5 +35,3 @@ const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
 }
 
 export default AccordsLadder
-
-const styles = StyleSheet.create({})
