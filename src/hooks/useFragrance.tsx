@@ -6,7 +6,7 @@ import useVoteOnFragrance from './useVoteOnFragrance'
 const DEFAULT_IMAGES_LIMIT = 5
 const DEFAULT_ACCORDS_LIMIT = 8
 const DEFAULT_NOTES_LIMIT = 8
-const DEFAULT_REVIEWS_LIMIT = 15
+const DEFAULT_REVIEWS_LIMIT = 8
 const DEFAULT_OFFSET = 0
 const DEFAULT_FILL = false
 

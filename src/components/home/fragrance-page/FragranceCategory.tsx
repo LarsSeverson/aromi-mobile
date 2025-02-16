@@ -3,26 +3,39 @@ import { Text } from 'react-native-paper'
 import React from 'react'
 import BouncyButton from '../../BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
+import TextButton from '../../TextButton'
 
 export interface FragranceCategoryProps {
   title: string
-  expandText?: string
+  expandText?: string | undefined
+  showSeeAll?: boolean | undefined
   children?: React.ReactNode
-  onExpand?: () => void
+  onCategoryPressed?: () => void
+  onSeeAll?: () => void
 }
 
 const FragranceCategory: React.FC<FragranceCategoryProps> = (props: FragranceCategoryProps) => {
-  const { title, expandText, children, onExpand } = props
+  const {
+    title,
+    expandText,
+    showSeeAll,
+    children,
+    onCategoryPressed,
+    onSeeAll
+  } = props
   const theme = useAppTheme()
 
   return (
     <View style={styles.categoryWrapper}>
-      <Text variant='titleSmall' style={{ fontWeight: 500 }}>{title}</Text>
+      <View style={styles.headingWrapper}>
+        <Text variant='titleSmall' style={{ fontWeight: 500 }}>{title}</Text>
+        {showSeeAll && <TextButton text='see all' onPress={onSeeAll} />}
+      </View>
 
       {children}
 
       {expandText && (
-        <BouncyButton style={[styles.categoryButton, { borderColor: theme.colors.surfaceDisabled }]} onPress={onExpand}>
+        <BouncyButton style={[styles.categoryButton, { borderColor: theme.colors.surfaceDisabled }]} onPress={onCategoryPressed}>
           <Text style={{ opacity: 0.8 }}>{expandText}</Text>
         </BouncyButton>
       )}
@@ -45,5 +58,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 48,
     marginVertical: 10
+  },
+  headingWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 })

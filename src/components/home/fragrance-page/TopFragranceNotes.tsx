@@ -9,7 +9,7 @@ export interface FragranceNotesPreviewProps {
   onExpand?: () => void
 }
 
-const FragranceNotesPreview = (props: FragranceNotesPreviewProps) => {
+const TopFragranceNotes = (props: FragranceNotesPreviewProps) => {
   const { notes, onExpand } = props
 
   const layers = [
@@ -19,7 +19,7 @@ const FragranceNotesPreview = (props: FragranceNotesPreviewProps) => {
   ].filter(item => item.notes.length > 0)
 
   return (
-    <FragranceCategory title='Notes' expandText='how do the notes develop?' onExpand={onExpand}>
+    <FragranceCategory title='Notes' expandText='how do the notes develop?' onCategoryPressed={onExpand}>
       <NotesPyramid layers={layers} />
       {layers.length > 0
         ? <NotesPyramid layers={layers} />
@@ -28,4 +28,4 @@ const FragranceNotesPreview = (props: FragranceNotesPreviewProps) => {
   )
 }
 
-export default FragranceNotesPreview
+export default TopFragranceNotes

@@ -9,12 +9,12 @@ export interface FragranceAccordsPreviewProps {
   onExpand?: () => void
 }
 
-const FragranceAccordsPreview = (props: FragranceAccordsPreviewProps) => {
+const TopFragranceAccords = (props: FragranceAccordsPreviewProps) => {
   const { accords, onExpand } = props
   const maxVote = useMemo(() => accords.at(0)?.votes || 0, [accords])
 
   return (
-    <FragranceCategory title='Top accords' expandText='how are the accords?' onExpand={onExpand}>
+    <FragranceCategory title='Top accords' expandText='how are the accords?' onCategoryPressed={onExpand}>
       {accords.length > 0
         ? <AccordsLadder accords={accords} maxVote={maxVote} />
         : <FragranceEmpty headline='No accords yet' />}
@@ -22,4 +22,4 @@ const FragranceAccordsPreview = (props: FragranceAccordsPreviewProps) => {
   )
 }
 
-export default FragranceAccordsPreview
+export default TopFragranceAccords

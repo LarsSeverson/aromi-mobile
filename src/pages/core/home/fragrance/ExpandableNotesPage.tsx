@@ -5,7 +5,7 @@ import { NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import ExpandableNotes from '@/src/components/home/fragrance-page/ExpandableNotes'
 
-const EditNotesPage = () => {
+const ExpandableNotesPage = () => {
   const router = useRouter()
 
   const fragranceId = Number(useLocalSearchParams().fragranceId)
@@ -54,7 +54,7 @@ const EditNotesPage = () => {
   )
 }
 
-export default EditNotesPage
+export default ExpandableNotesPage
 
 const styles = StyleSheet.create({
   wrapper: {

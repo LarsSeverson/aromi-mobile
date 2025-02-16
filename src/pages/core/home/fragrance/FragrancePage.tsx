@@ -8,15 +8,15 @@ import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/stats/ScaleBar'
-import FragranceCharacteristicsPreview from '@/src/components/home/fragrance-page/FragranceCharacteristicsPreview'
+import TopFragranceCharacteristics from '@/src/components/home/fragrance-page/TopFragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
 import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { Icon } from 'react-native-elements'
-import FragranceNotesPreview from '@/src/components/home/fragrance-page/FragranceNotesPreview'
-import FragranceAccordsPreview from '@/src/components/home/fragrance-page/FragranceAccordsPreview'
-import FragranceReviewsPreview from '@/src/components/home/fragrance-page/FragranceReviewsPreview'
+import TopFragranceNotes from '@/src/components/home/fragrance-page/TopFragranceNotes'
+import TopFragranceAccords from '@/src/components/home/fragrance-page/TopFragranceAccords'
+import TopFragranceReviews from '@/src/components/home/fragrance-page/TopFragranceReviews'
 
 const BASE_IMAGES_LIMIT = 5
 const BASE_NOTES_LIMIT = 10
@@ -26,10 +26,10 @@ const BASE_FILL = false
 
 const FragrancePage = () => {
   const router = useRouter()
-  const fragranceId = Number(useLocalSearchParams().fragranceId as string)
+  const fragranceId = useRef(Number(useLocalSearchParams().fragranceId as string))
 
   const fragranceVariables = useRef<FragranceVars>({
-    id: fragranceId,
+    id: fragranceId.current,
     imagesLimit: BASE_IMAGES_LIMIT,
     imagesOffset: BASE_OFFSET,
 
@@ -60,41 +60,51 @@ const FragrancePage = () => {
     voteOnFragrance(vars, fragrance.vote)
   }, [fragrance, voteOnFragrance])
 
-  const gotoEditGender = () => {
+  const gotoEditGender = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId
+        fragranceId: fragranceId.current
       }
     })
-  }
+  }, [router])
 
-  const gotoEditAccords = () => {
+  const gotoEditAccords = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/accords',
       params: {
-        fragranceId
+        fragranceId: fragranceId.current
       }
     })
-  }
+  }, [router])
 
-  const gotoEditNotes = () => {
+  const gotoEditNotes = useCallback(() => {
     router.push({
-      pathname: '/(core)/home/fragrance/edit/notes',
+      pathname: '/(core)/home/fragrance/expandable-notes',
       params: {
-        fragranceId
+        fragranceId: fragranceId.current
       }
     })
-  }
+  }, [router])
 
-  const gotoEditCharacteristics = () => {
+  const gotoEditCharacteristics = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId
+        fragranceId: fragranceId.current
       }
     })
-  }
+  }, [router])
+
+  const gotoFragranceReviews = useCallback((reviewId?: number | undefined) => {
+    router.push({
+      pathname: '/(core)/home/fragrance/reviews',
+      params: {
+        fragranceId: fragranceId.current,
+        reviewId
+      }
+    })
+  }, [router])
 
   if (loading.fragranceLoading || !fragrance) {
     return null
@@ -125,7 +135,7 @@ const FragrancePage = () => {
 
       <Divider style={{ marginTop: 10 }} />
 
-      <FragranceCategory title='Gender' expandText='masculine or feminine' onExpand={gotoEditGender}>
+      <FragranceCategory title='Gender' expandText='masculine or feminine' onCategoryPressed={gotoEditGender}>
         <ScaleBar
           value={fragrance.traits.gender.value}
           Icon={<GenderIcon />}
@@ -134,10 +144,10 @@ const FragrancePage = () => {
         />
       </FragranceCategory>
 
-      <FragranceAccordsPreview accords={fragrance.accords} onExpand={gotoEditAccords} />
-      <FragranceNotesPreview notes={fragrance.notes} onExpand={gotoEditNotes} />
-      <FragranceCharacteristicsPreview traits={fragrance.traits} onExpand={gotoEditCharacteristics} />
-      <FragranceReviewsPreview reviews={fragrance.reviews} />
+      <TopFragranceAccords accords={fragrance.accords} onExpand={gotoEditAccords} />
+      <TopFragranceNotes notes={fragrance.notes} onExpand={gotoEditNotes} />
+      <TopFragranceCharacteristics traits={fragrance.traits} onExpand={gotoEditCharacteristics} />
+      <TopFragranceReviews reviews={fragrance.reviews} onExpandReviews={gotoFragranceReviews} />
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>

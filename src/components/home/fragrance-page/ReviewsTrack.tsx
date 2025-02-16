@@ -1,4 +1,4 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
 import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import PressableList, { PressableListProps, PressableRenderItemProps } from '../../PressableList'
@@ -22,17 +22,15 @@ const ReviewsTrack = (props: ReviewsTrackProps) => {
   const columnProps = reviews.length > 1 ? { columnWrapperStyle: StyleSheet.compose(styles.wrapper, style) } : {}
 
   return (
-    <View>
-      <PressableList
-        data={reviews}
-        numRows={1}
-        numColumns={reviews.length}
-        {...columnProps}
-        onRenderItem={onRenderReview}
-        onItemPressed={onReviewPressed}
-        pressableItemProps={{ scaleTo: 0.995 }}
-      />
-    </View>
+    <PressableList
+      data={reviews}
+      numRows={1}
+      numColumns={reviews.length}
+      {...columnProps}
+      onRenderItem={onRenderReview}
+      onItemPressed={onReviewPressed}
+      pressableItemProps={{ scaleTo: 0.995 }}
+    />
   )
 }
 

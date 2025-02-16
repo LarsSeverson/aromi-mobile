@@ -35,9 +35,15 @@ const ExpandableReview = (props: ExpandableReviewProps) => {
         <Text variant='titleSmall'>{username}</Text>
       </View>
       <View>
-        <Text style={{ opacity: 0.9 }}>{text}</Text>
+        <Text
+          numberOfLines={4}
+          ellipsizeMode='tail'
+          style={{ opacity: 0.9 }}
+        >
+          {text}
+        </Text>
       </View>
-      <View style={{ marginTop: 'auto', flexDirection: 'row', alignItems: 'center', gap: 7 }}>
+      <View style={styles.ratingWrapper}>
         <RatingStars rating={rating} />
         <Text>●</Text>
         <Text>{formatDate(dCreated)}</Text>
@@ -55,5 +61,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 2,
     padding: 15
+  },
+  ratingWrapper: {
+    marginTop: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7
   }
 })

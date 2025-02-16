@@ -10,11 +10,11 @@ export interface FragranceCharacteristicsPreviewProps {
   onExpand?: () => void
 }
 
-const FragranceCharacteristicsPreview: React.FC<FragranceCharacteristicsPreviewProps> = (props: FragranceCharacteristicsPreviewProps) => {
+const TopFragranceCharacteristics: React.FC<FragranceCharacteristicsPreviewProps> = (props: FragranceCharacteristicsPreviewProps) => {
   const { traits, onExpand } = props
 
   return (
-    <FragranceCategory title='Characteristics' expandText='what are its characteristics?' onExpand={onExpand}>
+    <FragranceCategory title='Characteristics' expandText='what are its characteristics?' onCategoryPressed={onExpand}>
       <View style={styles.traitsWrapper}>
         <ScaleBar value={traits.longevity.value} label='longevity' Icon={<LongevityIcon />} lessLabel='very short' greaterLabel='very long' />
         <ScaleBar value={traits.sillage.value} label='sillage' Icon={<SillageIcon />} lessLabel='intimate' greaterLabel='expansive' />
@@ -26,7 +26,7 @@ const FragranceCharacteristicsPreview: React.FC<FragranceCharacteristicsPreviewP
   )
 }
 
-export default FragranceCharacteristicsPreview
+export default TopFragranceCharacteristics
 
 const styles = StyleSheet.create({
   traitsWrapper: {
