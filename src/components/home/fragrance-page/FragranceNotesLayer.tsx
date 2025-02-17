@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import React, { useCallback } from 'react'
-import { SelectableRenderItemProps } from '../../SelectableList'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import TextButton from '../../TextButton'
@@ -10,13 +9,13 @@ import FragranceEmpty from './FragranceEmpty'
 import FeedbackButton from '../../FeedbackButton'
 import { PressableRenderItemProps } from '../../PressableList'
 
-export interface ExpandableNotesProps {
+export interface FragranceNotesLayerProps {
   notes: FragranceNote[]
   layer: NoteLayerType
   onExpanded?: (layer: NoteLayerType) => void
 }
 
-const ExpandableNotes = (props: ExpandableNotesProps) => {
+const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {
   const theme = useAppTheme()
   const { notes, layer, onExpanded } = props
 
@@ -63,7 +62,7 @@ const ExpandableNotes = (props: ExpandableNotesProps) => {
   )
 }
 
-export default ExpandableNotes
+export default FragranceNotesLayer
 
 const styles = StyleSheet.create({
   wrapper: {

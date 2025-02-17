@@ -9,15 +9,17 @@ import { VariantProp } from 'react-native-paper/lib/typescript/components/Typogr
 interface TextButtonProps extends BouncyButtonProps {
   text: string
   style?: StyleProp<TextStyle>
-  wrapperStyle?: ViewStyle
+  wrapperStyle?: ViewStyle | ViewStyle[] | undefined
   variant?: VariantProp<ThemeBase>
+
+  onRenderText?: (text: string) => React.ReactNode
 }
 
 const TextButton: React.FC<TextButtonProps> = (props: TextButtonProps) => {
-  const { text, style, wrapperStyle, variant, ...bouncyButtonProps } = props
+  const { text, style, wrapperStyle, variant, onRenderText, ...bouncyButtonProps } = props
   return (
     <BouncyButton {...bouncyButtonProps} style={wrapperStyle}>
-      <Text variant={variant} style={[styles.textStyle, style]}>{text}</Text>
+      {onRenderText ? onRenderText(text) : <Text variant={variant} style={[styles.textStyle, style]}>{text}</Text>}
     </BouncyButton>
   )
 }

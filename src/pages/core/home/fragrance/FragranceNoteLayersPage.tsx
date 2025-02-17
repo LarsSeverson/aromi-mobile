@@ -3,9 +3,9 @@ import React, { useCallback } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import ExpandableNotes from '@/src/components/home/fragrance-page/ExpandableNotes'
+import FragranceNotesLayer from '@/src/components/home/fragrance-page/FragranceNotesLayer'
 
-const ExpandableNotesPage = () => {
+const FragranceNoteLayersPage = () => {
   const router = useRouter()
 
   const fragranceId = Number(useLocalSearchParams().fragranceId)
@@ -34,17 +34,17 @@ const ExpandableNotesPage = () => {
   return (
     <View style={styles.wrapper}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
-        <ExpandableNotes
+        <FragranceNotesLayer
           notes={notes.top}
           layer={NoteLayerType.TOP}
           onExpanded={handleOnExpanded}
         />
-        <ExpandableNotes
+        <FragranceNotesLayer
           notes={notes.middle}
           layer={NoteLayerType.MIDDLE}
           onExpanded={handleOnExpanded}
         />
-        <ExpandableNotes
+        <FragranceNotesLayer
           notes={notes.base}
           layer={NoteLayerType.BASE}
           onExpanded={handleOnExpanded}
@@ -54,7 +54,7 @@ const ExpandableNotesPage = () => {
   )
 }
 
-export default ExpandableNotesPage
+export default FragranceNoteLayersPage
 
 const styles = StyleSheet.create({
   wrapper: {

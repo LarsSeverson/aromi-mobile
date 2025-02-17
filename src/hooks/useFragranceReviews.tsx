@@ -1,4 +1,4 @@
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { Fragrance, FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useQuery } from '@apollo/client'
 import { useCallback, useRef, useState } from 'react'
 
@@ -9,6 +9,10 @@ const FRAGRANCE_REVIEWS_QUERY = gql`
   query FragranceReviews($fragranceId: Int!, $limit: Int, $offset: Int) {
     fragrance(id: $fragranceId) {
       id
+      brand
+      name
+      rating
+      reviewsCount
       reviews(limit: $limit, offset: $offset) {
         id
         rating
@@ -34,6 +38,14 @@ export interface FragranceReviewsVars {
 
 export interface FragranceReviewsData {
   fragrance: Fragrance
+}
+
+export interface UseFragranceReviewsMeta {
+  id: number
+  name: string
+  brand: string
+  reviewsCount: number
+  rating: number
 }
 
 export interface UseFragranceReviewsProps {
@@ -99,6 +111,7 @@ const useFragranceReviews = (props: UseFragranceReviewsProps) => {
 
   return {
     reviews: data?.fragrance.reviews || [],
+    meta: data?.fragrance as UseFragranceReviewsMeta,
     loading,
     error,
     hasMore,

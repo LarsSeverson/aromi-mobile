@@ -6,7 +6,7 @@ import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
-import FragranceVoteButton from './fragrance-page/FragranceVoteButton'
+import VoteButton from '../VoteButton'
 
 export interface FragrancePreviewProps extends BouncyButtonProps {
   fragrance: Fragrance
@@ -19,6 +19,7 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
   const theme = useAppTheme()
   const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
   const { path, loading: imgLoading } = useS3Image(fragrance.images?.[0]?.url)
+  const votes = fragrance.vote.likes - fragrance.vote.dislikes
 
   const handlePress = useCallback(() => {
     onFragrancePress?.(fragrance.id)
@@ -33,8 +34,9 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
       <BouncyButton onPress={handlePress} {...rest}>
         <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
           <Image source={{ uri: path || undefined }} style={styles.imgWrapper} />
-          <FragranceVoteButton
-            vote={fragrance.vote}
+          <VoteButton
+            votes={votes}
+            myVote={fragrance.vote.myVote}
             style={styles.reactionsWrapper}
             onVote={handleVote}
           />

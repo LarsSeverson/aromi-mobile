@@ -2,7 +2,7 @@ import { StyleSheet, ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
 import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import PressableList, { PressableListProps, PressableRenderItemProps } from '../../PressableList'
-import ExpandableReview from './ExpandableReview'
+import FragranceReviewCard from './FragranceReviewCard'
 
 export interface ReviewsTrackProps extends Omit<PressableListProps<FragranceReview>, 'data' | 'onRenderItem' | 'style'> {
   reviews: FragranceReview[]
@@ -16,7 +16,7 @@ const ReviewsTrack = (props: ReviewsTrackProps) => {
   const onRenderReview = useCallback(({ item: review }: PressableRenderItemProps<FragranceReview>) => {
     if (!review) return null
 
-    return <ExpandableReview review={review} />
+    return <FragranceReviewCard review={review} withVotes />
   }, [])
 
   const columnProps = reviews.length > 1 ? { columnWrapperStyle: StyleSheet.compose(styles.wrapper, style) } : {}

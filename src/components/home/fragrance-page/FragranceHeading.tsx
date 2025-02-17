@@ -5,7 +5,7 @@ import { Text } from 'react-native-paper'
 import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Colors } from '@/src/constants/Colors'
-import RatingStars from '../../stats/RatingStars'
+import RatingStars from '../../RatingStars'
 import { FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 
 export interface FragranceHeadingProps {

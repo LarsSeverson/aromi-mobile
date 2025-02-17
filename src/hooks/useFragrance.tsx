@@ -103,6 +103,7 @@ const FRAGRANCE_QUERY = gql`
         id
         rating
         review
+        votes
         dCreated
         dModified
         dDeleted
@@ -110,6 +111,7 @@ const FRAGRANCE_QUERY = gql`
           id
           username
         }
+        myVote
       }
     }
   }

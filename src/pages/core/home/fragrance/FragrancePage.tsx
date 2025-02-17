@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
 import BouncyButton from '@/src/components/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
-import ScaleBar from '@/src/components/stats/ScaleBar'
+import ScaleBar from '@/src/components/ScaleBar'
 import TopFragranceCharacteristics from '@/src/components/home/fragrance-page/TopFragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
@@ -80,7 +80,7 @@ const FragrancePage = () => {
 
   const gotoEditNotes = useCallback(() => {
     router.push({
-      pathname: '/(core)/home/fragrance/expandable-notes',
+      pathname: '/(core)/home/fragrance/note-layers',
       params: {
         fragranceId: fragranceId.current
       }
