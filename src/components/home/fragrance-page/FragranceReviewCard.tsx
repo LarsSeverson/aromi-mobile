@@ -48,7 +48,6 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
         <Text
           numberOfLines={1}
           ellipsizeMode='tail'
-          variant='titleSmall'
           style={{ flexShrink: 1 }}
         >
           {username}

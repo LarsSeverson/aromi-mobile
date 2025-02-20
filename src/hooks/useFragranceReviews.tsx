@@ -1,4 +1,4 @@
-import { Fragrance, FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { Fragrance, FragranceReview, FragranceReviewDistribution } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useQuery } from '@apollo/client'
 import { useCallback, useRef, useState } from 'react'
 
@@ -26,6 +26,13 @@ const FRAGRANCE_REVIEWS_QUERY = gql`
         }
         myVote
       }
+      reviewDistribution {
+        one
+        two
+        three
+        four
+        five
+      }
     }
   }
 `
@@ -46,6 +53,7 @@ export interface UseFragranceReviewsMeta {
   brand: string
   reviewsCount: number
   rating: number
+  reviewDistribution: FragranceReviewDistribution
 }
 
 export interface UseFragranceReviewsProps {

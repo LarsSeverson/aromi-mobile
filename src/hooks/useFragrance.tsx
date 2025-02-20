@@ -1,5 +1,5 @@
-import { Fragrance, FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { gql, useQuery } from '@apollo/client'
 import { useCallback, useRef } from 'react'
 import useVoteOnFragrance from './useVoteOnFragrance'
 

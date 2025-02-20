@@ -9,22 +9,30 @@ export interface LinearScaleBarProps extends ViewProps {
 }
 
 const LinearScaleBar: React.FC<LinearScaleBarProps> = (props: LinearScaleBarProps) => {
-  const theme = useAppTheme()
   const { value, color = Colors.button, ...viewProps } = props
 
   if (value > 100.0 || value < 0.0) {
     return null
   }
 
-  const viewStyle = StyleSheet.flatten(viewProps.style)
+  const viewStyle = StyleSheet.compose(styles.wrapper, viewProps.style)
 
   return (
-    <View {...viewProps} style={{ backgroundColor: 'transparent', borderRadius: 20, height: 15, overflow: 'hidden', flexDirection: 'row', ...viewStyle }}>
-      <View style={{ backgroundColor: color, width: `${value}%`, borderTopRightRadius: 20, borderBottomRightRadius: 20 }} />
+    <View {...viewProps} style={viewStyle}>
+      <View style={{ backgroundColor: color, width: `${value}%`, borderRadius: 20 }} />
     </View>
   )
 }
 
 export default LinearScaleBar
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  wrapper: {
+    backgroundColor: 'transparent',
+    borderRadius: 20,
+    height: 15,
+    overflow: 'hidden',
+    flexDirection: 'row',
+    flex: 1
+  }
+})
