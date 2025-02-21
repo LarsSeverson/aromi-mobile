@@ -5,11 +5,11 @@ import BouncyButton, { BouncyButtonProps } from '../../BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
 import RatingStars from '../../RatingStars'
 
-export interface FragranceReviewInputProps extends BouncyButtonProps {
+export interface FragranceReviewButtonProps extends BouncyButtonProps {
   username?: string | undefined
 }
 
-const FragranceReviewInput = (props: FragranceReviewInputProps) => {
+const FragranceReviewButton = (props: FragranceReviewButtonProps) => {
   const theme = useAppTheme()
   const { username = 'Your Username', ...rest } = props
 
@@ -24,7 +24,7 @@ const FragranceReviewInput = (props: FragranceReviewInputProps) => {
   )
 }
 
-export default FragranceReviewInput
+export default FragranceReviewButton
 
 const styles = StyleSheet.create({
   buttonWrapper: {

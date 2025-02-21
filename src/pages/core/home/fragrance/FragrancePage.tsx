@@ -11,7 +11,6 @@ import ScaleBar from '@/src/components/ScaleBar'
 import TopFragranceCharacteristics from '@/src/components/home/fragrance-page/TopFragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
-import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { Icon } from 'react-native-elements'
 import TopFragranceNotes from '@/src/components/home/fragrance-page/TopFragranceNotes'
@@ -49,9 +48,6 @@ const FragrancePage = () => {
     refresh,
     voteOnFragrance
   } = useFragrance({ variables: fragranceVariables.current })
-
-  // Temp
-  const { path, loading: imgLoading } = useS3Image(fragrance?.images?.at(0)?.url)
 
   const onFragranceVote = useCallback((myVote: boolean | null) => {
     if (!fragrance) return
@@ -119,7 +115,7 @@ const FragrancePage = () => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.imageWrapper}>
-        {path && <Image source={{ uri: path }} style={styles.image} />}
+        <Image source={{ uri: fragrance.images.at(0)?.url }} style={styles.image} />
         <BouncyButton style={{ position: 'absolute', top: 20, right: 20 }}>
           <Icon name='dots-vertical' type='material-community' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
         </BouncyButton>

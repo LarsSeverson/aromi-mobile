@@ -7,7 +7,7 @@ import useFragranceReviews from '@/src/hooks/useFragranceReviews'
 import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceReviewCard from '@/src/components/home/fragrance-page/FragranceReviewCard'
 import FragranceReviewsSummary from '@/src/components/home/fragrance-page/FragranceReviewsSummary'
-import FragranceReviewInput from '@/src/components/home/fragrance-page/FragranceReviewInput'
+import FragranceReviewButton from '@/src/components/home/fragrance-page/FragranceReviewButton'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 import { useMyReview } from '@/src/hooks/useMyReview'
 
@@ -39,6 +39,10 @@ const FragranceReviewsPage = () => {
     })
   }, [router, fragranceId])
 
+  const getMoreReviews = useCallback(() => {
+    !reviewsLoading && getMore()
+  }, [reviewsLoading, getMore])
+
   const onRenderFragranceReview = useCallback(({ item: review }: PressableRenderItemProps<FragranceReview>) => {
     if (!review) return null
 
@@ -52,12 +56,9 @@ const FragranceReviewsPage = () => {
     )
   }, [])
 
-  // useFocusEffect(useCallback(getMyReview, [getMyReview]))
-  useEffect(() => {
-    getMyReview(Number(fragranceId))
-  }, [fragranceId, getMyReview])
+  useFocusEffect(useCallback(() => getMyReview(Number(fragranceId)), [fragranceId, getMyReview]))
 
-  if (!meta || myReviewLoading) return null
+  if (!meta) return null
 
   return (
     <PressableList
@@ -66,6 +67,7 @@ const FragranceReviewsPage = () => {
       pressableItemProps={{ scaleTo: 0.998 }}
       contentContainerStyle={{ gap: 10 }}
       style={styles.wrapper}
+      onEndReached={getMoreReviews}
       ListHeaderComponent={
         <View style={{ gap: 12 }}>
           <FragranceReviewsSummary
@@ -89,7 +91,7 @@ const FragranceReviewsPage = () => {
             : (
               <>
                 <Text variant='titleMedium'>Leave a review</Text>
-                <FragranceReviewInput username={userInfo.user?.username} onPress={handleAddReviewPressed} />
+                <FragranceReviewButton username={userInfo.user?.username} onPress={handleAddReviewPressed} />
               </>
               )}
           <View style={styles.reviewsHeading}>

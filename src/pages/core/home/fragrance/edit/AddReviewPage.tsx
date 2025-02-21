@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-handler-names */
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Text, TextInput } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Colors } from '@/src/constants/Colors'
@@ -9,8 +9,11 @@ import SubmitButton from '@/src/components/SubmitButton'
 import EditableRatingStars from '@/src/components/EditableRatingStars'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import useReviewFragrance from '@/src/hooks/useReviewFragrance'
+import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import FeedbackSuccess from '@/src/components/FeedbackSuccess'
 
 const AddReviewPage = () => {
+  const router = useRouter()
   const theme = useAppTheme()
   const { fragranceId } = useLocalSearchParams<{ fragranceId: string }>()
   const numFragId = Number(fragranceId)
@@ -21,16 +24,28 @@ const AddReviewPage = () => {
 
   const { reviewFragrance, loading, error } = useReviewFragrance()
 
-  error && console.log(error)
-
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
+  const [done, setDone] = useState(false)
 
-  const submitReview = useCallback(() => reviewFragrance({
-    fragranceId: numFragId,
-    myRating: rating,
-    myReview: review
-  }), [numFragId, rating, review, reviewFragrance])
+  const submitReview = useCallback(async () => {
+    try {
+      await reviewFragrance({ fragranceId: numFragId, myRating: rating, myReview: review })
+      setDone(true)
+    } catch (error) {
+      showNotifaction.error('Something went wrong adding your review')
+    }
+  }, [numFragId, rating, review, reviewFragrance])
+
+  if (done) {
+    return (
+      <FeedbackSuccess
+        feedback='Review posted!'
+        buttonText='Back to reviews'
+        onButtonPress={() => router.dismiss()}
+      />
+    )
+  }
 
   return (
     <KeyboardScrollView
@@ -39,7 +54,7 @@ const AddReviewPage = () => {
       contentContainerStyle={styles.wrapper}
     >
       <View style={[styles.wrapper, { padding: 0 }]}>
-        <Text variant='titleMedium'>How would you rate your experience?</Text>
+        <Text variant='titleMedium'>How would you rate this fragrance?</Text>
         <EditableRatingStars
           rating={0}
           size={28}
@@ -66,6 +81,7 @@ const AddReviewPage = () => {
           text='Add Review'
           disabled={rating === 0}
           onPress={submitReview}
+          loading={loading}
         />
       </View>
     </KeyboardScrollView>

@@ -2,7 +2,6 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
-import useS3Image from '@/src/hooks/useS3Image'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
@@ -18,7 +17,6 @@ export interface FragrancePreviewProps extends BouncyButtonProps {
 const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePreviewProps) => {
   const theme = useAppTheme()
   const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
-  const { path, loading: imgLoading } = useS3Image(fragrance.images?.[0]?.url)
   const votes = fragrance.vote.likes - fragrance.vote.dislikes
 
   const handlePress = useCallback(() => {
@@ -33,7 +31,7 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
     <View style={styles.wrapper}>
       <BouncyButton onPress={handlePress} {...rest}>
         <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
-          <Image source={{ uri: path || undefined }} style={styles.imgWrapper} />
+          <Image source={{ uri: fragrance.images.at(0)?.url }} style={styles.imgWrapper} />
           <VoteButton
             votes={votes}
             myVote={fragrance.vote.myVote}

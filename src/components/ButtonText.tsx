@@ -4,7 +4,7 @@ import BouncyButton, { BouncyButtonProps } from './BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import { ActivityIndicator, useTheme } from 'react-native-paper'
 
-interface ButtonTextProps extends BouncyButtonProps {
+export interface ButtonTextProps extends BouncyButtonProps {
   text: string
   loading?: boolean
   loadingColor?: string
