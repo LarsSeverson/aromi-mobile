@@ -26,7 +26,7 @@ export const useClient = (): UseClientReturn => {
   , [token])
 
   const client = useMemo(() => new ApolloClient({
-    link: authLink.concat(new HttpLink({ uri: 'http://localhost:3000/dev/graphql' })),
+    link: authLink.concat(new HttpLink({ uri: 'http://192.168.0.49:3000/dev/graphql' })),
     cache: new InMemoryCache({
       typePolicies: {
         Fragrance: {
@@ -99,8 +99,8 @@ export const useClient = (): UseClientReturn => {
   }, [tokenExpiration, getToken])
 
   useEffect(() => {
-    getToken()
-  }, [getToken])
+    !token && getToken()
+  }, [token, getToken])
 
   return {
     client,

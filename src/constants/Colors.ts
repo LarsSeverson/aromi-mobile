@@ -5,6 +5,7 @@ const button = '#C6471D'
 const buttonText = '#FFFFFF'
 
 const black = '#000'
+const cursor = '#444'
 const placeholder = '#F3F3F3F3'
 const placeholder2 = '#E5E5E5E5'
 const placeholder3 = '#888'
@@ -23,6 +24,7 @@ export const Colors = {
   placeholder3,
   placeholder4,
   black,
+  cursor,
   button,
   buttonText,
   negativeDark,

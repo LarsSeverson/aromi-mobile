@@ -1,5 +1,5 @@
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { gql, useQuery } from '@apollo/client'
+import { DocumentNode, gql, useQuery } from '@apollo/client'
 import { useCallback, useRef } from 'react'
 import useVoteOnFragrance from './useVoteOnFragrance'
 
@@ -137,7 +137,13 @@ export interface FragranceData {
   fragrance: Fragrance
 }
 
-const useFragrance = (variables: FragranceVars) => {
+export interface UseFragranceParams {
+  query?: DocumentNode | undefined
+  variables: FragranceVars
+}
+
+const useFragrance = (params: UseFragranceParams) => {
+  const { query = FRAGRANCE_QUERY, variables } = params
   const localVariables = useRef<FragranceVars>({
     id: variables.id,
     imagesLimit: variables.imagesLimit ?? DEFAULT_IMAGES_LIMIT,
@@ -157,7 +163,7 @@ const useFragrance = (variables: FragranceVars) => {
     loading: fragranceLoading,
     error: fragranceError,
     refetch
-  } = useQuery<FragranceData, FragranceVars>(FRAGRANCE_QUERY, { variables: localVariables.current })
+  } = useQuery<FragranceData, FragranceVars>(query, { variables: localVariables.current })
 
   const {
     loading: voteLoading,

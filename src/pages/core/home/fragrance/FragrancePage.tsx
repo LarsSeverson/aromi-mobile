@@ -48,7 +48,7 @@ const FragrancePage = () => {
     error,
     refresh,
     voteOnFragrance
-  } = useFragrance(fragranceVariables.current)
+  } = useFragrance({ variables: fragranceVariables.current })
 
   // Temp
   const { path, loading: imgLoading } = useS3Image(fragrance?.images?.at(0)?.url)
@@ -106,6 +106,12 @@ const FragrancePage = () => {
     })
   }, [router])
 
+  const gotoAddFragranceReview = useCallback(() => {
+    router.push({
+      pathname: '/(core)/home/fragrance/edit/review'
+    })
+  }, [router])
+
   if (loading.fragranceLoading || !fragrance) {
     return null
   }
@@ -147,7 +153,7 @@ const FragrancePage = () => {
       <TopFragranceAccords accords={fragrance.accords} onExpand={gotoEditAccords} />
       <TopFragranceNotes notes={fragrance.notes} onExpand={gotoEditNotes} />
       <TopFragranceCharacteristics traits={fragrance.traits} onExpand={gotoEditCharacteristics} />
-      <TopFragranceReviews reviews={fragrance.reviews} onExpandReviews={gotoFragranceReviews} />
+      <TopFragranceReviews reviews={fragrance.reviews} onExpandReviews={gotoFragranceReviews} onWriteReview={gotoAddFragranceReview} />
 
       <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
         <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>

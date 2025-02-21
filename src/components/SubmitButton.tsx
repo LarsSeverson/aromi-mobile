@@ -12,11 +12,18 @@ export interface SubmitButtonProps extends BouncyButtonProps {
 const SubmitButton = (props: SubmitButtonProps) => {
   const theme = useAppTheme()
 
-  const { text, ...rest } = props
+  const { text, disabled, ...rest } = props
 
   return (
-    <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background }]}>
-      <ButtonText text={text || 'Submit'} color={Colors.button} textColor={Colors.white} style={styles.submit} {...rest} />
+    <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background, opacity: disabled ? 0.5 : 1 }]}>
+      <ButtonText
+        text={text || 'Submit'}
+        color={Colors.button}
+        textColor={Colors.white}
+        style={styles.submit}
+        disabled={disabled}
+        {...rest}
+      />
     </View>
   )
 }

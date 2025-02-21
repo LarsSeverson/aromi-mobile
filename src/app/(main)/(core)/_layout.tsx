@@ -1,23 +1,19 @@
 import NavBar from '@/src/components/navigation/NavBar'
 import { Tabs } from 'expo-router'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 const CoreLayout: React.FC = () => {
-  const [showTabBar, setShowTabBar] = useState(true)
-
-  const hideNav = () => {
-    setShowTabBar(false)
-  }
+  const onRenderTabBar = useCallback((props: any) => {
+    return <NavBar {...props} />
+  }, [])
 
   return (
     <Tabs
-      tabBar={(props) => showTabBar && <NavBar {...props} />}
-      screenOptions={
-            {
-              tabBarShowLabel: false,
-              headerShown: false
-            }
-          }
+      tabBar={onRenderTabBar}
+      screenOptions={{
+        tabBarShowLabel: false,
+        headerShown: false
+      }}
     >
       <Tabs.Screen name='home' />
       <Tabs.Screen name='search' />
