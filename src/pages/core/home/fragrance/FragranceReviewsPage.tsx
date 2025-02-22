@@ -95,7 +95,7 @@ const FragranceReviewsPage = () => {
               </>
               )}
           <View style={styles.reviewsHeading}>
-            <Text variant='titleMedium'>Top reviews</Text>
+            {reviews.length > 0 && <Text variant='titleMedium'>Top reviews</Text>}
           </View>
         </View>
     }

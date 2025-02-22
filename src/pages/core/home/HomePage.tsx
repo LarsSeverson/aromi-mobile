@@ -4,7 +4,7 @@ import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/BlockList'
 import FragrancePreview from '@/src/components/home/FragrancePreview'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { useFocusEffect, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 
 const HomePage = () => {
   const router = useRouter()

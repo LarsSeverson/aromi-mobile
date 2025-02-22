@@ -7,6 +7,7 @@ import RatingStars from '../../RatingStars'
 import ExpandableParagraph from '../../ExpandableParagraph'
 import VoteButton from '../../VoteButton'
 import useVoteOnReview from '@/src/hooks/useVoteOnReview'
+import { Colors } from '@/src/constants/Colors'
 
 const formatDate = (date: string | Date): string => {
   const parsedDate = typeof date === 'string' ? new Date(date) : date
@@ -57,10 +58,24 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
           <Text style={{ fontSize: 13 }}>{formatDate(dCreated)}</Text>
         </View>
       </View>
-      <ExpandableParagraph text={text} numLines={4} disabled={!expandable} />
+      <ExpandableParagraph
+        text={text}
+        numLines={4}
+        disabled={!expandable}
+      />
       <View style={styles.ratingWrapper}>
-        {withVotes && <VoteButton votes={review.votes} onVote={handleOnVote} myVote={review.myVote} />}
-        <RatingStars rating={rating} />
+        {withVotes &&
+          <VoteButton
+            votes={review.votes}
+            onVote={handleOnVote}
+            myVote={review.myVote}
+          />}
+        <RatingStars
+          rating={rating}
+          size={17}
+          filledColor={Colors.button}
+          emptyColor={theme.colors.onSurfaceDisabled}
+        />
       </View>
     </View>
   )

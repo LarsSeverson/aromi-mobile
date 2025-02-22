@@ -6,15 +6,23 @@ import { useAppTheme } from '@/src/constants/Themes'
 
 export interface FeedbackButtonProps extends BouncyButtonProps {
   text?: string | undefined
+  color?: string | undefined
+  textColor?: string | undefined
 }
 
 const FeedbackButton: React.FC<FeedbackButtonProps> = (props: FeedbackButtonProps) => {
   const theme = useAppTheme()
-  const { text, ...rest } = props
+  const { text, color, textColor, ...rest } = props
 
   return (
-    <BouncyButton style={[styles.wrapper, { borderColor: theme.colors.surfaceDisabled }]} {...rest}>
-      <Text>{text || 'are we missing something?'}</Text>
+    <BouncyButton
+      style={[styles.wrapper, {
+        borderColor: color ? 'transparent' : theme.colors.surfaceDisabled,
+        backgroundColor: color
+      }]}
+      {...rest}
+    >
+      <Text style={{ color: textColor }}>{text || 'are we missing something?'}</Text>
     </BouncyButton>
   )
 }

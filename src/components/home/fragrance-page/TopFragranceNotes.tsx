@@ -20,7 +20,6 @@ const TopFragranceNotes = (props: FragranceNotesPreviewProps) => {
 
   return (
     <FragranceCategory title='Notes' expandText='how do the notes develop?' onCategoryPressed={onExpand}>
-      <NotesPyramid layers={layers} />
       {layers.length > 0
         ? <NotesPyramid layers={layers} />
         : <FragranceEmpty headline='No notes yet' />}

@@ -7,6 +7,7 @@ import ButtonText from '@/src/components/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
 import { useRouter } from 'expo-router'
+import ImageCarousel from '@/src/components/ImageCarousel'
 
 const AuthPage = () => {
   const router = useRouter()

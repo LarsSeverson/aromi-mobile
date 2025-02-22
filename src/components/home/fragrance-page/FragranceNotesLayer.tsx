@@ -8,6 +8,7 @@ import NotesTrack from './NotesTrack'
 import FragranceEmpty from './FragranceEmpty'
 import FeedbackButton from '../../FeedbackButton'
 import { PressableRenderItemProps } from '../../PressableList'
+import FragranceNoteCard from './FragranceNoteCard'
 
 export interface FragranceNotesLayerProps {
   notes: FragranceNote[]
@@ -16,7 +17,6 @@ export interface FragranceNotesLayerProps {
 }
 
 const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {
-  const theme = useAppTheme()
   const { notes, layer, onExpanded } = props
 
   const handleOnNotePressed = useCallback(() => onExpanded?.(layer), [layer, onExpanded])
@@ -25,24 +25,13 @@ const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {
     if (!note) return null
 
     return (
-      <View style={styles.noteWrapper}>
-        <View style={[styles.notePreviewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]} />
-        <View style={styles.noteTextWrapper}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode='tail'
-            style={{ flex: 1 }}
-          >
-            {note.name}
-          </Text>
-          <Text>
-            {note.votes}
-          </Text>
-        </View>
-
-      </View>
+      <FragranceNoteCard
+        note={note}
+        style={styles.noteWrapper}
+        showVotes
+      />
     )
-  }, [theme])
+  }, [])
 
   return (
     <View style={styles.wrapper}>
@@ -78,15 +67,5 @@ const styles = StyleSheet.create({
   },
   noteWrapper: {
     width: 200
-  },
-  noteTextWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10
-  },
-  notePreviewWrapper: {
-    aspectRatio: 1,
-    borderRadius: 15
   }
 })

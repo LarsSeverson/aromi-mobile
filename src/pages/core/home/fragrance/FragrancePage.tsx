@@ -1,21 +1,20 @@
-import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useRef } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragrance, { FragranceVars } from '@/src/hooks/useFragrance'
-import { Divider, Text } from 'react-native-paper'
+import { Divider } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
-import BouncyButton from '@/src/components/BouncyButton'
 import { Colors } from '@/src/constants/Colors'
 import ScaleBar from '@/src/components/ScaleBar'
 import TopFragranceCharacteristics from '@/src/components/home/fragrance-page/TopFragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
-import { Image } from 'expo-image'
-import { Icon } from 'react-native-elements'
 import TopFragranceNotes from '@/src/components/home/fragrance-page/TopFragranceNotes'
 import TopFragranceAccords from '@/src/components/home/fragrance-page/TopFragranceAccords'
 import TopFragranceReviews from '@/src/components/home/fragrance-page/TopFragranceReviews'
+import FragranceImageCarousel from '@/src/components/home/fragrance-page/FragranceImageCarousel'
+import FeedbackButton from '@/src/components/FeedbackButton'
+import { StyleSheet, View } from 'react-native'
 
 const BASE_IMAGES_LIMIT = 5
 const BASE_NOTES_LIMIT = 10
@@ -114,15 +113,7 @@ const FragrancePage = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.imageWrapper}>
-        <Image source={{ uri: fragrance.images.at(0)?.url }} style={styles.image} />
-        <BouncyButton style={{ position: 'absolute', top: 20, right: 20 }}>
-          <Icon name='dots-vertical' type='material-community' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
-        </BouncyButton>
-        <BouncyButton style={{ position: 'absolute', bottom: 20, right: 20 }}>
-          <Icon name='bookmark-outline' backgroundColor={Colors.placeholder2} style={{ padding: 7, borderRadius: 50 }} />
-        </BouncyButton>
-      </View>
+      <FragranceImageCarousel images={fragrance.images} />
 
       <Divider />
 
@@ -138,23 +129,36 @@ const FragrancePage = () => {
       <Divider style={{ marginTop: 10 }} />
 
       <FragranceCategory title='Gender' expandText='masculine or feminine' onCategoryPressed={gotoEditGender}>
-        <ScaleBar
-          value={fragrance.traits.gender.value}
-          Icon={<GenderIcon />}
-          lessLabel='feminine'
-          greaterLabel='masculine'
-        />
+        <ScaleBar value={fragrance.traits.gender.value} Icon={<GenderIcon />} lessLabel='feminine' greaterLabel='masculine' />
       </FragranceCategory>
 
-      <TopFragranceAccords accords={fragrance.accords} onExpand={gotoEditAccords} />
-      <TopFragranceNotes notes={fragrance.notes} onExpand={gotoEditNotes} />
-      <TopFragranceCharacteristics traits={fragrance.traits} onExpand={gotoEditCharacteristics} />
-      <TopFragranceReviews reviews={fragrance.reviews} onExpandReviews={gotoFragranceReviews} onWriteReview={gotoAddFragranceReview} />
+      <TopFragranceAccords
+        accords={fragrance.accords}
+        onExpand={gotoEditAccords}
+      />
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 10, gap: 10 }}>
-        <BouncyButton style={{ alignItems: 'center', justifyContent: 'center', height: 48, marginVertical: 10, backgroundColor: Colors.button }}>
-          <Text style={{ color: Colors.white }}>did we get something wrong?</Text>
-        </BouncyButton>
+      <TopFragranceNotes
+        notes={fragrance.notes}
+        onExpand={gotoEditNotes}
+      />
+
+      <TopFragranceCharacteristics
+        traits={fragrance.traits}
+        onExpand={gotoEditCharacteristics}
+      />
+
+      <TopFragranceReviews
+        reviews={fragrance.reviews}
+        onExpandReviews={gotoFragranceReviews}
+        onWriteReview={gotoAddFragranceReview}
+      />
+
+      <View style={styles.feedbackWrapper}>
+        <FeedbackButton
+          text='Did we get something wrong?'
+          color={Colors.button}
+          textColor={Colors.white}
+        />
       </View>
 
     </ScrollView>
@@ -164,11 +168,8 @@ const FragrancePage = () => {
 export default FragrancePage
 
 const styles = StyleSheet.create({
-  imageWrapper: {
-    height: 400,
-    position: 'relative'
-  },
-  image: {
-    flex: 1
+  feedbackWrapper: {
+    padding: 10,
+    paddingBottom: 40
   }
 })

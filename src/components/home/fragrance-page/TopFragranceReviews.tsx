@@ -28,8 +28,7 @@ const TopFragranceReviews = (props: FragranceReviewsPreviewProps) => {
     <FragranceCategory
       title='Top reviews'
       expandText='write a review'
-      showSeeAll
-      onCategoryPressed={onWriteReview}
+      onCategoryPressed={onExpandReviews}
       onSeeAll={onExpandReviews}
     >
       {reviews.length === 0

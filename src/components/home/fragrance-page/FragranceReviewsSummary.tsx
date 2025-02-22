@@ -21,8 +21,14 @@ const FragranceReviewsSummary = (props: FragranceReviewsSummaryProps) => {
   const theme = useAppTheme()
   const { name, brand, rating, reviewsCount, distribution } = props
 
-  const maxDistCount = useMemo(() => Math.max(...Object.values(distribution).filter(val => typeof val === 'number')), [distribution])
-  const getWidth = useCallback((count: number) => Math.max(count / maxDistCount * 100, MIN_WIDTH), [maxDistCount])
+  const maxDistCount = useMemo(() => {
+    const numbers = Object.values(distribution).filter(val => typeof val === 'number')
+    return numbers.length ? Math.max(...numbers) : 1
+  }, [distribution])
+
+  const getWidth = useCallback((count: number) => {
+    return !maxDistCount ? MIN_WIDTH : Math.max((count / maxDistCount) * 100, MIN_WIDTH)
+  }, [maxDistCount])
 
   return (
     <View style={{ flex: 1 }}>

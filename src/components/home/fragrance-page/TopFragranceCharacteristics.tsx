@@ -15,7 +15,7 @@ const TopFragranceCharacteristics: React.FC<FragranceCharacteristicsPreviewProps
 
   return (
     <FragranceCategory title='Characteristics' expandText='what are its characteristics?' onCategoryPressed={onExpand}>
-      <View style={styles.traitsWrapper}>
+      <View style={styles.wrapper}>
         <ScaleBar value={traits.longevity.value} label='longevity' Icon={<LongevityIcon />} lessLabel='very short' greaterLabel='very long' />
         <ScaleBar value={traits.sillage.value} label='sillage' Icon={<SillageIcon />} lessLabel='intimate' greaterLabel='expansive' />
         <ScaleBar value={traits.complexity.value} label='complexity' Icon={<ComplexityIcon />} lessLabel='simple' greaterLabel='intricate' />
@@ -29,7 +29,7 @@ const TopFragranceCharacteristics: React.FC<FragranceCharacteristicsPreviewProps
 export default TopFragranceCharacteristics
 
 const styles = StyleSheet.create({
-  traitsWrapper: {
+  wrapper: {
     gap: 40
   }
 })

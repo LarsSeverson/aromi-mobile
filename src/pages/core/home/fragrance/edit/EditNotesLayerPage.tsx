@@ -4,7 +4,7 @@ import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import SelectableList, { SelectableRenderItemProps } from '@/src/components/SelectableList'
 import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import SelectableNote from '@/src/components/home/fragrance-page/SelectableNote'
+import FragranceNoteCard from '@/src/components/home/fragrance-page/FragranceNoteCard'
 import FeedbackButton from '@/src/components/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -49,12 +49,16 @@ const EditNotesLayerPage = () => {
     }, fragranceNote)
   }, [fragranceId, voteOnNote])
 
-  const onRenderNote = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceNote>) => {
+  const onRenderNote = useCallback(({ item, selected }: SelectableRenderItemProps<FragranceNote>) => {
     if (!item) return null
 
-    const originallySelected = item.myVote
-
-    return <SelectableNote item={item} index={index} selected={selected} originallySelected={originallySelected} />
+    return (
+      <FragranceNoteCard
+        note={item}
+        selected={selected}
+        showVotes
+      />
+    )
   }, [])
 
   const onRenderListFooter = useCallback(() => {
