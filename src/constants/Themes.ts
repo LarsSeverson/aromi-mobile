@@ -35,7 +35,7 @@ const fonts: MD3Typescale & any = {
   headlineMedium: {
     fontFamily: 'PalanquinDark-Semibold',
     fontWeight: '400',
-    fontSize: 24,
+    fontSize: 22,
     lineHeight: 36,
     letterSpacing: 0
   },

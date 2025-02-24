@@ -13,10 +13,7 @@ const MY_REVIEW_QUERY = gql`
         votes
         dCreated
         dDeleted
-        user {
-          id
-          username
-        }
+        author 
         myVote
       }
     }

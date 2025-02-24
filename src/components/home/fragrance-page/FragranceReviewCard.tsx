@@ -29,13 +29,12 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
 
   const { review, withVotes, expandable, style } = props
   const {
-    user,
+    author,
     review: text,
     rating,
     dCreated,
     dModified
   } = review
-  const { username } = user
 
   const { voteOnReview, loading, error } = useVoteOnReview()
 
@@ -51,7 +50,7 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
           ellipsizeMode='tail'
           style={{ flexShrink: 1 }}
         >
-          {username}
+          {author}
         </Text>
         <View style={styles.headingWrapper}>
           <Text style={{ fontSize: 10 }}>●</Text>

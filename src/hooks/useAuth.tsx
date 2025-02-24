@@ -12,15 +12,12 @@ export enum AuthState {
 
 export interface AuthOutput<T = null> {
   success: boolean
-
   error: AromiAuthError | null
-
   data?: T | undefined
 }
 
 export interface AuthUserInfo {
   user?: User | null
-
   state: AuthState
 }
 
@@ -61,8 +58,8 @@ const useAuth = (): UseAuthReturn => {
       const email = signInDetails?.loginId
       if (!email) return { success: false, error: err }
 
-      const upsertUserRes = await upsertUser({ variables: { email, cognitoId: userId } })
-      const user = upsertUserRes.data?.upsertUser || null
+      const { data } = await upsertUser({ variables: { email, cognitoId: userId } })
+      const user = data?.upsertUser
 
       if (!user) return { success: false, error: err }
 

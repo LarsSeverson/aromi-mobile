@@ -71,7 +71,7 @@ export const useClient = (): UseClientReturn => {
       const token = session.tokens?.accessToken.toString() || null
       const expiration = session.tokens?.accessToken.payload.exp || null
 
-      console.log(token)
+      // console.log(token)
 
       setToken(token)
       setTokenExpiration(expiration)

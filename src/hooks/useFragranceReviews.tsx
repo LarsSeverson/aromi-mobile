@@ -20,10 +20,7 @@ const FRAGRANCE_REVIEWS_QUERY = gql`
         votes
         dCreated
         dDeleted
-        user {
-          id
-          username
-        }
+        author 
         myVote
       }
       reviewDistribution {
