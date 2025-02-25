@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
     opacity: 0.7
   },
   image: {
-    height: '100%',
-    resizeMode: 'contain'
+    height: '100%'
   },
   pagination: {
     position: 'absolute',

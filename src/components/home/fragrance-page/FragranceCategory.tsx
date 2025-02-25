@@ -28,7 +28,7 @@ const FragranceCategory: React.FC<FragranceCategoryProps> = (props: FragranceCat
   return (
     <View style={styles.categoryWrapper}>
       <View style={styles.headingWrapper}>
-        <Text variant='titleSmall' style={{ fontWeight: 500 }}>{title}</Text>
+        <Text variant='headlineSmall' style={{ fontWeight: 500 }}>{title}</Text>
         {showSeeAll && <TextButton text='see all' onPress={onSeeAll} />}
       </View>
 

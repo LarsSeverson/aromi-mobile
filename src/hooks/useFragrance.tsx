@@ -10,7 +10,7 @@ const DEFAULT_REVIEWS_LIMIT = 8
 const DEFAULT_OFFSET = 0
 const DEFAULT_FILL = false
 
-const FRAGRANCE_QUERY = gql`
+const DEFAULT_QUERY = gql`
   query Fragrance(
     $id: Int!, 
     $imagesLimit: Int, 
@@ -107,10 +107,7 @@ const FRAGRANCE_QUERY = gql`
         dCreated
         dModified
         dDeleted
-        user {
-          id
-          username
-        }
+        author 
         myVote
       }
     }
@@ -143,7 +140,7 @@ export interface UseFragranceParams {
 }
 
 const useFragrance = (params: UseFragranceParams) => {
-  const { query = FRAGRANCE_QUERY, variables } = params
+  const { query = DEFAULT_QUERY, variables } = params
   const localVariables = useRef<FragranceVars>({
     id: variables.id,
     imagesLimit: variables.imagesLimit ?? DEFAULT_IMAGES_LIMIT,

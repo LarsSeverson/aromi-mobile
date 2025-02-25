@@ -16,8 +16,10 @@ export interface AuthOutput<T = null> {
   data?: T | undefined
 }
 
+export type AuthUser = Pick<User, 'id' | 'username' | 'email' | 'cognitoId'>
+
 export interface AuthUserInfo {
-  user?: User | null
+  user?: AuthUser | null
   state: AuthState
 }
 

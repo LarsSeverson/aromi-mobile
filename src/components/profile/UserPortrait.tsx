@@ -7,13 +7,16 @@ import { useAppTheme } from '@/src/constants/Themes'
 import { appImages } from '@/src/assets/images/appImages'
 
 export interface UserPortraitProps {
-  user: User
+  username: string
+  followers: number
+  following: number
+  avatar?: string | undefined
+  editable?: boolean | undefined
 }
 
 const UserPortrait = (props: UserPortraitProps) => {
   const theme = useAppTheme()
-  const { user } = props
-  const { username, followers = 0, following = 0 } = user
+  const { username, followers, following, avatar, editable } = props
 
   return (
     <View style={styles.container}>

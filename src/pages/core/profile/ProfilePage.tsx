@@ -1,20 +1,33 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { useAuthContext } from '@/src/contexts/AuthContext'
-import { Text } from 'react-native-paper'
 import UserPortrait from '@/src/components/profile/UserPortrait'
 import UserCollections from '@/src/components/profile/UserCollections'
+import { AuthUser } from '@/src/hooks/useAuth'
+import { UserPreview } from '@/src/hooks/useUserPreview'
 
-const ProfilePage = () => {
-  const { userInfo } = useAuthContext()
-  const user = userInfo.user
+export interface ProfilePageProps {
+  user: UserPreview | null
+  currentUser?: AuthUser | null | undefined
+}
 
-  if (!user) return null
+const ProfilePage = (props: ProfilePageProps) => {
+  const { user, currentUser } = props
+  const isOwner = !!(currentUser && currentUser.id === user?.id)
+
+  if (!user) { return null } // TODO
 
   return (
     <View style={styles.wrapper}>
-      <UserPortrait user={user} />
-      <UserCollections />
+      <UserPortrait
+        username={user.username}
+        followers={user.followers}
+        following={user.following}
+        editable={isOwner}
+      />
+      <UserCollections
+        collections={user.collections}
+        editable={isOwner}
+      />
     </View>
   )
 }
