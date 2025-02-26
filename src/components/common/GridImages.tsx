@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ViewStyle } from 'react-native'
 import React from 'react'
 import { Image } from 'expo-image'
-import { useAppTheme } from '../constants/Themes'
+import { useAppTheme } from '../../constants/Themes'
 
 export interface GridImagesProps {
   images: (string | undefined)[]

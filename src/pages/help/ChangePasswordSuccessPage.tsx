@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import ButtonText from '@/src/components/ButtonText'
+import ButtonText from '@/src/components/common/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 
 interface ChangePasswordSuccessPageProps {

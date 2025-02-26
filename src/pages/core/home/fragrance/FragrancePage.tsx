@@ -5,7 +5,7 @@ import { Divider } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
 import { Colors } from '@/src/constants/Colors'
-import ScaleBar from '@/src/components/ScaleBar'
+import ScaleBar from '@/src/components/common/ScaleBar'
 import TopFragranceCharacteristics from '@/src/components/home/fragrance-page/TopFragranceCharacteristics'
 import FragranceHeading from '@/src/components/home/fragrance-page/FragranceHeading'
 import FragranceCategory from '@/src/components/home/fragrance-page/FragranceCategory'
@@ -13,7 +13,7 @@ import TopFragranceNotes from '@/src/components/home/fragrance-page/TopFragrance
 import TopFragranceAccords from '@/src/components/home/fragrance-page/TopFragranceAccords'
 import TopFragranceReviews from '@/src/components/home/fragrance-page/TopFragranceReviews'
 import FragranceImageCarousel from '@/src/components/home/fragrance-page/FragranceImageCarousel'
-import FeedbackButton from '@/src/components/FeedbackButton'
+import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { StyleSheet, View } from 'react-native'
 
 const BASE_IMAGES_LIMIT = 5

@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useMemo } from 'react'
-import RatingStars from '../../RatingStars'
+import RatingStars from '../../common/RatingStars'
 import { FragranceReviewDistribution } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Text } from 'react-native-paper'
-import LinearScaleBar from '../../LinearScaleBar'
+import LinearScaleBar from '../../common/LinearScaleBar'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 

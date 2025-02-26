@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { FragrancePreviewCollection } from '@/src/hooks/useUserPreview'
 import { Text } from 'react-native-paper'
-import GridImages from '../GridImages'
+import GridImages from '../common/GridImages'
 
 export interface UserCollectionPreviewCardProps {
   collection: FragrancePreviewCollection

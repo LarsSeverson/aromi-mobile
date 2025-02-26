@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
+import BouncyButton, { BouncyButtonProps } from '../common/BouncyButton'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
-import VoteButton from '../VoteButton'
+import VoteButton from '../common/VoteButton'
 
 export interface FragrancePreviewProps extends BouncyButtonProps {
   fragrance: Fragrance

@@ -2,8 +2,8 @@ import { NativeSyntheticEvent, StyleSheet, TextLayoutEventData, View } from 'rea
 import React, { useState } from 'react'
 import { Text } from 'react-native-paper'
 import TextButton from './TextButton'
-import { useAppTheme } from '../constants/Themes'
-import { Colors } from '../constants/Colors'
+import { useAppTheme } from '../../constants/Themes'
+import { Colors } from '../../constants/Colors'
 
 export interface ExpandableParagraphProps {
   text: string

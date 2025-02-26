@@ -2,10 +2,8 @@ import { View, StyleSheet } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Text } from 'react-native-paper'
-import ButtonText from './utils/ButtonText'
-import AuthActionGuard from './auth/AuthActionGuard'
-import EditGenderPage from '@/src/pages/core/home/fragrance/edit/EditGenderPage'
-import EditAccordsPage from '@/src/pages/core/home/fragrance/edit/EditAccordsPage'
+import ButtonText from './ButtonText'
+import AuthActionGuard from '../auth/AuthActionGuard'
 
 interface AppErrorProps {
   onRetry: () => void

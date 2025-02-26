@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { StyleSheet, View, StyleProp, ViewStyle, TouchableWithoutFeedback } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { useAppTheme } from '../constants/Themes'
+import { useAppTheme } from '../../constants/Themes'
 import BouncyButton from './BouncyButton'
 
 export interface EditableRatingStarsProps {

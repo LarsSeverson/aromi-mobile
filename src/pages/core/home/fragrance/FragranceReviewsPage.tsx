@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { Text } from 'react-native-paper'
-import PressableList, { PressableRenderItemProps } from '@/src/components/PressableList'
+import PressableList, { PressableRenderItemProps } from '@/src/components/common/PressableList'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import useFragranceReviews from '@/src/hooks/useFragranceReviews'
 import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'

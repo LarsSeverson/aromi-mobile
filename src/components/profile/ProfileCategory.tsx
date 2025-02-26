@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import BouncyButton from '../BouncyButton'
-import TextButton from '../TextButton'
+import BouncyButton from '../common/BouncyButton'
+import TextButton from '../common/TextButton'
 import { useAppTheme } from '@/src/constants/Themes'
 
 export interface ProfileCategoryProps {

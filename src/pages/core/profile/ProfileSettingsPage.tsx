@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import BouncyButtonGroup from '@/src/components/BouncyButtonGroup'
+import BouncyButtonGroup from '@/src/components/common/BouncyButtonGroup'
 import { Colors } from '@/src/constants/Colors'
 import { useRouter } from 'expo-router'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'

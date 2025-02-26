@@ -1,13 +1,13 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
-import TextButton from '@/src/components/TextButton'
+import TextButton from '@/src/components/common/TextButton'
 import LegalAgreement from '@/src/components/auth/LegalAgreement'
-import ButtonText from '@/src/components/ButtonText'
+import ButtonText from '@/src/components/common/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
 import { useRouter } from 'expo-router'
-import ImageCarousel from '@/src/components/ImageCarousel'
+import ImageCarousel from '@/src/components/common/ImageCarousel'
 
 const AuthPage = () => {
   const router = useRouter()

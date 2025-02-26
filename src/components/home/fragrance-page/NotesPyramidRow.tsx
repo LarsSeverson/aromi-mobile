@@ -4,7 +4,7 @@ import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/
 import NotesTrack from './NotesTrack'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
-import { PressableRenderItemProps } from '../../PressableList'
+import { PressableRenderItemProps } from '../../common/PressableList'
 
 export interface NotesPyramidRowProps {
   notes: FragranceNote[]

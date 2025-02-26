@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import BouncyButton from '../../BouncyButton'
+import BouncyButton from '../../common/BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
-import TextButton from '../../TextButton'
+import TextButton from '../../common/TextButton'
 
 export interface FragranceCategoryProps {
   title: string

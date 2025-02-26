@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import React, { useCallback } from 'react'
-import LinearScaleBar from '../../LinearScaleBar'
+import LinearScaleBar from '../../common/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
 import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'

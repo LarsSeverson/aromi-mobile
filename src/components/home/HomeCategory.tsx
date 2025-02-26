@@ -1,7 +1,7 @@
 import { GestureResponderEvent, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import TextButton from '../TextButton'
+import TextButton from '../common/TextButton'
 
 interface HomeCategoryProps {
   children?: React.ReactNode

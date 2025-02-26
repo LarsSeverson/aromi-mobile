@@ -1,9 +1,12 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import UserPortrait from '@/src/components/profile/UserPortrait'
 import UserCollections from '@/src/components/profile/UserCollections'
 import { AuthUser } from '@/src/hooks/useAuth'
 import { UserPreview } from '@/src/hooks/useUserPreview'
+import UserLikes from '@/src/components/profile/UserLikes'
+import UserReviews from '@/src/components/profile/UserReviews'
+import { ScrollView } from 'react-native-gesture-handler'
 
 export interface ProfilePageProps {
   user: UserPreview | null
@@ -17,18 +20,29 @@ const ProfilePage = (props: ProfilePageProps) => {
   if (!user) { return null } // TODO
 
   return (
-    <View style={styles.wrapper}>
+    <ScrollView style={styles.wrapper}>
       <UserPortrait
         username={user.username}
         followers={user.followers}
         following={user.following}
-        editable={isOwner}
+        isOwner={isOwner}
       />
       <UserCollections
         collections={user.collections}
-        editable={isOwner}
+        username={user.username}
+        isOwner={isOwner}
       />
-    </View>
+      <UserLikes
+        fragrances={[]}
+        username={user.username}
+        isOwner={isOwner}
+      />
+      <UserReviews
+        reviews={[]}
+        username={user.username}
+        isOwner={isOwner}
+      />
+    </ScrollView>
   )
 }
 

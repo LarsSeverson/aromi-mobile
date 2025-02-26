@@ -1,6 +1,5 @@
 import { StyleSheet, Text as RegularText, View } from 'react-native'
 import React from 'react'
-import { User } from '@/aromi-backend/src/graphql/types/userTypes'
 import { Divider, Text } from 'react-native-paper'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
@@ -11,12 +10,12 @@ export interface UserPortraitProps {
   followers: number
   following: number
   avatar?: string | undefined
-  editable?: boolean | undefined
+  isOwner?: boolean | undefined
 }
 
 const UserPortrait = (props: UserPortraitProps) => {
   const theme = useAppTheme()
-  const { username, followers, following, avatar, editable } = props
+  const { username, followers, following, avatar, isOwner } = props
 
   return (
     <View style={styles.container}>

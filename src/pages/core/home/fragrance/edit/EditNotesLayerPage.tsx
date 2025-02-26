@@ -2,13 +2,13 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import SelectableList, { SelectableRenderItemProps } from '@/src/components/SelectableList'
+import SelectableList, { SelectableRenderItemProps } from '@/src/components/common/SelectableList'
 import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceNoteCard from '@/src/components/home/fragrance-page/FragranceNoteCard'
-import FeedbackButton from '@/src/components/FeedbackButton'
+import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SearchInput from '@/src/components/SearchInput'
+import SearchInput from '@/src/components/common/SearchInput'
 
 const DEFAULT_LIMIT = 30
 

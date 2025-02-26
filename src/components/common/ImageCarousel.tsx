@@ -2,7 +2,7 @@ import { StyleSheet, View, FlatList, NativeSyntheticEvent, NativeScrollEvent } f
 import React, { useState } from 'react'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
-import { useAppTheme } from '../constants/Themes'
+import { useAppTheme } from '../../constants/Themes'
 
 export interface ImageCarouselProps {
   urls: string[]

@@ -3,11 +3,11 @@ import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/
 import React, { useCallback } from 'react'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
-import TextButton from '../../TextButton'
+import TextButton from '../../common/TextButton'
 import NotesTrack from './NotesTrack'
 import FragranceEmpty from './FragranceEmpty'
-import FeedbackButton from '../../FeedbackButton'
-import { PressableRenderItemProps } from '../../PressableList'
+import FeedbackButton from '../../common/FeedbackButton'
+import { PressableRenderItemProps } from '../../common/PressableList'
 import FragranceNoteCard from './FragranceNoteCard'
 
 export interface FragranceNotesLayerProps {

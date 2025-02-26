@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { Identifiable, SelectableRenderItemProps } from '../../SelectableList'
+import { Identifiable, SelectableRenderItemProps } from '../../common/SelectableList'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'

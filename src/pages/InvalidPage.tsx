@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../constants/Colors'
-import ButtonText from '../components/ButtonText'
+import ButtonText from '../components/common/ButtonText'
 import { useRouter } from 'expo-router'
 import { Text } from 'react-native-paper'
 

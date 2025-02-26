@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from 'react-native-paper'
-import BouncyButton, { BouncyButtonProps } from '../../BouncyButton'
+import BouncyButton, { BouncyButtonProps } from '../../common/BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
-import RatingStars from '../../RatingStars'
+import RatingStars from '../../common/RatingStars'
 
 export interface FragranceReviewButtonProps extends BouncyButtonProps {
   username?: string | undefined

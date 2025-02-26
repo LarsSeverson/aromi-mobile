@@ -5,12 +5,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { Text, TextInput } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Colors } from '@/src/constants/Colors'
-import SubmitButton from '@/src/components/SubmitButton'
-import EditableRatingStars from '@/src/components/EditableRatingStars'
+import SubmitButton from '@/src/components/common/SubmitButton'
+import EditableRatingStars from '@/src/components/common/EditableRatingStars'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import useReviewFragrance from '@/src/hooks/useReviewFragrance'
 import { showNotifaction } from '@/src/components/notify/ShowNotification'
-import FeedbackSuccess from '@/src/components/FeedbackSuccess'
+import FeedbackSuccess from '@/src/components/common/FeedbackSuccess'
 
 const AddReviewPage = () => {
   const router = useRouter()
