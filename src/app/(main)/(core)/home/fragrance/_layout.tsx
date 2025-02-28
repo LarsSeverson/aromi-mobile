@@ -1,8 +1,8 @@
 import React from 'react'
 import { Stack } from 'expo-router'
 import { useAppTheme } from '@/src/constants/Themes'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 import { TextStyles } from '@/src/constants/TextStyles'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
 
 const HomeFragranceLayout = () => {
   const theme = useAppTheme()

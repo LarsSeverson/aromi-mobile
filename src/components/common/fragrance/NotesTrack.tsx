@@ -1,7 +1,7 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import React from 'react'
-import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import PressableList, { PressableListProps, PressableRenderItemProps } from '../../common/PressableList'
+import { FragranceNote } from '@/src/gql/graphql'
 
 export interface NotesTrackProps extends Omit<PressableListProps<FragranceNote>, 'data' | 'style' | 'onRenderItem'> {
   notes: FragranceNote[]

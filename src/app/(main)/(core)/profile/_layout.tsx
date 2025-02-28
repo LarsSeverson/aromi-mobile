@@ -2,8 +2,8 @@ import React from 'react'
 import { Stack, useNavigation } from 'expo-router'
 import ProfileHeader from '@/src/components/profile/ProfileHeader'
 import { TextStyles } from '@/src/constants/TextStyles'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 import { useAppTheme } from '@/src/constants/Themes'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
 
 const ProfileLayout = () => {
   const theme = useAppTheme()

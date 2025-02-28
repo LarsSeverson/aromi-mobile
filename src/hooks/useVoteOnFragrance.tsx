@@ -1,6 +1,6 @@
-import { FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useMutation } from '@apollo/client'
 import { useCallback } from 'react'
+import { FragranceVote } from '../gql/graphql'
 
 const VOTE_ON_FRAGRANCE_MUTATION = gql`
   mutation VoteOnFragance($fragranceId: Int!, $myVote: Boolean) {

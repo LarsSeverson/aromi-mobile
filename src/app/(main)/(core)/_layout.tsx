@@ -1,4 +1,4 @@
-import NavBar from '@/src/components/navigation/NavBar'
+import NavBar from '@/src/components/common/navigation/NavBar'
 import { Tabs } from 'expo-router'
 import React, { useCallback, useState } from 'react'
 

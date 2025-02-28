@@ -7,7 +7,7 @@ import { Colors } from '@/src/constants/Colors'
 import { Icon } from 'react-native-elements'
 import { Hub } from '@aws-amplify/core'
 import { useRouter } from 'expo-router'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const AuthCheckPage = () => {

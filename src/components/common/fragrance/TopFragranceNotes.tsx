@@ -1,8 +1,8 @@
 import React from 'react'
-import { FragranceNotes, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesPyramid from './NotesPyramid'
 import FragranceCategory from './FragranceCategory'
 import FragranceEmpty from './FragranceEmpty'
+import { FragranceNotes, NoteLayer } from '@/src/gql/graphql'
 
 export interface FragranceNotesPreviewProps {
   notes: FragranceNotes
@@ -13,9 +13,9 @@ const TopFragranceNotes = (props: FragranceNotesPreviewProps) => {
   const { notes, onExpand } = props
 
   const layers = [
-    { layer: NoteLayerType.TOP, notes: notes.top },
-    { layer: NoteLayerType.MIDDLE, notes: notes.middle },
-    { layer: NoteLayerType.BASE, notes: notes.base }
+    { layer: NoteLayer.Top, notes: notes.top },
+    { layer: NoteLayer.Middle, notes: notes.middle },
+    { layer: NoteLayer.Base, notes: notes.base }
   ].filter(item => item.notes.length > 0)
 
   return (

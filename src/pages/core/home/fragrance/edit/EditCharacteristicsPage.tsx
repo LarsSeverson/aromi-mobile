@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native'
 import React, { useCallback } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import EditFragranceSlider from '@/src/components/home/fragrance-page/EditFragranceSlider'
 import { useLocalSearchParams } from 'expo-router'
 import { AllureIcon, BalanceIcon, ComplexityIcon, GenderIcon, LongevityIcon, SillageIcon } from '@/src/constants/Icons'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FragranceTrait } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import useFragranceTraits from '@/src/hooks/useFragranceTraits'
+import { FragranceTrait } from '@/src/gql/graphql'
+import EditFragranceSlider from '@/src/components/common/fragrance/EditFragranceSlider'
 
 const EditCharacteristicsPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)

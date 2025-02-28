@@ -2,13 +2,12 @@ import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useRef } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import useFragranceAccords from '@/src/hooks/useFragranceAccords'
-import SearchInput from '@/src/components/common/SearchInput'
 import SelectableList, { SelectableRenderItemProps } from '@/src/components/common/SelectableList'
-import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import SelectableAccord from '@/src/components/home/fragrance-page/SelectableAccord'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { FragranceAccord } from '@/src/gql/graphql'
+import SelectableAccord from '@/src/components/common/fragrance/SelectableAccord'
 
 const EditAccordsPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)
@@ -35,7 +34,7 @@ const EditAccordsPage = () => {
   }, [loading.accordsLoading, getMore])
 
   const isAccordSelected = useCallback((accord: FragranceAccord) => {
-    return accord.myVote
+    return !!accord.myVote
   }, [])
 
   const onAccordSelected = useCallback((_: number, fragranceAccord: FragranceAccord, myVote: boolean) => {
@@ -49,7 +48,7 @@ const EditAccordsPage = () => {
   const onRenderAccord = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceAccord>) => {
     if (!item) return null
 
-    return <SelectableAccord item={item} index={index} selected={selected} originallySelected={item.myVote} />
+    return <SelectableAccord item={item} index={index} selected={selected} originallySelected={!!item.myVote} />
   }, [])
 
   const onRenderListFooter = useCallback(() => {

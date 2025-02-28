@@ -3,7 +3,7 @@ import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Text } from 'react-native-paper'
 import ButtonText from './ButtonText'
-import AuthActionGuard from '../auth/AuthActionGuard'
+import AuthActionGuard from './auth/AuthActionGuard'
 
 interface AppErrorProps {
   onRetry: () => void

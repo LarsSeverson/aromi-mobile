@@ -1,11 +1,11 @@
 import React from 'react'
 import { Stack } from 'expo-router'
 import { TextStyles } from '@/src/constants/TextStyles'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
-import HeaderCloseButton from '@/src/components/navigation/HeaderCloseButton'
 import { PaperProvider } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import { NotifierWrapper } from 'react-native-notifier'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
+import HeaderCloseButton from '@/src/components/common/navigation/HeaderCloseButton'
 
 const AuthHelpLayout = () => {
   const theme = useAppTheme()

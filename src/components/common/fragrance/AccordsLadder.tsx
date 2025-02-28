@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import LinearScaleBar from '../../common/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
-import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceAccord } from '@/src/gql/graphql'
 
 export interface AccordBarsProps {
   accords: FragranceAccord[]

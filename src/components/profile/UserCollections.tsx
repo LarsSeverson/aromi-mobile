@@ -1,10 +1,8 @@
-import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import ProfileCategory from './ProfileCategory'
-import { Text } from 'react-native-paper'
-import { FragrancePreviewCollection } from '@/src/hooks/useUserPreview'
 import UserCollectionPreviewCard from './UserCollectionPreviewCard'
 import ProfileEmpty from './ProfileEmpty'
+import { UserPreviewQuery } from '@/src/gql/graphql'
 
 const getEmptyCollectionText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no collections' : `${username} has no collections`,
@@ -13,8 +11,10 @@ const getEmptyCollectionText = (isOwner: boolean, username: string) => ({
     : 'Check back later to see what new collections they create'
 })
 
+type Collections = NonNullable<UserPreviewQuery['user']>['collections']
+
 export interface UserCollectionsProps {
-  collections: FragrancePreviewCollection[]
+  collections: Collections
   username: string
   isOwner?: boolean | undefined
 }

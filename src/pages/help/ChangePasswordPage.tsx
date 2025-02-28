@@ -8,7 +8,7 @@ import { TextInput, Text } from 'react-native-paper'
 import { TextStyles } from '@/src/constants/TextStyles'
 import TextButton from '@/src/components/common/TextButton'
 import ButtonText from '@/src/components/common/ButtonText'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const ChangePasswordPage = () => {

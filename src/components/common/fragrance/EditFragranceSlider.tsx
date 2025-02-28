@@ -3,7 +3,7 @@ import { Text } from 'react-native-paper'
 import React, { useCallback } from 'react'
 import MiddleSlider, { MiddleSliderProps } from '../../common/MiddleSlider'
 import { Colors } from '@/src/constants/Colors'
-import { FragranceTrait } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceTrait } from '@/src/gql/graphql'
 
 export interface EditFragranceSliderProps extends MiddleSliderProps {
   trait: FragranceTrait
@@ -50,7 +50,7 @@ const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFrag
         </View>
       </View>
 
-      <MiddleSlider value={trait.myVote} focusPoints={[16, 32, 50, 66, 84]} {...rest} onValueChange={handleValueChanged} />
+      <MiddleSlider value={trait.myVote || undefined} focusPoints={[16, 32, 50, 66, 84]} {...rest} onValueChange={handleValueChanged} />
 
       <View style={styles.labelsWrapper}>
         <Text style={{ opacity: 0.6 }}>{leftLabel}</Text>

@@ -3,19 +3,19 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import SelectableList, { SelectableRenderItemProps } from '@/src/components/common/SelectableList'
-import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import FragranceNoteCard from '@/src/components/home/fragrance-page/FragranceNoteCard'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '@/src/components/common/SearchInput'
+import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
+import FragranceNoteCard from '@/src/components/common/fragrance/FragranceNoteCard'
 
 const DEFAULT_LIMIT = 30
 
 const EditNotesLayerPage = () => {
   const nav = useNavigation()
   const fragranceId = Number(useLocalSearchParams().fragranceId)
-  const layer = useLocalSearchParams().layer as NoteLayerType
+  const layer = useLocalSearchParams().layer as NoteLayer
 
   const localSearchTerm = useRef('')
 
@@ -37,7 +37,7 @@ const EditNotesLayerPage = () => {
   }, [loading.notesLoading, getMore])
 
   const isNoteSelected = useCallback((note: FragranceNote) => {
-    return note.myVote
+    return !!note.myVote
   }, [])
 
   const onNoteSelected = useCallback((_: number, fragranceNote: FragranceNote, myVote: boolean) => {

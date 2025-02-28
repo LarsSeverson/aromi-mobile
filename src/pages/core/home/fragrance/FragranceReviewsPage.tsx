@@ -4,12 +4,12 @@ import { Text } from 'react-native-paper'
 import PressableList, { PressableRenderItemProps } from '@/src/components/common/PressableList'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import useFragranceReviews from '@/src/hooks/useFragranceReviews'
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import FragranceReviewCard from '@/src/components/home/fragrance-page/FragranceReviewCard'
-import FragranceReviewsSummary from '@/src/components/home/fragrance-page/FragranceReviewsSummary'
-import FragranceReviewButton from '@/src/components/home/fragrance-page/FragranceReviewButton'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 import { useMyReview } from '@/src/hooks/useMyReview'
+import FragranceReviewCard from '@/src/components/common/fragrance/FragranceReviewCard'
+import { FragranceReview } from '@/src/gql/graphql'
+import FragranceReviewsSummary from '@/src/components/common/fragrance/FragranceReviewsSummary'
+import FragranceReviewButton from '@/src/components/common/fragrance/FragranceReviewButton'
 
 const FragranceReviewsPage = () => {
   const router = useRouter()

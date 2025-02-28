@@ -4,8 +4,8 @@ import { useAppTheme } from '@/src/constants/Themes'
 import { PaperProvider } from 'react-native-paper'
 import { NotifierWrapper } from 'react-native-notifier'
 import { TextStyles } from '@/src/constants/TextStyles'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
-import HeaderCloseButton from '@/src/components/navigation/HeaderCloseButton'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
+import HeaderCloseButton from '@/src/components/common/navigation/HeaderCloseButton'
 
 const HomeAuthLayout = () => {
   const theme = useAppTheme()

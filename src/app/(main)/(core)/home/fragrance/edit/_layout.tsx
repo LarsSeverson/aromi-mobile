@@ -2,7 +2,7 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import { useAppTheme } from '@/src/constants/Themes'
 import { TextStyles } from '@/src/constants/TextStyles'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
 
 const FragranceEditLayout = () => {
   const theme = useAppTheme()

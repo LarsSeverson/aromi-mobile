@@ -9,7 +9,7 @@ import SubmitButton from '@/src/components/common/SubmitButton'
 import EditableRatingStars from '@/src/components/common/EditableRatingStars'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import useReviewFragrance from '@/src/hooks/useReviewFragrance'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import FeedbackSuccess from '@/src/components/common/FeedbackSuccess'
 
 const AddReviewPage = () => {

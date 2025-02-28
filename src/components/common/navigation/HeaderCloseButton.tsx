@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import BouncyButton from '../common/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { useNavigation } from 'expo-router'
+import BouncyButton from '../BouncyButton'
 
 const HeaderCloseButton = () => {
   const nav = useNavigation()

@@ -26,7 +26,7 @@ export const useClient = (): UseClientReturn => {
   , [token])
 
   const client = useMemo(() => new ApolloClient({
-    link: authLink.concat(new HttpLink({ uri: 'http://192.168.0.49:3000/dev/graphql' })),
+    link: authLink.concat(new HttpLink({ uri: process.env.EXPO_PUBLIC_GQL_ENDPOINT })),
     cache: new InMemoryCache({
       typePolicies: {
         Fragrance: {

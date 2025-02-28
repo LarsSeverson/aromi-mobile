@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useCallback } from 'react'
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceCategory from './FragranceCategory'
 import ReviewsTrack from './ReviewsTrack'
 import FragranceEmpty from './FragranceEmpty'
+import { FragranceReview } from '@/src/gql/graphql'
 
 export interface FragranceReviewsPreviewProps {
   reviews: FragranceReview[]

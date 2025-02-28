@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import NotesPyramidRow from './NotesPyramidRow'
 import { Divider } from 'react-native-paper'
+import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
 
 export interface NotesPyramidLayer {
-  layer: NoteLayerType
+  layer: NoteLayer
   notes: FragranceNote[]
 }
 

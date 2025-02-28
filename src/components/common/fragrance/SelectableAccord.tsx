@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import { Identifiable, SelectableRenderItemProps } from '../../common/SelectableList'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
-import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceAccord } from '@/src/gql/graphql'
 
 export interface SelectableAccordProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
   originallySelected: boolean

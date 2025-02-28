@@ -1,9 +1,8 @@
-import { gql } from '@apollo/client/core'
 import { useQuery } from '@apollo/client'
-import { FragranceImage } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { User } from '@/aromi-backend/src/graphql/types/userTypes'
+import { graphql } from '../gql'
+import { UserPreviewQueryVariables } from '../gql/graphql'
 
-const USER_PREVIEW_QUERY = gql`
+const USER_PREVIEW_QUERY = graphql(/* GraphQL */`
   query UserPreview(
     $id: Int!, 
     $collectionsLimit: Int = 6, 
@@ -11,7 +10,11 @@ const USER_PREVIEW_QUERY = gql`
     $fragrancesLimit: Int = 4,
     $fragrancesOffset: Int = 0,
     $fragranceImagesLimit: Int = 1,
-    $fragranceImagesOffset: Int = 0
+    $fragranceImagesOffset: Int = 0,
+    $reviewsLimit: Int = 10,
+    $reviewsOffset: Int = 0,
+    $likesLimit: Int = 10,
+    $likesOffset: Int = 0
     ) {
     user(id: $id) {
       id
@@ -33,44 +36,31 @@ const USER_PREVIEW_QUERY = gql`
           username
         }
       }
+      reviews(limit: $reviewsLimit, offset: $reviewsOffset) {
+        id
+        rating
+        review
+        votes
+        author
+        myVote
+        dCreated
+        dModified
+      }
+      likes(limit: $likesLimit, offset: $likesOffset) {
+        id
+        vote {
+          id
+          likes
+          dislikes
+          myVote
+        }
+      }
     }
   }
-`
+`)
 
-export interface UserPreviewVars {
-  id?: number
-  collectionsLimit?: number
-  collectionsOffset?: number
-  fragrancesLimit?: number
-  fragrancesOffset?: number
-  fragranceImagesLimit?: number
-  fragranceImagesOffset?: number
-}
-
-export interface FragrancePreview {
-  id: number
-  images: FragranceImage[]
-}
-
-export type FragrancePreviewCollectionUser = Pick<User, 'username'>
-
-export interface FragrancePreviewCollection {
-  id: number
-  name: string
-  fragrances: FragrancePreview[]
-  user: FragrancePreviewCollectionUser
-}
-
-export type UserPreview = Pick<User, 'id' | 'username' | 'followers' | 'following'> & {
-  collections: FragrancePreviewCollection[]
-}
-
-export interface UserPreviewData {
-  user: UserPreview
-}
-
-const useUserPreview = (variables: UserPreviewVars) => {
-  const { data, loading, error } = useQuery<UserPreviewData, UserPreviewVars>(USER_PREVIEW_QUERY, { variables })
+const useUserPreview = (variables: UserPreviewQueryVariables) => {
+  const { data, loading, error } = useQuery(USER_PREVIEW_QUERY, { variables })
 
   return {
     user: data?.user || null,

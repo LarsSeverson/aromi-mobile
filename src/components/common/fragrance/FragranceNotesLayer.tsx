@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import { FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
 import React, { useCallback } from 'react'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
@@ -12,8 +12,8 @@ import FragranceNoteCard from './FragranceNoteCard'
 
 export interface FragranceNotesLayerProps {
   notes: FragranceNote[]
-  layer: NoteLayerType
-  onExpanded?: (layer: NoteLayerType) => void
+  layer: NoteLayer
+  onExpanded?: (layer: NoteLayer) => void
 }
 
 const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {

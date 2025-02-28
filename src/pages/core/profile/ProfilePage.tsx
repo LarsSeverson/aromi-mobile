@@ -3,13 +3,13 @@ import React from 'react'
 import UserPortrait from '@/src/components/profile/UserPortrait'
 import UserCollections from '@/src/components/profile/UserCollections'
 import { AuthUser } from '@/src/hooks/useAuth'
-import { UserPreview } from '@/src/hooks/useUserPreview'
 import UserLikes from '@/src/components/profile/UserLikes'
 import UserReviews from '@/src/components/profile/UserReviews'
 import { ScrollView } from 'react-native-gesture-handler'
+import { UserPreviewQuery } from '@/src/gql/graphql'
 
 export interface ProfilePageProps {
-  user: UserPreview | null
+  user: UserPreviewQuery['user'] | null
   currentUser?: AuthUser | null | undefined
 }
 

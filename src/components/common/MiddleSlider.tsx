@@ -6,7 +6,7 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 
 export interface MiddleSliderProps {
-  value?: number
+  value?: number | undefined
   min?: number
   max?: number
   focusPoints?: Array<number>

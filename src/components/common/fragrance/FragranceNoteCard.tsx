@@ -1,7 +1,7 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { FragranceNote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceNote } from '@/src/gql/graphql'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Image } from 'expo-image'

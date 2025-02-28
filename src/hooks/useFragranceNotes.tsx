@@ -1,6 +1,6 @@
-import { Fragrance, FragranceNote, NoteLayerType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useCallback, useRef, useState } from 'react'
+import { Fragrance, FragranceNote, NoteLayer } from '../gql/graphql'
 
 const DEFAULT_LIMIT = 12
 const DEFAULT_OFFSET = 0
@@ -80,7 +80,7 @@ const VOTE_ON_NOTE = gql`
 export interface VoteOnNoteVars {
   fragranceId: number
   noteId: number
-  layer: NoteLayerType
+  layer: NoteLayer
   myVote: boolean
 }
 
@@ -90,7 +90,7 @@ export interface VoteOnNoteData {
 
 export interface UseFragranceNotesVars {
   id: number
-  layers: NoteLayerType[]
+  layers: NoteLayer[]
   fill?: boolean | undefined
   limit?: number | undefined
   offset?: number | undefined
@@ -105,9 +105,9 @@ const useFragranceNotes = (vars: UseFragranceNotesVars) => {
     offset
   } = vars
 
-  const includeTop = layers.includes(NoteLayerType.TOP)
-  const includeMiddle = layers.includes(NoteLayerType.MIDDLE)
-  const includeBase = layers.includes(NoteLayerType.BASE)
+  const includeTop = layers.includes(NoteLayer.Top)
+  const includeMiddle = layers.includes(NoteLayer.Middle)
+  const includeBase = layers.includes(NoteLayer.Base)
 
   const localVariables = useRef({
     id,

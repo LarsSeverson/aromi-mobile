@@ -1,9 +1,9 @@
 import { AuthError, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
 import { useCallback, useEffect, useState } from 'react'
 import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './utils/AuthErrors'
-import { User } from '@/aromi-backend/src/graphql/types/userTypes'
 import { useClientContext } from '../contexts/ClientContext'
 import useUpsertUser from './useUpsertUser'
+import { User } from '../gql/graphql'
 
 export enum AuthState {
   UNAUTHENTICATED = 'UNAUTHENTICATED',

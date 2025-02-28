@@ -1,8 +1,8 @@
 import React from 'react'
 import { Stack, useRouter } from 'expo-router'
-import HeaderBackButton from '@/src/components/navigation/HeaderBackButton'
 import { useTheme } from 'react-native-paper'
 import { TextStyles } from '@/src/constants/TextStyles'
+import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButton'
 
 const AuthLayout = () => {
   const router = useRouter()

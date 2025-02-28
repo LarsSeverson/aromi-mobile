@@ -2,8 +2,8 @@ import ReactNative, { StyleSheet, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Dialog, Portal, TextInput, Text } from 'react-native-paper'
-import TextButton from '../common/TextButton'
-import ButtonText from '../common/ButtonText'
+import TextButton from '../TextButton'
+import ButtonText from '../ButtonText'
 import { TextStyles } from '@/src/constants/TextStyles'
 
 interface ConfirmationCodeProps {

@@ -6,7 +6,7 @@ import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AIcon from 'react-native-vector-icons/AntDesign'
 import { Colors } from '@/src/constants/Colors'
 import RatingStars from '../../common/RatingStars'
-import { FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceVote } from '@/src/gql/graphql'
 
 export interface FragranceHeadingProps {
   name: string
@@ -32,7 +32,7 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
   } = props
 
   const localVote = useRef(vote)
-  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote)
+  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote || null)
 
   const counts = useMemo(() => {
     const { likes, dislikes, myVote } = localVote.current

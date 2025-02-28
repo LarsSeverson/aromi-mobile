@@ -2,11 +2,11 @@ import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
-import ConfirmationCode from '@/src/components/auth/ConfirmationCode'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import InvalidPage from '../InvalidPage'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import { useAuthContext } from '@/src/contexts/AuthContext'
+import ConfirmationCode from '@/src/components/common/auth/ConfirmationCode'
 
 export interface ConfirmPasswordResetPageProps {
   onContinue: (email: string, code: string) => void

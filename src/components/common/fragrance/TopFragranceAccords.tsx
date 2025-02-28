@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import AccordsLadder from './AccordsLadder'
 import FragranceCategory from './FragranceCategory'
-import { FragranceAccord } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import FragranceEmpty from './FragranceEmpty'
+import { FragranceAccord } from '@/src/gql/graphql'
 
 export interface FragranceAccordsPreviewProps {
   accords: FragranceAccord[]

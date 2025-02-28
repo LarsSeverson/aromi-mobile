@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gql } from '@apollo/client/core'
-import { Fragrance, FragranceVote } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { useMutation, useQuery } from '@apollo/client'
 import useVoteOnFragrance from './useVoteOnFragrance'
+import { Fragrance } from '../gql/graphql'
 
 const DEFAULT_LIMIT = 20
 const DEFAULT_OFFSET = 0

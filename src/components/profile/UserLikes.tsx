@@ -1,7 +1,7 @@
 import React from 'react'
 import ProfileCategory from './ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { UserPreviewQuery } from '@/src/gql/graphql'
 
 const getEmptyLikesText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? "You haven't liked any fragrances yet" : `${username} hasn't liked any fragrances yet`,
@@ -10,8 +10,10 @@ const getEmptyLikesText = (isOwner: boolean, username: string) => ({
     : 'Check back later to see what fragrances they like'
 })
 
+type Fragrances = NonNullable<UserPreviewQuery['user']>['likes']
+
 export interface UserLikesProps {
-  fragrances: Fragrance[]
+  fragrances: Fragrances
   username: string
   isOwner?: boolean | undefined
 }

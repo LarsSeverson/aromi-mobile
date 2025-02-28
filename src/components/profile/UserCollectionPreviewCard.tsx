@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { FragrancePreviewCollection } from '@/src/hooks/useUserPreview'
 import { Text } from 'react-native-paper'
 import GridImages from '../common/GridImages'
+import { UserPreviewQuery } from '@/src/gql/graphql'
+
+type Collection = NonNullable<UserPreviewQuery['user']>['collections'][number]
 
 export interface UserCollectionPreviewCardProps {
-  collection: FragrancePreviewCollection
+  collection: Collection
 }
 
 const UserCollectionPreviewCard = (props: UserCollectionPreviewCardProps) => {

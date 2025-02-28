@@ -1,6 +1,6 @@
-import { Fragrance, FragranceTrait, FragranceTraitType } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useCallback } from 'react'
+import { Fragrance, FragranceTrait, FragranceTraitType } from '../gql/graphql'
 
 const FRAGRANCE_TRAITS_QUERY = gql`
   query FragranceTraits($id: Int!) {

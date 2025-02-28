@@ -1,6 +1,6 @@
-import { Fragrance, FragranceReview, FragranceReviewDistribution } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useQuery } from '@apollo/client'
 import { useCallback, useRef, useState } from 'react'
+import { Fragrance, FragranceReviewDistribution } from '../gql/graphql'
 
 const DEFAULT_LIMIT = 10
 const DEFAULT_OFFSET = 0

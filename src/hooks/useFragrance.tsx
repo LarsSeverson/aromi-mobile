@@ -1,7 +1,7 @@
-import { Fragrance } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { DocumentNode, gql, useQuery } from '@apollo/client'
 import { useCallback, useRef } from 'react'
 import useVoteOnFragrance from './useVoteOnFragrance'
+import { Fragrance } from '../gql/graphql'
 
 const DEFAULT_IMAGES_LIMIT = 5
 const DEFAULT_ACCORDS_LIMIT = 8

@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import BouncyButtonGroup from '@/src/components/common/BouncyButtonGroup'
 import { Colors } from '@/src/constants/Colors'
 import { useRouter } from 'expo-router'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import useAuth from '@/src/hooks/useAuth'
 
 const ProfileSettingsPage = () => {

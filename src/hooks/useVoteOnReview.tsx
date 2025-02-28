@@ -1,8 +1,9 @@
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useCallback } from 'react'
+import { graphql } from '../gql'
+import { FragranceReview, VoteOnReviewMutationVariables } from '../gql/graphql'
 
-const VOTE_ON_REVIEW_MUTATION = gql`
+const VOTE_ON_REVIEW_MUTATION = graphql(/* GraphQL */`
   mutation VoteOnReview($reviewId: Int!, $myVote: Boolean) {
     voteOnReview(reviewId: $reviewId, myVote: $myVote) {
       id
@@ -10,21 +11,12 @@ const VOTE_ON_REVIEW_MUTATION = gql`
       myVote
     }
   }
-`
-
-export interface VoteOnReviewVars {
-  reviewId: number
-  myVote: boolean | null
-}
-
-export interface VoteOnReviewData {
-  voteOnReview: FragranceReview
-}
+`)
 
 const useVoteOnReview = () => {
-  const [voteOnReviewMutation, { loading, error }] = useMutation<VoteOnReviewData, VoteOnReviewVars>(VOTE_ON_REVIEW_MUTATION)
+  const [voteOnReviewMutation, { loading, error }] = useMutation(VOTE_ON_REVIEW_MUTATION)
 
-  const voteOnReview = useCallback((variables: VoteOnReviewVars, review: FragranceReview) => {
+  const voteOnReview = useCallback((variables: VoteOnReviewMutationVariables, review: FragranceReview) => {
     const myVote = variables.myVote
     const curVotes = review.votes
 

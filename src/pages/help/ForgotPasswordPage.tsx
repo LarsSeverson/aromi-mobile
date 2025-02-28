@@ -5,7 +5,7 @@ import TextButton from '@/src/components/common/TextButton'
 import ButtonText from '@/src/components/common/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 import { TextStyles } from '@/src/constants/TextStyles'
-import { showNotifaction } from '@/src/components/notify/ShowNotification'
+import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
 import useAuth from '@/src/hooks/useAuth'
 
 export interface ForgotPasswordProps {

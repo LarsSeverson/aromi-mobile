@@ -1,11 +1,10 @@
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import React from 'react'
-import { FragranceImage } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { FragranceImage } from '@/src/gql/graphql'
 import ImageCarousel from '../../common/ImageCarousel'
 import BouncyButton from '../../common/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
-import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 
 export interface FragranceImageCarouselProps {

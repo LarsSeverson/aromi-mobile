@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client'
-import { User } from '@/aromi-backend/src/graphql/types/userTypes'
+import { User } from '../gql/graphql'
 
 const UPSERT_USER_MUTATION = gql`
   mutation UpsertUser($email: String!, $cognitoId: String!) {

@@ -1,6 +1,5 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import React, { useCallback, useState } from 'react'
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import RatingStars from '../../common/RatingStars'
@@ -8,6 +7,7 @@ import ExpandableParagraph from '../../common/ExpandableParagraph'
 import VoteButton from '../../common/VoteButton'
 import useVoteOnReview from '@/src/hooks/useVoteOnReview'
 import { Colors } from '@/src/constants/Colors'
+import { FragranceReview } from '@/src/gql/graphql'
 
 const formatDate = (date: string | Date): string => {
   const parsedDate = typeof date === 'string' ? new Date(date) : date
@@ -16,8 +16,13 @@ const formatDate = (date: string | Date): string => {
   return parsedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export interface FragranceReviewCardProps {
-  review: FragranceReview
+export type RequiredFragranceReviewProps = Pick<
+  FragranceReview,
+  'id' | 'author' | 'review' | 'rating' | 'dCreated' | 'dModified' | 'votes' | 'myVote'
+>
+
+export interface FragranceReviewCardProps<T extends RequiredFragranceReviewProps = RequiredFragranceReviewProps> {
+  review: T
   withVotes?: boolean | undefined
   expandable?: boolean | undefined
 

@@ -1,10 +1,9 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
+import { StyleSheet } from 'react-native'
 import ProfileCategory from './ProfileCategory'
-import FragranceReviewCard from '../home/fragrance-page/FragranceReviewCard'
+import FragranceReviewCard from '../common/fragrance/FragranceReviewCard'
 import ProfileEmpty from './ProfileEmpty'
+import { UserPreviewQuery } from '@/src/gql/graphql'
 
 const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no reviews' : `${username} has no reviews`,
@@ -13,8 +12,10 @@ const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
     : 'Check back later to see what reviews they share.'
 })
 
+type Reviews = NonNullable<UserPreviewQuery['user']>['reviews']
+
 export interface UserReviewsProps {
-  reviews: FragranceReview[]
+  reviews: Reviews
   username: string
   isOwner?: boolean | undefined
 }

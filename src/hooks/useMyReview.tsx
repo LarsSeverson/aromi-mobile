@@ -1,6 +1,6 @@
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import { gql, useLazyQuery } from '@apollo/client'
 import { useCallback } from 'react'
+import { FragranceReview } from '../gql/graphql'
 
 const MY_REVIEW_QUERY = gql`
   query MyReview($fragranceId: Int!) {

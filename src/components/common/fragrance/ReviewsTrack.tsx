@@ -1,8 +1,8 @@
 import { StyleSheet, ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
-import { FragranceReview } from '@/aromi-backend/src/graphql/types/fragranceTypes'
 import PressableList, { PressableListProps, PressableRenderItemProps } from '../../common/PressableList'
 import FragranceReviewCard from './FragranceReviewCard'
+import { FragranceReview } from '@/src/gql/graphql'
 
 export interface ReviewsTrackProps extends Omit<PressableListProps<FragranceReview>, 'data' | 'onRenderItem' | 'style'> {
   reviews: FragranceReview[]
