@@ -1,5 +1,5 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
+import React, { useCallback } from 'react'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
 import RatingStars from '../../common/RatingStars'
@@ -7,7 +7,7 @@ import ExpandableParagraph from '../../common/ExpandableParagraph'
 import VoteButton from '../../common/VoteButton'
 import useVoteOnReview from '@/src/hooks/useVoteOnReview'
 import { Colors } from '@/src/constants/Colors'
-import { FragranceReview } from '@/src/gql/graphql'
+import { type FragranceReview } from '@/src/generated/graphql'
 
 const formatDate = (date: string | Date): string => {
   const parsedDate = typeof date === 'string' ? new Date(date) : date
@@ -16,13 +16,12 @@ const formatDate = (date: string | Date): string => {
   return parsedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export type RequiredFragranceReviewProps = Pick<
-  FragranceReview,
-  'id' | 'author' | 'review' | 'rating' | 'dCreated' | 'dModified' | 'votes' | 'myVote'
+export type CardFragranceReview = Pick<FragranceReview,
+'id' | 'author' | 'review' | 'rating' | 'dCreated' | 'dModified' | 'votes' | 'myVote'
 >
 
-export interface FragranceReviewCardProps<T extends RequiredFragranceReviewProps = RequiredFragranceReviewProps> {
-  review: T
+export interface FragranceReviewCardProps {
+  review: CardFragranceReview
   withVotes?: boolean | undefined
   expandable?: boolean | undefined
 
@@ -37,14 +36,13 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
     author,
     review: text,
     rating,
-    dCreated,
-    dModified
+    dCreated
   } = review
 
-  const { voteOnReview, loading, error } = useVoteOnReview()
+  const { voteOnReview } = useVoteOnReview()
 
   const handleOnVote = useCallback((vote: boolean | null) => {
-    voteOnReview({ myVote: vote, reviewId: review.id }, review)
+    void voteOnReview({ myVote: vote, reviewId: review.id }, review)
   }, [review, voteOnReview])
 
   return (
@@ -65,10 +63,10 @@ const FragranceReviewCard = (props: FragranceReviewCardProps) => {
       <ExpandableParagraph
         text={text}
         numLines={4}
-        disabled={!expandable}
+        disabled={!(expandable ?? false)}
       />
       <View style={styles.ratingWrapper}>
-        {withVotes &&
+        {(withVotes ?? false) &&
           <VoteButton
             votes={review.votes}
             onVote={handleOnVote}

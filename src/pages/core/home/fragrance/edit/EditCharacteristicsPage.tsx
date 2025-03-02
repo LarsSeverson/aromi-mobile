@@ -6,82 +6,91 @@ import { AllureIcon, BalanceIcon, ComplexityIcon, GenderIcon, LongevityIcon, Sil
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useFragranceTraits from '@/src/hooks/useFragranceTraits'
-import { FragranceTrait } from '@/src/gql/graphql'
-import EditFragranceSlider from '@/src/components/common/fragrance/EditFragranceSlider'
+import TraitSliderProps, { type CardFragranceTrait } from '@/src/components/common/fragrance/TraitSlider'
+import useVoteOnTrait from '@/src/hooks/useVoteOnTrait'
 
 const EditCharacteristicsPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)
 
   const {
-    fragranceTraits,
-    loading,
-    error,
-    refresh,
-    voteOnTrait
+    traits,
+    loading
   } = useFragranceTraits({ id: fragranceId })
 
-  const handleVoteChanged = useCallback((value: number, trait: FragranceTrait) => {
-    voteOnTrait({ fragranceId, trait: trait.trait, myVote: value }, trait)
+  const { voteOnTrait } = useVoteOnTrait()
+
+  const handleVoteChanged = useCallback((value: number, trait: CardFragranceTrait) => {
+    voteOnTrait({
+      fragranceId,
+      trait: trait.trait,
+      myVote: value
+    }, trait)
   }, [voteOnTrait, fragranceId])
 
   // TODO: Skeleton
-  if (!fragranceTraits || loading.traitsLoading) {
+  if (loading || traits == null) {
     return null
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
-      <ScrollView style={styles.editSlidesWrapper} showsVerticalScrollIndicator={false}>
-        <EditFragranceSlider
+    <SafeAreaView
+      style={{ flex: 1 }}
+      edges={['bottom']}
+    >
+      <ScrollView
+        style={styles.editSlidesWrapper}
+        showsVerticalScrollIndicator={false}
+      >
+        <TraitSliderProps
           label='gender'
           leftLabel='feminine'
           rightLabel='masculine'
-          trait={fragranceTraits.gender}
+          trait={traits.gender}
           icon={<GenderIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}
         />
-        <EditFragranceSlider
+        <TraitSliderProps
           label='longevity'
           leftLabel='very short'
           rightLabel='very long'
-          trait={fragranceTraits.longevity}
+          trait={traits.longevity}
           icon={<LongevityIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}
         />
-        <EditFragranceSlider
+        <TraitSliderProps
           label='sillage'
           leftLabel='intimate'
           rightLabel='expansive'
-          trait={fragranceTraits.sillage}
+          trait={traits.sillage}
           icon={<SillageIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}
         />
-        <EditFragranceSlider
+        <TraitSliderProps
           label='complexity'
           leftLabel='simple'
           rightLabel='intricate'
-          trait={fragranceTraits.complexity}
+          trait={traits.complexity}
           icon={<ComplexityIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}
         />
-        <EditFragranceSlider
+        <TraitSliderProps
           label='balance'
           leftLabel='unbalanced'
           rightLabel='harmonious'
-          trait={fragranceTraits.balance}
+          trait={traits.balance}
           icon={<BalanceIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}
         />
-        <EditFragranceSlider
+        <TraitSliderProps
           label='allure'
           leftLabel='unappealing'
           rightLabel='captivating'
-          trait={fragranceTraits.allure}
+          trait={traits.allure}
           icon={<AllureIcon />}
           style={styles.editSliderWrapper}
           onTraitChanged={handleVoteChanged}

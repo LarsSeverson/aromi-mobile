@@ -1,13 +1,15 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import React from 'react'
-import PressableList, { PressableListProps, PressableRenderItemProps } from '../../common/PressableList'
-import { FragranceNote } from '@/src/gql/graphql'
+import PressableList, { type PressableListProps, type PressableRenderItemProps } from '../../common/PressableList'
+import { type CardFragranceNote } from './FragranceNoteCard'
 
-export interface NotesTrackProps extends Omit<PressableListProps<FragranceNote>, 'data' | 'style' | 'onRenderItem'> {
-  notes: FragranceNote[]
+type PressableProps = Omit<PressableListProps<CardFragranceNote>, 'style' | 'data' | 'onRenderItem'>
+
+export interface NotesTrackProps extends PressableProps {
+  notes: CardFragranceNote[]
   wrapperStyle?: ViewStyle | undefined
   style?: ViewStyle | undefined
-  onRenderNote: (info: PressableRenderItemProps<FragranceNote>) => React.JSX.Element | null
+  onRenderNote: (info: PressableRenderItemProps<CardFragranceNote>) => React.JSX.Element | null
 }
 
 const NotesTrack = (props: NotesTrackProps) => {

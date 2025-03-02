@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { ReactNode } from 'react'
+import React, { type ReactNode } from 'react'
 import { Divider } from 'react-native-paper'
 import BouncyButtonGroupButton from './BouncyButtonGroupButton'
 import BouncyButton from './BouncyButton'
@@ -15,7 +15,7 @@ export interface BouncyButtonGroupComponent extends React.FC<BouncyButtonGroupPr
   ButtonRaw: typeof BouncyButton
 }
 
-const BouncyButtonGroup: BouncyButtonGroupComponent = (props: BouncyButtonGroupProps) => {
+const BouncyButtonGroup = (props: BouncyButtonGroupProps) => {
   const { children } = props
   const count = React.Children.count(children)
   const theme = useAppTheme()

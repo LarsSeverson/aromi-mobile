@@ -4,12 +4,13 @@ import { ScrollView } from 'react-native-gesture-handler'
 import BouncyButtonGroup from '@/src/components/common/BouncyButtonGroup'
 import { Colors } from '@/src/constants/Colors'
 import { useRouter } from 'expo-router'
-import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
-import useAuth from '@/src/hooks/useAuth'
+import { showNotifaction } from '@/src/common/show-notification'
+import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const ProfileSettingsPage = () => {
   const router = useRouter()
-  const { userSignOut } = useAuth()
+  const { userSignOut } = useAuthContext()
+
   const [loading, setLoading] = useState(false)
 
   const onSignOut = async () => {
@@ -18,18 +19,28 @@ const ProfileSettingsPage = () => {
     setLoading(false)
 
     if (success) {
-      return router.replace('/')
+      router.replace('/')
+      return
     }
 
-    if (error) {
+    if (error != null) {
       showNotifaction.error(error.message)
     }
+  }
+
+  if (loading) {
+    //
   }
 
   return (
     <ScrollView style={styles.wrapper}>
       <BouncyButtonGroup>
-        <BouncyButtonGroup.Button text='Sign out' contentColor={Colors.negative} iconRightProps={{ name: 'logout', type: 'material-community' }} onPress={onSignOut} />
+        <BouncyButtonGroup.Button
+          text='Sign out'
+          contentColor={Colors.negative}
+          iconRightProps={{ name: 'logout', type: 'material-community' }}
+          onPress={() => { void onSignOut() }}
+        />
       </BouncyButtonGroup>
     </ScrollView>
   )

@@ -16,8 +16,17 @@ const HeaderCloseButton = () => {
   }
 
   return (
-    <BouncyButton scaleTo={0.95} style={styles.wrapper} onPress={closeStack}>
-      <Icon name='x' type='octicon' size={iconSize} color={theme.colors.card} />
+    <BouncyButton
+      scaleTo={0.95}
+      style={styles.wrapper}
+      onPress={closeStack}
+    >
+      <Icon
+        name='x'
+        type='octicon'
+        size={iconSize}
+        color={theme.colors.card}
+      />
     </BouncyButton>
   )
 }

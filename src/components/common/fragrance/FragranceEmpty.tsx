@@ -1,22 +1,24 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
 
 export interface EmptyPropertyProps {
   headline: string
   body?: string
-
   style?: ViewStyle
 }
 
-const FragranceEmpty: React.FC<EmptyPropertyProps> = (props: EmptyPropertyProps) => {
+const FragranceEmpty = (props: EmptyPropertyProps) => {
   const { headline, body, style } = props
 
   return (
     <View style={StyleSheet.compose(styles.wrapper, style)}>
       <Text variant='titleSmall'>{headline}</Text>
-      <Text variant='labelMedium' style={styles.bodyWrapper}>
-        {body || 'Tried this fragrance? Help out the community by sharing your experience'}
+      <Text
+        variant='labelMedium'
+        style={styles.bodyWrapper}
+      >
+        {body ?? 'Tried this fragrance? Help out the community by sharing your experience'}
       </Text>
     </View>
   )

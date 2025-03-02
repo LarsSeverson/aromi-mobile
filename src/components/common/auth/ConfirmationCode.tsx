@@ -1,4 +1,5 @@
-import ReactNative, { StyleSheet, View } from 'react-native'
+import type ReactNative from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Dialog, Portal, TextInput, Text } from 'react-native-paper'
@@ -15,14 +16,14 @@ interface ConfirmationCodeProps {
   onReset: () => void
 }
 
-const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCodeProps) => {
+const ConfirmationCode = (props: ConfirmationCodeProps) => {
   const { to, length = 6, loading, onCompleted, onEdit, onReset } = props
 
-  const [codes, setCodes] = useState(Array(length).fill(''))
+  const [codes, setCodes] = useState<string[]>(Array(length).fill(''))
   const [codesValid, setCodesValid] = useState<boolean | null>(null)
   const [dialogVisible, setDialogVisible] = useState(false)
 
-  const inputsRef = useRef<Array<ReactNative.TextInput>>([])
+  const inputsRef = useRef<ReactNative.TextInput[]>([])
 
   const continueForm = () => {
     const code = codes.join('').trim()
@@ -46,7 +47,7 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
       setCodesValid(null)
     }
     updateCode(index, text)
-    if (text.length && index + 1 < length) {
+    if ((text.length !== 0) && index + 1 < length) {
       inputsRef.current[index + 1].focus()
     }
   }
@@ -67,7 +68,16 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
     <View style={styles.wrapper}>
       <Text variant='titleMedium'>Enter your confirmation code</Text>
       <View style={{ gap: 20 }}>
-        <Text style={styles.sentToWrapper}>sent to: {to}   •<TextButton text='Edit' style={styles.toWrapper} onPress={onEdit} /></Text>
+        <Text
+          style={styles.sentToWrapper}
+        >
+          sent to: {to}   •
+          <TextButton
+            text='Edit'
+            style={styles.toWrapper}
+            onPress={onEdit}
+          />
+        </Text>
         <View>
           <View style={styles.codesWrapper}>
             {codes.map((code, index) => (
@@ -82,18 +92,41 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
                 autoFocus={index === 0}
                 style={styles.codeWrapper}
                 contentStyle={styles.codeInputWrapper}
-                onChangeText={text => textChange(text, index)}
-                onKeyPress={e => keyPress(e, index)}
+                onChangeText={text => { textChange(text, index) }}
+                onKeyPress={e => { keyPress(e, index) }}
               />
             ))}
           </View>
-          <Text style={[TextStyles.smallInputFeedback, { opacity: codesValid === false ? 1 : 0, marginTop: 10, marginBottom: -10 }]}>Enter the complete 6-digit code</Text>
+          <Text
+            style={[TextStyles.smallInputFeedback, {
+              opacity: codesValid === false ? 1 : 0,
+              marginTop: 10,
+              marginBottom: -10
+            }]}
+          >
+            Enter the complete 6-digit code
+          </Text>
         </View>
-        <TextButton text="Didn't get a code?" scaleTo={0.997} onPress={() => setDialogVisible(true)} />
-        <ButtonText text='Continue' loading={loading || false} color={Colors.sinopia} loadingColor={Colors.white} textColor={Colors.white} onPress={continueForm} />
+        <TextButton
+          text="Didn't get a code?"
+          scaleTo={0.997}
+          onPress={() => { setDialogVisible(true) }}
+        />
+        <ButtonText
+          text='Continue'
+          loading={loading ?? false}
+          color={Colors.sinopia}
+          loadingColor={Colors.white}
+          textColor={Colors.white}
+          onPress={continueForm}
+        />
       </View>
       <Portal>
-        <Dialog dismissable={false} visible={dialogVisible} style={styles.dialogWrapper}>
+        <Dialog
+          dismissable={false}
+          visible={dialogVisible}
+          style={styles.dialogWrapper}
+        >
           <Dialog.Content style={styles.dialogContentWrapper}>
             <View>
               <ButtonText
@@ -119,7 +152,7 @@ const ConfirmationCode: React.FC<ConfirmationCodeProps> = (props: ConfirmationCo
               text='Cancel'
               color={Colors.white}
               style={styles.dialogGroupWrapper}
-              onPress={() => setDialogVisible(false)}
+              onPress={() => { setDialogVisible(false) }}
             />
           </Dialog.Content>
         </Dialog>

@@ -1,6 +1,6 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { Icon } from 'react-native-elements'
 import { useAppTheme } from '@/src/constants/Themes'
 
 export interface RatingStarsProps {
@@ -11,9 +11,16 @@ export interface RatingStarsProps {
   style?: StyleProp<ViewStyle>
 }
 
-const RatingStars: React.FC<RatingStarsProps> = (props: RatingStarsProps) => {
+const RatingStars = (props: RatingStarsProps) => {
   const theme = useAppTheme()
-  const { rating, size = 15, filledColor = theme.colors.card, emptyColor = theme.colors.card, style } = props
+
+  const {
+    rating,
+    size = 15,
+    filledColor = theme.colors.card,
+    emptyColor = theme.colors.card,
+    style
+  } = props
 
   const transformFillPercentage = useCallback((percentage: number): number => {
     const center = 50
@@ -35,18 +42,23 @@ const RatingStars: React.FC<RatingStarsProps> = (props: RatingStarsProps) => {
     const width = fillPercentage === 100 ? fillPercentage : transformFillPercentage(fillPercentage)
 
     return (
-      <View key={index} style={{ width: size, height: size, marginRight: 2 }}>
-        <Icon name='star-o' size={size} color={emptyColor} />
-        <View style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: `${width}%`,
-          height: size,
-          overflow: 'hidden'
-        }}
-        >
-          <Icon name='star' size={size} color={filledColor} />
+      <View
+        key={index}
+        style={{ width: size, height: size, marginRight: 2 }}
+      >
+        <Icon
+          type='font-awesome'
+          name='star-o'
+          size={size}
+          color={emptyColor}
+        />
+        <View style={[styles.starWrapper, { width: `${width}%`, height: size }]}>
+          <Icon
+            type='font-awesome'
+            name='star'
+            size={size}
+            color={filledColor}
+          />
         </View>
       </View>
     )
@@ -60,5 +72,11 @@ export default RatingStars
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row'
+  },
+  starWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    overflow: 'hidden'
   }
 })

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
-import BouncyButton, { BouncyButtonProps } from './BouncyButton'
+import BouncyButton, { type BouncyButtonProps } from './BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
 
 export interface FeedbackButtonProps extends BouncyButtonProps {
@@ -10,19 +10,21 @@ export interface FeedbackButtonProps extends BouncyButtonProps {
   textColor?: string | undefined
 }
 
-const FeedbackButton: React.FC<FeedbackButtonProps> = (props: FeedbackButtonProps) => {
+const FeedbackButton = (props: FeedbackButtonProps) => {
   const theme = useAppTheme()
   const { text, color, textColor, ...rest } = props
 
   return (
     <BouncyButton
       style={[styles.wrapper, {
-        borderColor: color ? 'transparent' : theme.colors.surfaceDisabled,
+        borderColor: (color != null) ? 'transparent' : theme.colors.surfaceDisabled,
         backgroundColor: color
       }]}
       {...rest}
     >
-      <Text style={{ color: textColor }}>{text || 'are we missing something?'}</Text>
+      <Text style={{ color: textColor }}>
+        {text ?? 'are we missing something?'}
+      </Text>
     </BouncyButton>
   )
 }

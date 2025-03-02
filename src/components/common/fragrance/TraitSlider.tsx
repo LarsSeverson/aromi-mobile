@@ -1,12 +1,14 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useCallback } from 'react'
-import MiddleSlider, { MiddleSliderProps } from '../../common/MiddleSlider'
+import MiddleSlider, { type MiddleSliderProps } from '../MiddleSlider'
 import { Colors } from '@/src/constants/Colors'
-import { FragranceTrait } from '@/src/gql/graphql'
+import { type FragranceTrait } from '@/src/generated/graphql'
 
-export interface EditFragranceSliderProps extends MiddleSliderProps {
-  trait: FragranceTrait
+export type CardFragranceTrait = Pick<FragranceTrait, 'id' | 'value' | 'trait' | 'myVote'>
+
+export interface TraitSliderProps extends MiddleSliderProps {
+  trait: CardFragranceTrait
 
   label?: string | undefined
   leftLabel?: string | undefined
@@ -16,10 +18,10 @@ export interface EditFragranceSliderProps extends MiddleSliderProps {
 
   style?: ViewStyle | undefined
 
-  onTraitChanged?: (value: number, trait: FragranceTrait) => void | undefined
+  onTraitChanged?: (value: number, trait: CardFragranceTrait) => void
 }
 
-const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFragranceSliderProps) => {
+const TraitSlider = (props: TraitSliderProps) => {
   const {
     trait,
     label,
@@ -39,18 +41,26 @@ const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFrag
     <View style={StyleSheet.compose(styles.wrapper, style)}>
       {icon}
 
-      {label && <Text style={{ alignSelf: 'center', margin: -10 }}>{label}</Text>}
+      {(label != null) && (
+        <Text style={styles.label}>
+          {label}
+        </Text>)}
 
       <View style={styles.storedDataContainer}>
         <View style={[styles.storedDataWrapper, { flexDirection: 'row-reverse' }]}>
-          <View style={{ width: `${100 - trait.value}%`, borderRadius: 20, backgroundColor: Colors.pink }} />
+          <View style={[styles.leftTrack, { width: `${100 - trait.value}%` }]} />
         </View>
         <View style={styles.storedDataWrapper}>
-          <View style={{ width: `${trait.value}%`, height: '100%', borderRadius: 20, backgroundColor: Colors.button }} />
+          <View style={[styles.rightTrack, { width: `${trait.value}%` }]} />
         </View>
       </View>
 
-      <MiddleSlider value={trait.myVote || undefined} focusPoints={[16, 32, 50, 66, 84]} {...rest} onValueChange={handleValueChanged} />
+      <MiddleSlider
+        value={trait.myVote ?? undefined}
+        focusPoints={[16, 32, 50, 66, 84]}
+        {...rest}
+        onValueChange={handleValueChanged}
+      />
 
       <View style={styles.labelsWrapper}>
         <Text style={{ opacity: 0.6 }}>{leftLabel}</Text>
@@ -60,7 +70,7 @@ const EditFragranceSlider: React.FC<EditFragranceSliderProps> = (props: EditFrag
   )
 }
 
-export default EditFragranceSlider
+export default TraitSlider
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -82,5 +92,17 @@ const styles = StyleSheet.create({
   labelsWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  leftTrack: {
+    borderRadius: 20,
+    backgroundColor: Colors.pink
+  },
+  rightTrack: {
+    borderRadius: 20,
+    backgroundColor: Colors.button
+  },
+  label: {
+    alignSelf: 'center',
+    margin: -10
   }
 })

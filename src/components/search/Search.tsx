@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 
-const Search: React.FC = () => {
+const Search = () => {
   return (
     <View style={styles.wrapper}>
       <Text>Search</Text>

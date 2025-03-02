@@ -7,7 +7,7 @@ interface ClientProviderProps {
   children: React.ReactNode
 }
 
-export const ClientProvider: React.FC<ClientProviderProps> = (props: ClientProviderProps) => {
+export const ClientProvider = (props: ClientProviderProps) => {
   const { children } = props
   const { client, refresh, reset } = useClient()
 

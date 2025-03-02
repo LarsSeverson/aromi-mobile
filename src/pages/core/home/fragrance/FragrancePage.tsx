@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import useFragrance, { FragranceVars } from '@/src/hooks/useFragrance'
+import useFragrance from '@/src/hooks/useFragrance'
 import { Divider } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
@@ -15,44 +15,22 @@ import TopFragranceAccords from '@/src/components/common/fragrance/TopFragranceA
 import TopFragranceNotes from '@/src/components/common/fragrance/TopFragranceNotes'
 import TopFragranceCharacteristics from '@/src/components/common/fragrance/TopFragranceCharacteristics'
 import TopFragranceReviews from '@/src/components/common/fragrance/TopFragranceReviews'
-
-const BASE_IMAGES_LIMIT = 5
-const BASE_NOTES_LIMIT = 10
-const BASE_ACCORDS_LIMIT = 8
-const BASE_OFFSET = 0
-const BASE_FILL = false
+import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 
 const FragrancePage = () => {
   const router = useRouter()
-  const fragranceId = useRef(Number(useLocalSearchParams().fragranceId as string))
+  const fragranceId = useRef(Number(useLocalSearchParams<{ fragranceId: string }>()))
 
-  const fragranceVariables = useRef<FragranceVars>({
-    id: fragranceId.current,
-    imagesLimit: BASE_IMAGES_LIMIT,
-    imagesOffset: BASE_OFFSET,
-
-    notesLimit: BASE_NOTES_LIMIT,
-    notesOffset: BASE_OFFSET,
-    notesFill: BASE_FILL,
-
-    accordsLimit: BASE_ACCORDS_LIMIT,
-    accordsOffset: BASE_OFFSET,
-    accordsFill: BASE_FILL
-  })
-
-  const {
-    fragrance,
-    loading,
-    error,
-    refresh,
-    voteOnFragrance
-  } = useFragrance({ variables: fragranceVariables.current })
+  const { fragrance, loading } = useFragrance({ id: fragranceId.current })
+  const { voteOnFragrance } = useVoteOnFragrance()
 
   const onFragranceVote = useCallback((myVote: boolean | null) => {
-    if (!fragrance) return
+    if (fragrance == null) return
 
-    const vars = { fragranceId: fragrance.id, myVote }
-    voteOnFragrance(vars, fragrance.vote)
+    const { id, vote } = fragrance
+    const vars = { fragranceId: id, myVote }
+
+    voteOnFragrance(vars, vote)
   }, [fragrance, voteOnFragrance])
 
   const gotoEditGender = useCallback(() => {
@@ -107,7 +85,7 @@ const FragrancePage = () => {
     })
   }, [router])
 
-  if (loading.fragranceLoading || !fragrance) {
+  if (loading || fragrance == null) {
     return null
   }
 

@@ -3,11 +3,12 @@ import React, { useCallback } from 'react'
 import NotesTrack from './NotesTrack'
 import { Text } from 'react-native-paper'
 import { useAppTheme } from '@/src/constants/Themes'
-import { PressableRenderItemProps } from '../../common/PressableList'
-import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
+import { type PressableRenderItemProps } from '../../common/PressableList'
+import { type CardFragranceNote } from './FragranceNoteCard'
+import { type NoteLayer } from '@/src/generated/graphql'
 
 export interface NotesPyramidRowProps {
-  notes: FragranceNote[]
+  notes: CardFragranceNote[]
   layer: NoteLayer
 }
 
@@ -15,8 +16,8 @@ const NotesPyramidRow = (props: NotesPyramidRowProps) => {
   const theme = useAppTheme()
   const { notes, layer } = props
 
-  const onRenderRowNote = useCallback(({ item: note }: PressableRenderItemProps<FragranceNote>) => {
-    if (!note) return null
+  const onRenderRowNote = useCallback(({ item: note }: PressableRenderItemProps<CardFragranceNote>) => {
+    if (note == null) return null
 
     return (
       <View style={styles.noteWrapper}>
@@ -32,7 +33,7 @@ const NotesPyramidRow = (props: NotesPyramidRowProps) => {
     )
   }, [theme])
 
-  if (!notes.length) {
+  if (notes.length === 0) {
     return null
   }
 

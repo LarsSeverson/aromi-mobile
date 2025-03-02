@@ -1,9 +1,10 @@
 import NavBar from '@/src/components/common/navigation/NavBar'
 import { Tabs } from 'expo-router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
+import { type BottomTabBarProps } from '@react-navigation/bottom-tabs'
 
-const CoreLayout: React.FC = () => {
-  const onRenderTabBar = useCallback((props: any) => {
+const CoreLayout = () => {
+  const onRenderTabBar = useCallback((props: BottomTabBarProps) => {
     return <NavBar {...props} />
   }, [])
 

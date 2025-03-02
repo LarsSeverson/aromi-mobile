@@ -1,60 +1,67 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { Identifiable, SelectableRenderItemProps } from '../../common/SelectableList'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
-import { FragranceAccord } from '@/src/gql/graphql'
+import { type FragranceAccord } from '@/src/generated/graphql'
 
-export interface SelectableAccordProps<T extends Identifiable> extends SelectableRenderItemProps<T> {
-  originallySelected: boolean
+export type CardFragranceAccord = Pick<FragranceAccord, 'id' | 'accordId' | 'name' | 'votes' | 'color' | 'myVote'>
+
+export interface FragranceAccordCardProps {
+  accord: CardFragranceAccord
+  selected?: boolean | undefined
 }
 
-const SelectableAccord: React.FC<SelectableAccordProps<FragranceAccord>> = (props: SelectableAccordProps<FragranceAccord>) => {
+const FragranceAccordCard = (props: FragranceAccordCardProps) => {
   const theme = useAppTheme()
 
   const {
-    item: accord,
-    selected,
-    originallySelected
+    accord,
+    selected
   } = props
 
-  const bg = accord?.color || theme.colors.surfaceDisabled
+  const bg = accord?.color ?? theme.colors.surfaceDisabled
 
   const selectedVotes = useMemo(() => {
-    if (!accord) return 0
+    if (accord == null) return 0
 
+    const originallySelected = accord.myVote === true
     const votes = accord.votes
 
-    const addOne = !originallySelected && selected
-    const subOne = originallySelected && !selected
+    const addOne = !originallySelected && (selected ?? false)
+    const subOne = originallySelected && !(selected ?? false)
 
     if (addOne) return votes + 1
     if (subOne) return votes - 1
 
     return votes
-  }, [accord, originallySelected, selected])
+  }, [accord, selected])
 
   return (
     <View style={{ padding: 5 }}>
-      <View style={[styles.accordItemWrapper, { borderColor: selected ? Colors.button : bg }]}>
+      <View style={[styles.accordItemWrapper, { borderColor: (selected ?? false) ? Colors.button : bg }]}>
         <View style={[
           styles.accordBackground,
           {
             backgroundColor: bg,
-            transform: [{ scale: selected ? 0.94 : 1 }]
+            transform: [{ scale: (selected ?? false) ? 0.94 : 1 }]
           }]}
         />
       </View>
       <View style={styles.accordName}>
-        <Text numberOfLines={1} ellipsizeMode='tail'>{accord?.name.toLowerCase()}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {accord?.name.toLowerCase()}
+        </Text>
         {selectedVotes > 0 && <Text>{selectedVotes}</Text>}
       </View>
     </View>
   )
 }
 
-export default SelectableAccord
+export default FragranceAccordCard
 
 const styles = StyleSheet.create({
   accordItemWrapper: {

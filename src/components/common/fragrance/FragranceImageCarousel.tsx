@@ -1,21 +1,21 @@
 import { StyleSheet, useWindowDimensions, View } from 'react-native'
 import React from 'react'
-import { FragranceImage } from '@/src/gql/graphql'
 import ImageCarousel from '../../common/ImageCarousel'
 import BouncyButton from '../../common/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
-import { useAppTheme } from '@/src/constants/Themes'
+import { type FragranceImage } from '@/src/generated/graphql'
+
+export type FragranceImageCarouselImage = Pick<FragranceImage, 'url'>
 
 export interface FragranceImageCarouselProps {
-  images: FragranceImage[]
+  images: FragranceImageCarouselImage[]
   onImagePressed?: (uri: string) => void
 }
 
 const FragranceImageCarousel = (props: FragranceImageCarouselProps) => {
-  const theme = useAppTheme()
   const { width } = useWindowDimensions()
-  const { images, onImagePressed } = props
+  const { images } = props
 
   return (
     <View style={styles.wrapper}>

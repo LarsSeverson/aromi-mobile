@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { useCallback } from 'react'
-import { graphql } from '../gql'
-import { FragranceReview, VoteOnReviewMutationVariables } from '../gql/graphql'
+import { graphql } from '../generated'
+import { type FragranceReview, type VoteOnReviewMutationVariables } from '../generated/graphql'
 
 const VOTE_ON_REVIEW_MUTATION = graphql(/* GraphQL */`
   mutation VoteOnReview($reviewId: Int!, $myVote: Boolean) {
@@ -16,16 +16,17 @@ const VOTE_ON_REVIEW_MUTATION = graphql(/* GraphQL */`
 const useVoteOnReview = () => {
   const [voteOnReviewMutation, { loading, error }] = useMutation(VOTE_ON_REVIEW_MUTATION)
 
-  const voteOnReview = useCallback((variables: VoteOnReviewMutationVariables, review: FragranceReview) => {
-    const myVote = variables.myVote
-    const curVotes = review.votes
+  const voteOnReview = useCallback(async (variables: VoteOnReviewMutationVariables, review: FragranceReview) => {
+    const myVote = variables.myVote ?? null
+    const voteDelta = myVote === null ? 0 : myVote ? 1 : -1
+    const curVotes = review.votes + voteDelta
 
-    return voteOnReviewMutation({
+    return await voteOnReviewMutation({
       variables,
       optimisticResponse: {
         voteOnReview: {
           ...review,
-          votes: myVote ? curVotes + 1 : curVotes - 1,
+          votes: curVotes,
           myVote
         }
       }

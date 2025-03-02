@@ -2,7 +2,7 @@ import React from 'react'
 import ProfileCategory from './ProfileCategory'
 import UserCollectionPreviewCard from './UserCollectionPreviewCard'
 import ProfileEmpty from './ProfileEmpty'
-import { UserPreviewQuery } from '@/src/gql/graphql'
+import { UserPreviewQuery } from '@/src/types/graphql'
 
 const getEmptyCollectionText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no collections' : `${username} has no collections`,

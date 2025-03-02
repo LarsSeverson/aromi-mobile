@@ -8,12 +8,17 @@
       ]
     }
   },
+  "exclude": [
+    "node_modules",
+    ".expo",
+    "android",
+    "ios",
+    "aromi-backend"
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "aromi-backend/src/graphql/schema/typeDefs.ts",
-    "aromi-backend/handler.ts"
+    "expo-env.d.ts"
   ]
 }

@@ -2,8 +2,8 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import { NoteLayer } from '@/src/gql/graphql'
 import FragranceNotesLayer from '@/src/components/common/fragrance/FragranceNotesLayer'
+import { NoteLayer } from '@/src/generated/graphql'
 
 const FragranceNoteLayersPage = () => {
   const router = useRouter()
@@ -12,9 +12,8 @@ const FragranceNoteLayersPage = () => {
 
   const {
     notes,
-    loading,
-    errors
-  } = useFragranceNotes({ id: fragranceId, layers: [NoteLayer.Top, NoteLayer.Middle, NoteLayer.Base] })
+    loading
+  } = useFragranceNotes({ id: fragranceId, includeTop: true, includeMiddle: true, includeBase: true })
 
   const handleOnExpanded = useCallback((layer: NoteLayer) => {
     router.push({
@@ -27,7 +26,7 @@ const FragranceNoteLayersPage = () => {
   }, [fragranceId, router])
 
   // TODO
-  if (loading.notesLoading || !notes) {
+  if (loading || notes == null) {
     return null
   }
 
@@ -35,17 +34,17 @@ const FragranceNoteLayersPage = () => {
     <View style={styles.wrapper}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
         <FragranceNotesLayer
-          notes={notes.top}
+          notes={notes.top ?? []}
           layer={NoteLayer.Top}
           onExpanded={handleOnExpanded}
         />
         <FragranceNotesLayer
-          notes={notes.middle}
+          notes={notes.middle ?? []}
           layer={NoteLayer.Middle}
           onExpanded={handleOnExpanded}
         />
         <FragranceNotesLayer
-          notes={notes.base}
+          notes={notes.base ?? []}
           layer={NoteLayer.Base}
           onExpanded={handleOnExpanded}
         />

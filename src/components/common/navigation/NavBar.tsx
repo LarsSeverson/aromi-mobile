@@ -1,13 +1,11 @@
 import { SafeAreaView, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import NavBarButton from './NavBarButton'
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { type BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import { useAppTheme } from '@/src/constants/Themes'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
-import { useNavigation } from 'expo-router'
 
-const NavBar: React.FC<BottomTabBarProps> = (props: BottomTabBarProps) => {
-  const nav = useNavigation()
+const NavBar = (props: BottomTabBarProps) => {
   const theme = useAppTheme()
   const { state } = props
 

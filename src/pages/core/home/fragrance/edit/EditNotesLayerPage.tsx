@@ -1,14 +1,14 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import useFragranceNotes from '@/src/hooks/useFragranceNotes'
-import SelectableList, { SelectableRenderItemProps } from '@/src/components/common/SelectableList'
+import SelectableList, { type SelectableRenderItemProps } from '@/src/components/common/SelectableList'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import SearchInput from '@/src/components/common/SearchInput'
-import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
-import FragranceNoteCard from '@/src/components/common/fragrance/FragranceNoteCard'
+import FragranceNoteCard, { type CardFragranceNote } from '@/src/components/common/fragrance/FragranceNoteCard'
+import { NoteLayer } from '@/src/generated/graphql'
+import useVoteOnNote from '@/src/hooks/useVoteOnNote'
 
 const DEFAULT_LIMIT = 30
 
@@ -17,44 +17,53 @@ const EditNotesLayerPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)
   const layer = useLocalSearchParams().layer as NoteLayer
 
-  const localSearchTerm = useRef('')
-
   const {
     notes,
     loading,
-    errors,
     hasMore,
-    getMore,
-    voteOnNote
-  } = useFragranceNotes({ id: fragranceId, layers: [layer], fill: true, limit: DEFAULT_LIMIT })
+    getMore
+  } = useFragranceNotes({
+    id: fragranceId,
+    includeBase: layer === NoteLayer.Base,
+    includeMiddle: layer === NoteLayer.Middle,
+    includeTop: layer === NoteLayer.Top,
+    fill: true,
+    limit: DEFAULT_LIMIT
+  })
 
-  const handleSearch = useCallback((newSearchTerm: string) => {
-    localSearchTerm.current = newSearchTerm
-  }, [])
+  const { voteOnNote } = useVoteOnNote()
+
+  // const handleSearch = useCallback((newSearchTerm: string) => {
+  //   localSearchTerm.current = newSearchTerm
+  // }, [])
 
   const getMoreNotes = useCallback(() => {
-    !loading.notesLoading && getMore()
-  }, [loading.notesLoading, getMore])
+    if (!loading) {
+      getMore()
+    }
+  }, [loading, getMore])
 
-  const isNoteSelected = useCallback((note: FragranceNote) => {
-    return !!note.myVote
+  const isNoteSelected = useCallback((note: CardFragranceNote) => {
+    return note.myVote ?? false
   }, [])
 
-  const onNoteSelected = useCallback((_: number, fragranceNote: FragranceNote, myVote: boolean) => {
+  const onNoteSelected = useCallback((_: number, fragranceNote: CardFragranceNote, myVote: boolean) => {
+    const { noteId, layer } = fragranceNote
+
     voteOnNote({
       fragranceId,
-      noteId: fragranceNote.noteId,
-      layer: fragranceNote.layer,
+      noteId,
+      layer,
       myVote
     }, fragranceNote)
   }, [fragranceId, voteOnNote])
 
-  const onRenderNote = useCallback(({ item, selected }: SelectableRenderItemProps<FragranceNote>) => {
-    if (!item) return null
+  const onRenderNote = useCallback(({ item: note, selected }: SelectableRenderItemProps<CardFragranceNote>) => {
+    if (note == null) return null
 
     return (
       <FragranceNoteCard
-        note={item}
+        note={note}
         selected={selected}
         showVotes
       />
@@ -64,25 +73,25 @@ const EditNotesLayerPage = () => {
   const onRenderListFooter = useCallback(() => {
     return (
       <View>
-        {loading.notesLoading && <ActivityIndicator />}
+        {loading && <ActivityIndicator />}
         {!hasMore && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
         {!hasMore && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading.notesLoading])
+  }, [hasMore, loading])
 
   useEffect(() => {
     nav.setOptions({ headerTitle: `${layer} notes` })
   }, [nav, layer])
 
-  if (!notes) return null
+  if (notes == null) return null
 
   return (
     <SafeAreaView edges={[]} style={{ flex: 1 }}>
       {/* <SearchInput onSearch={handleSearch} /> */}
 
       <SelectableList
-        data={notes[layer]}
+        data={notes[layer] ?? []}
         numColumns={3}
         onEndReachedThreshold={0.5}
         renderItemStyle={{ width: '33.33%' }}

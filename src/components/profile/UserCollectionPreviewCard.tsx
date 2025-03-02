@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from 'react-native-paper'
 import GridImages from '../common/GridImages'
-import { UserPreviewQuery } from '@/src/gql/graphql'
+import { UserPreviewQuery } from '@/src/types/graphql'
 
 type Collection = NonNullable<UserPreviewQuery['user']>['collections'][number]
 

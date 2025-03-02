@@ -4,11 +4,11 @@ import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { useRouter } from 'expo-router'
-import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
+import BouncyButton, { type BouncyButtonProps } from '../BouncyButton'
 
 export interface HeaderBackButtonProps extends BouncyButtonProps {}
 
-const HeaderBackButton: React.FC<HeaderBackButtonProps> = () => {
+const HeaderBackButton = () => {
   const router = useRouter()
   const iconSize = 18
   const theme = useAppTheme()
@@ -20,8 +20,17 @@ const HeaderBackButton: React.FC<HeaderBackButtonProps> = () => {
   }
 
   return (
-    <BouncyButton scaleTo={0.95} style={styles.wrapper} onPress={goBack}>
-      <Icon name='arrow-left' type='octicon' size={iconSize} color={theme.colors.card} />
+    <BouncyButton
+      scaleTo={0.95}
+      style={styles.wrapper}
+      onPress={goBack}
+    >
+      <Icon
+        name='arrow-left'
+        type='octicon'
+        size={iconSize}
+        color={theme.colors.card}
+      />
     </BouncyButton>
   )
 }

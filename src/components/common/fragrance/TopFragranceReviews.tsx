@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
 import React, { useCallback } from 'react'
 import FragranceCategory from './FragranceCategory'
-import ReviewsTrack from './ReviewsTrack'
 import FragranceEmpty from './FragranceEmpty'
-import { FragranceReview } from '@/src/gql/graphql'
+import { type FragranceReview } from '@/src/generated/graphql'
+import { type CardFragranceReview } from './FragranceReviewCard'
+import ReviewsTrack from './ReviewsTrack'
 
 export interface FragranceReviewsPreviewProps {
-  reviews: FragranceReview[]
+  reviews: CardFragranceReview[]
 
   onExpandReviews?: (reviewId?: number | undefined) => void
   onWriteReview?: () => void
@@ -16,8 +16,7 @@ const TopFragranceReviews = (props: FragranceReviewsPreviewProps) => {
   const {
     reviews,
 
-    onExpandReviews,
-    onWriteReview
+    onExpandReviews
   } = props
 
   const handleOnReviewPressed = useCallback((review: FragranceReview) => {
@@ -33,7 +32,10 @@ const TopFragranceReviews = (props: FragranceReviewsPreviewProps) => {
     >
       {reviews.length === 0
         ? <FragranceEmpty headline='There are no reviews yet' />
-        : <ReviewsTrack reviews={reviews} onReviewPressed={handleOnReviewPressed} />}
+        : <ReviewsTrack
+            reviews={reviews}
+            onReviewPressed={handleOnReviewPressed}
+          />}
     </FragranceCategory>
   )
 }

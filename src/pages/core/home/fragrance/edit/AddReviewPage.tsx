@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-handler-names */
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -9,7 +8,7 @@ import SubmitButton from '@/src/components/common/SubmitButton'
 import EditableRatingStars from '@/src/components/common/EditableRatingStars'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
 import useReviewFragrance from '@/src/hooks/useReviewFragrance'
-import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
+import { showNotifaction } from '@/src/common/show-notification'
 import FeedbackSuccess from '@/src/components/common/FeedbackSuccess'
 
 const AddReviewPage = () => {
@@ -22,7 +21,7 @@ const AddReviewPage = () => {
     // TODO:
   }
 
-  const { reviewFragrance, loading, error } = useReviewFragrance()
+  const { reviewFragrance, loading } = useReviewFragrance()
 
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
@@ -42,7 +41,7 @@ const AddReviewPage = () => {
       <FeedbackSuccess
         feedback='Review posted!'
         buttonText='Back to reviews'
-        onButtonPress={() => router.dismiss()}
+        onButtonPress={() => { router.dismiss() }}
       />
     )
   }
@@ -80,7 +79,7 @@ const AddReviewPage = () => {
         <SubmitButton
           text='Add Review'
           disabled={rating === 0}
-          onPress={submitReview}
+          onPress={() => { void submitReview() }}
           loading={loading}
         />
       </View>

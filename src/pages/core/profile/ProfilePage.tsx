@@ -2,11 +2,11 @@ import { StyleSheet } from 'react-native'
 import React from 'react'
 import UserPortrait from '@/src/components/profile/UserPortrait'
 import UserCollections from '@/src/components/profile/UserCollections'
-import { AuthUser } from '@/src/hooks/useAuth'
+import { type AuthUser } from '@/src/hooks/useAuth'
 import UserLikes from '@/src/components/profile/UserLikes'
 import UserReviews from '@/src/components/profile/UserReviews'
 import { ScrollView } from 'react-native-gesture-handler'
-import { UserPreviewQuery } from '@/src/gql/graphql'
+import { type UserPreviewQuery } from '@/src/generated/graphql'
 
 export interface ProfilePageProps {
   user: UserPreviewQuery['user'] | null
@@ -15,9 +15,9 @@ export interface ProfilePageProps {
 
 const ProfilePage = (props: ProfilePageProps) => {
   const { user, currentUser } = props
-  const isOwner = !!(currentUser && currentUser.id === user?.id)
+  const isOwner = (currentUser != null) && currentUser.id === user?.id
 
-  if (!user) { return null } // TODO
+  if (user == null) { return null } // TODO
 
   return (
     <ScrollView style={styles.wrapper}>

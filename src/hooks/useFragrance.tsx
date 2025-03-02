@@ -1,28 +1,21 @@
-import { DocumentNode, gql, useQuery } from '@apollo/client'
-import { useCallback, useRef } from 'react'
-import useVoteOnFragrance from './useVoteOnFragrance'
-import { Fragrance } from '../gql/graphql'
+import { useQuery } from '@apollo/client'
+import { useCallback } from 'react'
+import { graphql } from '../generated'
+import { type FragranceQueryVariables } from '../generated/graphql'
 
-const DEFAULT_IMAGES_LIMIT = 5
-const DEFAULT_ACCORDS_LIMIT = 8
-const DEFAULT_NOTES_LIMIT = 8
-const DEFAULT_REVIEWS_LIMIT = 8
-const DEFAULT_OFFSET = 0
-const DEFAULT_FILL = false
-
-const DEFAULT_QUERY = gql`
+const FRAGRANCE_QUERY = graphql(/* GraphQL */ `
   query Fragrance(
     $id: Int!, 
-    $imagesLimit: Int, 
-    $imagesOffset: Int,
-    $notesLimit: Int,
-    $notesOffset: Int,
-    $notesFill: Boolean,
-    $accordsLimit: Int,
-    $accordsOffset: Int,
-    $accordsFill: Boolean,
-    $reviewsLimit: Int,
-    $reviewsOffset: Int) {
+    $imagesLimit: Int = 5, 
+    $imagesOffset: Int = 0,
+    $notesLimit: Int = 8,
+    $notesOffset: Int = 0,
+    $notesFill: Boolean = false,
+    $accordsLimit: Int = 8,
+    $accordsOffset: Int = 0,
+    $accordsFill: Boolean = false,
+    $reviewsLimit: Int = 10,
+    $reviewsOffset: Int = 0) {
     fragrance(id: $id) {
       id
       brand
@@ -44,47 +37,64 @@ const DEFAULT_QUERY = gql`
 
       traits {
         gender {
+          id
           trait
           value
           myVote
         }
         longevity {
+          id
           trait
           value
+          myVote
         }
         sillage {
+          id
           trait
           value
+          myVote
         }
         complexity {
+          id
           trait
           value
+          myVote
         }
         balance {
+          id
           trait
           value
+          myVote
         }
         allure {
+          id
           trait
           value
+          myVote
         }
       }
 
       notes {
         top(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
           id
+          noteId
+          layer
           name
           votes
           myVote
         }
         middle(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
           id
+          noteId
+          layer
           name
           votes
           myVote
         }
         base(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
           id
+          noteId
+          layer
           name
           votes
           myVote
@@ -93,6 +103,7 @@ const DEFAULT_QUERY = gql`
 
       accords(limit: $accordsLimit, offset: $accordsOffset, fill: $accordsFill) {
         id
+        accordId
         name
         color
         votes
@@ -112,73 +123,26 @@ const DEFAULT_QUERY = gql`
       }
     }
   }
-`
+`)
 
-export interface FragranceVars {
-  id: number
-
-  imagesLimit?: number | undefined
-  imagesOffset?: number | undefined
-  notesLimit?: number | undefined
-  notesOffset?: number | undefined
-  accordsLimit?: number | undefined
-  accordsOffset?: number | undefined
-  reviewsLimit?: number | undefined
-  reviewsOffset?: number | undefined
-
-  notesFill?: boolean | undefined
-  accordsFill?: boolean | undefined
-}
-
-export interface FragranceData {
-  fragrance: Fragrance
-}
-
-export interface UseFragranceParams {
-  query?: DocumentNode | undefined
-  variables: FragranceVars
-}
-
-const useFragrance = (params: UseFragranceParams) => {
-  const { query = DEFAULT_QUERY, variables } = params
-  const localVariables = useRef<FragranceVars>({
-    id: variables.id,
-    imagesLimit: variables.imagesLimit ?? DEFAULT_IMAGES_LIMIT,
-    notesLimit: variables.notesLimit ?? DEFAULT_NOTES_LIMIT,
-    accordsLimit: variables.accordsLimit ?? DEFAULT_ACCORDS_LIMIT,
-    reviewsLimit: variables.reviewsLimit ?? DEFAULT_REVIEWS_LIMIT,
-    imagesOffset: variables.imagesOffset ?? DEFAULT_OFFSET,
-    notesOffset: variables.notesOffset ?? DEFAULT_OFFSET,
-    accordsOffset: variables.accordsOffset ?? DEFAULT_OFFSET,
-    reviewsOffset: variables.reviewsOffset ?? DEFAULT_OFFSET,
-    notesFill: variables.notesFill ?? DEFAULT_FILL,
-    accordsFill: variables.accordsFill ?? DEFAULT_FILL
-  })
-
+const useFragrance = (variables: FragranceQueryVariables) => {
   const {
     data,
-    loading: fragranceLoading,
-    error: fragranceError,
+    loading,
+    error,
     refetch
-  } = useQuery<FragranceData, FragranceVars>(query, { variables: localVariables.current })
+  } = useQuery(FRAGRANCE_QUERY, { variables })
 
-  const {
-    loading: voteLoading,
-    error: voteError,
-    voteOnFragrance
-  } = useVoteOnFragrance()
-
-  const refresh = useCallback((variables: FragranceVars) => {
-    refetch(variables)
+  const refresh = useCallback((variables?: FragranceQueryVariables) => {
+    void refetch(variables)
   }, [refetch])
 
   return {
     fragrance: data?.fragrance,
-    loading: { fragranceLoading, voteLoading },
-    error: { fragranceError, voteError },
+    loading,
+    error,
 
-    refresh,
-    voteOnFragrance
+    refresh
   }
 }
 

@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from 'react-native-paper'
-import BouncyButton, { BouncyButtonProps } from '../../common/BouncyButton'
+import BouncyButton, { type BouncyButtonProps } from '../../common/BouncyButton'
 import { useAppTheme } from '@/src/constants/Themes'
 import RatingStars from '../../common/RatingStars'
 
@@ -17,7 +17,11 @@ const FragranceReviewButton = (props: FragranceReviewButtonProps) => {
     <BouncyButton scaleTo={0.995} {...rest}>
       <View style={[styles.buttonWrapper, { borderColor: theme.colors.surfaceDisabled }]}>
         <Text>{username}</Text>
-        <RatingStars rating={0} size={18} emptyColor={theme.colors.onSurfaceDisabled} />
+        <RatingStars
+          rating={0}
+          size={18}
+          emptyColor={theme.colors.onSurfaceDisabled}
+        />
         <Text style={{ fontSize: 14, opacity: 0.8 }}>tap to review...</Text>
       </View>
     </BouncyButton>

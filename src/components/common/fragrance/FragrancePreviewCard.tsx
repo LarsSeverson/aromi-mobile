@@ -1,20 +1,22 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback } from 'react'
-import { Fragrance } from '@/src/gql/graphql'
-import BouncyButton, { BouncyButtonProps } from '../BouncyButton'
+import BouncyButton, { type BouncyButtonProps } from '../BouncyButton'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
 import VoteButton from '../VoteButton'
+import { type Fragrance } from '@/src/generated/graphql'
 
-export interface FragrancePreviewProps extends BouncyButtonProps {
-  fragrance: Fragrance
+export type CardFragrancePreview = Pick<Fragrance, 'id' | 'name' | 'brand' | 'vote' | 'images'>
+
+export interface FragrancePreviewCardProps extends BouncyButtonProps {
+  fragrance: CardFragrancePreview
 
   onFragrancePress?: (fragranceId: number) => void
-  onFragranceVote?: (fragrance: Fragrance, myVote: boolean | null) => void
+  onFragranceVote?: (fragrance: CardFragrancePreview, myVote: boolean | null) => void
 }
 
-const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePreviewProps) => {
+const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   const theme = useAppTheme()
   const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
   const votes = fragrance.vote.likes - fragrance.vote.dislikes
@@ -31,7 +33,10 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
     <View style={styles.wrapper}>
       <BouncyButton onPress={handlePress} {...rest}>
         <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
-          <Image source={{ uri: fragrance.images.at(0)?.url }} style={styles.imgWrapper} />
+          <Image
+            source={{ uri: fragrance.images.at(0)?.url }}
+            style={styles.imgWrapper}
+          />
           <VoteButton
             votes={votes}
             myVote={fragrance.vote.myVote}
@@ -42,11 +47,18 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
       </BouncyButton>
       <View>
         <View style={styles.headingWrapper}>
-          <Text numberOfLines={1} ellipsizeMode='tail' style={styles.nameWrapper}>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode='tail'
+            style={styles.nameWrapper}
+          >
             {fragrance.name}
           </Text>
           <BouncyButton>
-            <Icon size={20} source='dots-horizontal' />
+            <Icon
+              size={20}
+              source='dots-horizontal'
+            />
           </BouncyButton>
         </View>
         <Text
@@ -62,7 +74,7 @@ const FragrancePreview: React.FC<FragrancePreviewProps> = (props: FragrancePrevi
   )
 }
 
-export default FragrancePreview
+export default FragrancePreviewCard
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -1,4 +1,4 @@
-import { AuthError } from 'aws-amplify/auth'
+import { type AuthError } from 'aws-amplify/auth'
 
 export enum AuthErrorCode {
   USERNAME_EXISTS = 'USERNAME_EXISTS',
@@ -46,7 +46,7 @@ export const toSignUpError = (error: AuthError): AromiAuthError => {
       return new AromiAuthError('Internal service error. Please try again later.', AuthErrorCode.SERVICE_EXCEPTION)
     default:
       console.error(error)
-      return new AromiAuthError(error.message || 'Something went wrong. Please try again later.', AuthErrorCode.UNKNOWN_ERROR)
+      return new AromiAuthError(error.message ?? 'Something went wrong. Please try again later.', AuthErrorCode.UNKNOWN_ERROR)
   }
 }
 
@@ -75,7 +75,7 @@ export const toConfirmSignUpError = (error: AuthError): AromiAuthError => {
     default:
       console.error(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }
@@ -111,7 +111,7 @@ export const toResendSignUpError = (error: AuthError): AromiAuthError => {
     default:
       console.log(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }
@@ -133,7 +133,7 @@ export const toLogInError = (error: AuthError): AromiAuthError => {
     default:
       console.error(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }
@@ -159,7 +159,7 @@ export const toGetUserInfoError = (error: AuthError): AromiAuthError => {
     default:
       console.error(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }
@@ -180,7 +180,7 @@ export const toResetPasswordError = (error: AuthError): AromiAuthError => {
     default:
       console.error(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }
@@ -228,7 +228,7 @@ export const toConfirmResetPasswordError = (error: AuthError): AromiAuthError =>
     default:
       console.error(error)
       return new AromiAuthError(
-        error.message || 'Something went wrong. Please try again later.',
+        error.message ?? 'Something went wrong. Please try again later.',
         AuthErrorCode.UNKNOWN_ERROR
       )
   }

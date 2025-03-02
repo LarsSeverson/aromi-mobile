@@ -14,7 +14,7 @@ export interface FragranceCategoryProps {
   onSeeAll?: () => void
 }
 
-const FragranceCategory: React.FC<FragranceCategoryProps> = (props: FragranceCategoryProps) => {
+const FragranceCategory = (props: FragranceCategoryProps) => {
   const {
     title,
     expandText,
@@ -28,14 +28,22 @@ const FragranceCategory: React.FC<FragranceCategoryProps> = (props: FragranceCat
   return (
     <View style={styles.categoryWrapper}>
       <View style={styles.headingWrapper}>
-        <Text variant='headlineSmall' style={{ fontWeight: 500 }}>{title}</Text>
-        {showSeeAll && <TextButton text='see all' onPress={onSeeAll} />}
+        <Text
+          variant='headlineSmall'
+          style={{ fontWeight: 500 }}
+        >
+          {title}
+        </Text>
+        {(showSeeAll ?? false) && <TextButton text='see all' onPress={onSeeAll} />}
       </View>
 
       {children}
 
-      {expandText && (
-        <BouncyButton style={[styles.categoryButton, { borderColor: theme.colors.surfaceDisabled }]} onPress={onCategoryPressed}>
+      {(expandText != null) && (
+        <BouncyButton
+          style={[styles.categoryButton, { borderColor: theme.colors.surfaceDisabled }]}
+          onPress={onCategoryPressed}
+        >
           <Text style={{ opacity: 0.8 }}>{expandText}</Text>
         </BouncyButton>
       )}

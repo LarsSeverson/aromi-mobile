@@ -1,5 +1,5 @@
-import { GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle } from 'react-native'
-import React, { ReactNode, useRef } from 'react'
+import { type GestureResponderEvent, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native'
+import React, { type ReactNode, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 export interface BouncyButtonProps extends PressableProps {
@@ -8,7 +8,7 @@ export interface BouncyButtonProps extends PressableProps {
   contentStyle?: StyleProp<ViewStyle>
 }
 
-const BouncyButton: React.FC<BouncyButtonProps> = (props: BouncyButtonProps) => {
+const BouncyButton = (props: BouncyButtonProps) => {
   const { onPress, children, scaleTo = 0.98, contentStyle, ...restProps } = props
   const scale = useSharedValue(1)
   const longPressed = useRef(false)

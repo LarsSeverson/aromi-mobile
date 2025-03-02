@@ -1,13 +1,15 @@
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import { Text } from 'react-native-paper'
 import React, { useMemo } from 'react'
-import { FragranceNote } from '@/src/gql/graphql'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Image } from 'expo-image'
+import { type FragranceNote } from '@/src/generated/graphql'
+
+export type CardFragranceNote = Pick<FragranceNote, 'id' | 'layer' | 'noteId' | 'name' | 'votes' | 'myVote'>
 
 export interface FragranceNoteCardProps {
-  note: FragranceNote
+  note: CardFragranceNote
   selected?: boolean | undefined
   showVotes?: boolean | undefined
 
@@ -27,13 +29,13 @@ const FragranceNoteCard = (props: FragranceNoteCardProps) => {
   } = props
 
   const selectedVotes = useMemo(() => {
-    if (!note) return 0
+    if (note == null) return 0
 
     const originallySelected = note.myVote === true
     const votes = note.votes
 
-    const addOne = !originallySelected && selected
-    const subOne = originallySelected && !selected
+    const addOne = !originallySelected && (selected ?? false)
+    const subOne = originallySelected && !(selected ?? false)
 
     if (addOne) return votes + 1
     if (subOne) return votes - 1
@@ -46,7 +48,7 @@ const FragranceNoteCard = (props: FragranceNoteCardProps) => {
       <View
         style={[
           styles.noteItemWrapper,
-          { borderColor: selected ? Colors.button : theme.colors.surfaceDisabled }
+          { borderColor: (selected ?? false) ? Colors.button : theme.colors.surfaceDisabled }
         ]}
       >
         <Image
@@ -54,13 +56,18 @@ const FragranceNoteCard = (props: FragranceNoteCardProps) => {
             styles.noteBackground,
             {
               backgroundColor: theme.colors.surfaceDisabled,
-              transform: [{ scale: selected ? 0.94 : 1 }]
+              transform: [{ scale: (selected ?? false) ? 0.94 : 1 }]
             }]}
         />
       </View>
       <View style={[styles.noteName, headingStyle]}>
-        <Text numberOfLines={1} ellipsizeMode='tail'>{note?.name.toLowerCase()}</Text>
-        {showVotes && selectedVotes > 0 && <Text>{selectedVotes}</Text>}
+        <Text
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {note?.name.toLowerCase()}
+        </Text>
+        {(showVotes ?? false) && selectedVotes > 0 && <Text>{selectedVotes}</Text>}
       </View>
     </View>
   )

@@ -1,9 +1,9 @@
-import { AuthError, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
+import { type AuthError, confirmResetPassword, confirmSignUp, getCurrentUser, resendSignUpCode, resetPassword, signIn, signInWithRedirect, signOut, signUp } from 'aws-amplify/auth'
 import { useCallback, useEffect, useState } from 'react'
-import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from './utils/AuthErrors'
+import { AromiAuthError, AuthErrorCode, toConfirmSignUpError, toResendSignUpError, toLogInError, toSignUpError, toGetUserInfoError, toConfirmResetPasswordError, toResetPasswordError, toSocialSignInError } from '../common/auth-errors'
 import { useClientContext } from '../contexts/ClientContext'
 import useUpsertUser from './useUpsertUser'
-import { User } from '../gql/graphql'
+import { type User } from '../generated/graphql'
 
 export enum AuthState {
   UNAUTHENTICATED = 'UNAUTHENTICATED',
@@ -58,20 +58,20 @@ const useAuth = (): UseAuthReturn => {
       await refresh()
 
       const email = signInDetails?.loginId
-      if (!email) return { success: false, error: err }
+      if (email === undefined) return { success: false, error: err }
 
       const { data } = await upsertUser({ variables: { email, cognitoId: userId } })
       const user = data?.upsertUser
 
-      if (!user) return { success: false, error: err }
+      if (user === undefined || user === null) return { success: false, error: err }
 
       const newUserInfo = { user, state: AuthState.AUTHENTICATED }
 
       setUserInfo(newUserInfo)
 
       return { success: true, error: null, data: newUserInfo }
-    } catch (error: AuthError | any) {
-      const authError = toGetUserInfoError(error)
+    } catch (error: unknown) {
+      const authError = toGetUserInfoError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -84,8 +84,8 @@ const useAuth = (): UseAuthReturn => {
       const { success, error } = await userGetInfo()
 
       return { success, error }
-    } catch (error: AuthError | any) {
-      const authError = toSocialSignInError(error)
+    } catch (error: unknown) {
+      const authError = toSocialSignInError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -104,11 +104,11 @@ const useAuth = (): UseAuthReturn => {
         }
       })
 
-      userGetInfo()
+      void userGetInfo()
 
       return { success: true, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toSignUpError(error)
+    } catch (error: unknown) {
+      const authError = toSignUpError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -122,8 +122,8 @@ const useAuth = (): UseAuthReturn => {
       })
 
       return { success: true, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toConfirmSignUpError(error)
+    } catch (error: unknown) {
+      const authError = toConfirmSignUpError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -136,8 +136,8 @@ const useAuth = (): UseAuthReturn => {
       })
 
       return { success: true, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toResendSignUpError(error)
+    } catch (error: unknown) {
+      const authError = toResendSignUpError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -158,8 +158,8 @@ const useAuth = (): UseAuthReturn => {
       }
 
       return { success: isSignedIn, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toLogInError(error)
+    } catch (error: unknown) {
+      const authError = toLogInError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -202,8 +202,8 @@ const useAuth = (): UseAuthReturn => {
       await resetPassword({ username: email })
 
       return { success: true, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toResetPasswordError(error)
+    } catch (error: unknown) {
+      const authError = toResetPasswordError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -218,8 +218,8 @@ const useAuth = (): UseAuthReturn => {
       })
 
       return { success: true, error: null }
-    } catch (error: AuthError | any) {
-      const authError = toConfirmResetPasswordError(error)
+    } catch (error: unknown) {
+      const authError = toConfirmResetPasswordError(error as AuthError)
 
       return { success: false, error: authError }
     }
@@ -231,7 +231,7 @@ const useAuth = (): UseAuthReturn => {
       setInitialized(true)
     }
 
-    !initialized && init()
+    void (!initialized && init())
   }, [initialized, userGetInfo])
 
   return {

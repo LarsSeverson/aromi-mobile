@@ -1,7 +1,7 @@
 import { fetchAuthSession } from 'aws-amplify/auth'
 import { setContext } from '@apollo/client/link/context'
-import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client/core'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ApolloClient, HttpLink, InMemoryCache, type NormalizedCacheObject } from '@apollo/client/core'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export interface UseClientReturn {
   client: ApolloClient<NormalizedCacheObject>
@@ -11,95 +11,56 @@ export interface UseClientReturn {
 }
 
 export const useClient = (): UseClientReturn => {
-  const [token, setToken] = useState<string | null>(null)
+  const token = useRef<string | null>(null)
   const [tokenExpiration, setTokenExpiration] = useState<number | null>(null)
 
   const authLink = useMemo(() =>
-    setContext((_, { headers }) => {
-      const newHeaders = {
+    setContext((_, { headers = {} }: { headers?: Record<string, string> }) => ({
+      headers: {
         ...headers,
-        Authorization: token ? `Bearer ${token}` : ''
+        Authorization: (token.current !== null) ? `Bearer ${token.current}` : ''
       }
-
-      return { headers: newHeaders }
-    })
-  , [token])
+    }))
+  , [])
 
   const client = useMemo(() => new ApolloClient({
     link: authLink.concat(new HttpLink({ uri: process.env.EXPO_PUBLIC_GQL_ENDPOINT })),
-    cache: new InMemoryCache({
-      typePolicies: {
-        Fragrance: {
-          fields: {
-            notes: {
-              merge (existing = {}, incoming) {
-                return incoming
-              }
-            }
-          }
-        },
-        FragranceNotes: {
-          keyFields: false,
-          fields: {
-            top: {
-              keyArgs: ['limit', 'offset', 'fill'],
-              merge (existing = [], incoming) {
-                return [...existing, ...incoming]
-              }
-            },
-            middle: {
-              keyArgs: ['limit', 'offset', 'fill'],
-              merge (existing = [], incoming) {
-                return [...existing, ...incoming]
-              }
-            },
-            base: {
-              keyArgs: ['limit', 'offset', 'fill'],
-              merge (existing = [], incoming) {
-                return [...existing, ...incoming]
-              }
-            }
-          }
-        }
-      }
-    })
+    cache: new InMemoryCache()
   }), [authLink])
 
   const getToken = useCallback(async () => {
     try {
       const session = await fetchAuthSession({ forceRefresh: true })
-      const token = session.tokens?.accessToken.toString() || null
-      const expiration = session.tokens?.accessToken.payload.exp || null
+      const sessionToken = session.tokens?.accessToken.toString() ?? null
+      const expiration = session.tokens?.accessToken.payload.exp ?? null
 
-      // console.log(token)
-
-      setToken(token)
+      token.current = sessionToken
       setTokenExpiration(expiration)
     } catch (error) {
-      setToken(null)
+      token.current = null
       setTokenExpiration(null)
     }
   }, [])
 
-  const refresh = useCallback(async () => await getToken(), [getToken])
+  const refresh = useCallback(async () => { await getToken() }, [getToken])
 
   const reset = useCallback(() => {
-    setToken(null)
+    token.current = null
     setTokenExpiration(null)
   }, [])
 
   useEffect(() => {
-    if (!tokenExpiration) return
+    if (tokenExpiration === null) return
 
     const now = Math.floor(Date.now() / 1000)
     const delay = (tokenExpiration - now - 60) * 1000
-    const timer = setTimeout(getToken, delay)
+    const timer = setTimeout(() => { void getToken() }, delay)
 
-    return () => clearTimeout(timer)
+    return () => { clearTimeout(timer) }
   }, [tokenExpiration, getToken])
 
   useEffect(() => {
-    !token && getToken()
+    if (token.current === null) void getToken()
   }, [token, getToken])
 
   return {

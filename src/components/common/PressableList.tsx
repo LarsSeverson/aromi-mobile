@@ -1,7 +1,7 @@
-import { FlatList, ListRenderItem, StyleProp, ViewStyle } from 'react-native'
+import { FlatList, type ListRenderItem } from 'react-native'
 import React, { useCallback, useMemo } from 'react'
-import BouncyButton, { BouncyButtonProps } from './BouncyButton'
-import RowList, { RowListProps } from './RowList'
+import BouncyButton, { type BouncyButtonProps } from './BouncyButton'
+import RowList, { type RowListProps } from './RowList'
 
 export interface PressableRenderItemProps<T> {
   item: T | null
@@ -17,7 +17,9 @@ const PressableListItem = <T, >(props: PressableListItemProps<T>) => {
   const { item, index, onRenderItem, onItemPressed, ...rest } = props
 
   const handleOnItemPressed = useCallback(() => {
-    item && onItemPressed?.(item)
+    if (item != null) {
+      onItemPressed?.(item)
+    }
   }, [item, onItemPressed])
 
   return (
@@ -49,10 +51,10 @@ const PressableList = <T, >(props: PressableListProps<T>) => {
     ...restProps
   } = props
 
-  const ListComponent = useMemo(() => numRows ? RowList : FlatList, [numRows])
+  const ListComponent = useMemo(() => (numRows != null) ? RowList : FlatList, [numRows])
 
   const renderPressableItem: ListRenderItem<T | null> = useCallback(({ item, index }) => {
-    if (!item) return null
+    if (item === null) return null
 
     return (
       <PressableListItem
@@ -66,7 +68,7 @@ const PressableList = <T, >(props: PressableListProps<T>) => {
   }, [pressableItemProps, onRenderItem, onItemPressed])
 
   const extractKey = useCallback((item: T | null, index: number) => {
-    return keyExtractor ? keyExtractor(item, index) : String(index)
+    return keyExtractor?.(item, index) ?? index.toString()
   }, [keyExtractor])
 
   return (

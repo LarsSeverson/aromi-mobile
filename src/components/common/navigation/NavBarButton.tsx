@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import NavBarIcons from '@/src/constants/Icons'
-import { useNavigation, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import BouncyButton from '../BouncyButton'
 
 interface NavBarButtonProps {
@@ -9,20 +9,22 @@ interface NavBarButtonProps {
   isFocused: boolean
 }
 
-const NavBarButton: React.FC<NavBarButtonProps> = (props: NavBarButtonProps) => {
-  const { route, isFocused } = props
+const NavBarButton = (props: NavBarButtonProps) => {
   const router = useRouter()
-  const nav = useNavigation()
+  const { route, isFocused } = props
   const Icon = NavBarIcons[route as keyof typeof NavBarIcons]
 
   const onPressed = () => {
     if (!isFocused) {
-      router.navigate({ pathname: route as any })
+      router.navigate({ pathname: route })
     }
   }
 
   return (
-    <BouncyButton onPress={onPressed} style={[{ opacity: isFocused ? 1.0 : 0.7 }, styles.wrapper]}>
+    <BouncyButton
+      onPress={onPressed}
+      style={[{ opacity: isFocused ? 1.0 : 0.7 }, styles.wrapper]}
+    >
       <Icon />
     </BouncyButton>
   )

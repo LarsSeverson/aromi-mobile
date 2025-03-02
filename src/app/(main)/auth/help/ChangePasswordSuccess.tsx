@@ -3,8 +3,14 @@ import ChangePasswordSuccessPage from '@/src/pages/help/ChangePasswordSuccessPag
 import { useRouter } from 'expo-router'
 
 const ChangePasswordSuccess = () => {
+  const router = useRouter()
+
+  const handleButtonPress = () => {
+    router.navigate('/auth/login')
+  }
+
   return (
-    <ChangePasswordSuccessPage buttonText='Log in' />
+    <ChangePasswordSuccessPage buttonText='Log in' onButtonPress={handleButtonPress} />
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, View, StyleProp, ViewStyle, TouchableWithoutFeedback } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native'
+import { Icon } from 'react-native-elements'
 import { useAppTheme } from '../../constants/Themes'
 import BouncyButton from './BouncyButton'
 
@@ -13,7 +13,7 @@ export interface EditableRatingStarsProps {
   onRatingChange?: (rating: number) => void
 }
 
-const EditableRatingStars: React.FC<EditableRatingStarsProps> = (props: EditableRatingStarsProps) => {
+const EditableRatingStars = (props: EditableRatingStarsProps) => {
   const theme = useAppTheme()
   const {
     rating,
@@ -41,7 +41,7 @@ const EditableRatingStars: React.FC<EditableRatingStarsProps> = (props: Editable
 
   const handlePress = useCallback((star: number) => {
     setCurrentRating(star)
-    onRatingChange && onRatingChange(star)
+    onRatingChange?.(star)
   }, [onRatingChange])
 
   const stars = Array.from({ length: 5 }, (_, index) => {
@@ -50,9 +50,17 @@ const EditableRatingStars: React.FC<EditableRatingStarsProps> = (props: Editable
     const width = fillPercentage === 100 ? fillPercentage : transformFillPercentage(fillPercentage)
 
     return (
-      <BouncyButton key={index} onPress={() => handlePress(startNumber)}>
+      <BouncyButton
+        key={index}
+        onPress={() => { handlePress(startNumber) }}
+      >
         <View style={{ width: size, height: size, marginHorizontal: 2 }}>
-          <Icon name='star-o' size={size} color={emptyColor} />
+          <Icon
+            type='font-awesome'
+            name='star-o'
+            size={size}
+            color={emptyColor}
+          />
           <View style={{
             position: 'absolute',
             top: 0,
@@ -62,7 +70,12 @@ const EditableRatingStars: React.FC<EditableRatingStarsProps> = (props: Editable
             overflow: 'hidden'
           }}
           >
-            <Icon name='star' size={size} color={filledColor} />
+            <Icon
+              type='font-awesome'
+              name='star'
+              size={size}
+              color={filledColor}
+            />
           </View>
         </View>
       </BouncyButton>

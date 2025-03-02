@@ -16,7 +16,13 @@ const FeedbackSuccess = (props: FeedbackSuccessProps) => {
   return (
     <View style={styles.wrapper}>
       <Text variant='titleMedium'>{feedback}</Text>
-      <ButtonText text={buttonText} color={Colors.sinopia} textColor={Colors.white} style={{ width: 200 }} onPress={onButtonPress} />
+      <ButtonText
+        text={buttonText}
+        color={Colors.sinopia}
+        textColor={Colors.white}
+        style={{ width: 200 }}
+        onPress={onButtonPress}
+      />
     </View>
   )
 }

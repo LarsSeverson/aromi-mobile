@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react'
-import { UseAuthReturn } from '@/src/hooks/useAuth'
+import { type UseAuthReturn } from '@/src/hooks/useAuth'
 
 export const AuthContext = createContext<UseAuthReturn | null>(null)
 
 export const useAuthContext = (): UseAuthReturn => {
   const context = useContext(AuthContext)
-  if (!context) {
+  if (context == null) {
     throw new Error('useAuthContext must be used within an AuthProvider')
   }
 

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import { Icon, IconProps } from 'react-native-elements'
-import BouncyButton, { BouncyButtonProps } from './BouncyButton'
+import { Icon, type IconProps } from 'react-native-elements'
+import BouncyButton, { type BouncyButtonProps } from './BouncyButton'
 import { Text } from 'react-native-paper'
 
 export interface BouncyButtonGroupButtonProps extends BouncyButtonProps {
@@ -10,14 +10,25 @@ export interface BouncyButtonGroupButtonProps extends BouncyButtonProps {
   contentColor?: string
 }
 
-const BouncyButtonGroupButton: React.FC<BouncyButtonGroupButtonProps> = (props: BouncyButtonGroupButtonProps) => {
+const BouncyButtonGroupButton = (props: BouncyButtonGroupButtonProps) => {
   const { text, iconRightProps, contentColor, ...buttonProps } = props
   const iconSize = 18
 
   return (
-    <BouncyButton scaleTo={0.998} style={styles.wrapper} contentStyle={styles.contentWrapper} {...buttonProps}>
-      {text && <Text style={{ color: contentColor }}>{text}</Text>}
-      {iconRightProps && <Icon size={iconSize} color={contentColor} {...iconRightProps} containerStyle={styles.iconRightStyle} />}
+    <BouncyButton
+      scaleTo={0.998}
+      style={styles.wrapper}
+      contentStyle={styles.contentWrapper}
+      {...buttonProps}
+    >
+      {(text != null) && <Text style={{ color: contentColor }}>{text}</Text>}
+      {(iconRightProps != null) &&
+        <Icon
+          size={iconSize}
+          color={contentColor}
+          {...iconRightProps}
+          containerStyle={styles.iconRightStyle}
+        />}
     </BouncyButton>
   )
 }

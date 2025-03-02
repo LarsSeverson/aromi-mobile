@@ -9,7 +9,7 @@ interface ErrorNotifyProps {
   message: string
 }
 
-const ErrorNotify: React.FC<ErrorNotifyProps> = (props: ErrorNotifyProps) => {
+const ErrorNotify = (props: ErrorNotifyProps) => {
   const { message } = props
   return (
     <Notify>

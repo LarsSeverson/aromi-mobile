@@ -2,24 +2,25 @@ import { StyleSheet, View } from 'react-native'
 import React, { useMemo, useRef, useState } from 'react'
 import BouncyButton from '../../common/BouncyButton'
 import { Text } from 'react-native-paper'
-import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import AIcon from 'react-native-vector-icons/AntDesign'
+import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import RatingStars from '../../common/RatingStars'
-import { FragranceVote } from '@/src/gql/graphql'
+import { type FragranceVote } from '@/src/generated/graphql'
+
+export type FragranceHeadingVote = Pick<FragranceVote, 'likes' | 'dislikes' | 'myVote'>
 
 export interface FragranceHeadingProps {
   name: string
   brand: string
   rating: number
   reviewsCount: number
-  vote: FragranceVote
+  vote: FragranceHeadingVote
 
   onVote?: (myVote: boolean | null) => void
   gotoReviews?: () => void
 }
 
-const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadingProps) => {
+const FragranceHeading = (props: FragranceHeadingProps) => {
   const {
     name,
     brand,
@@ -27,12 +28,11 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
     reviewsCount,
     vote,
 
-    onVote,
-    gotoReviews
+    onVote
   } = props
 
   const localVote = useRef(vote)
-  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote || null)
+  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote ?? null)
 
   const counts = useMemo(() => {
     const { likes, dislikes, myVote } = localVote.current
@@ -47,7 +47,7 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
   }, [curLiked, reviewsCount])
 
   const onLike = () => {
-    const newLiked = curLiked ? null : true
+    const newLiked = (curLiked ?? false) ? null : true
     setCurLiked(newLiked)
     onVote?.(newLiked)
   }
@@ -60,8 +60,13 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
 
   return (
     <View style={styles.wrapper}>
-      <BouncyButton style={styles.ldContainer} contentStyle={styles.ldWrapper} onPress={onDislike}>
-        <AIcon
+      <BouncyButton
+        style={styles.ldContainer}
+        contentStyle={styles.ldWrapper}
+        onPress={onDislike}
+      >
+        <Icon
+          type='antdesign'
           name={curLiked === false ? 'dislike1' : 'dislike2'}
           size={25}
           color={curLiked === false ? Colors.som : Colors.black}
@@ -70,7 +75,12 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
       </BouncyButton>
 
       <View style={styles.titleWrapper}>
-        <Text variant='titleMedium' style={{ fontWeight: 500 }}>{name}</Text>
+        <Text
+          variant='titleMedium'
+          style={{ fontWeight: 500 }}
+        >
+          {name}
+        </Text>
         <Text variant='labelMedium'>{brand}</Text>
         <View style={styles.ratingsWrapper}>
           <Text>{rating}</Text>
@@ -81,8 +91,17 @@ const FragranceHeading: React.FC<FragranceHeadingProps> = (props: FragranceHeadi
         </View>
       </View>
 
-      <BouncyButton style={styles.ldContainer} contentStyle={styles.ldWrapper} onPress={onLike}>
-        <CIcon name={curLiked ? 'heart' : 'heart-outline'} size={25} color={curLiked ? Colors.heart : Colors.black} />
+      <BouncyButton
+        style={styles.ldContainer}
+        contentStyle={styles.ldWrapper}
+        onPress={onLike}
+      >
+        <Icon
+          type='material-community'
+          name={(curLiked ?? false) ? 'heart' : 'heart-outline'}
+          size={25}
+          color={(curLiked ?? false) ? Colors.heart : Colors.black}
+        />
         <Text>{counts.likesCount}</Text>
       </BouncyButton>
     </View>

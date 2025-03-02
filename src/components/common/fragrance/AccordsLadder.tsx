@@ -3,14 +3,14 @@ import React, { useCallback } from 'react'
 import LinearScaleBar from '../../common/LinearScaleBar'
 import { Text } from 'react-native-paper'
 import FragranceEmpty from './FragranceEmpty'
-import { FragranceAccord } from '@/src/gql/graphql'
+import { type CardFragranceAccord } from './FragranceAccordCard'
 
 export interface AccordBarsProps {
-  accords: FragranceAccord[]
+  accords: CardFragranceAccord[]
   maxVote: number
 }
 
-const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
+const AccordsLadder = (props: AccordBarsProps) => {
   const { accords, maxVote } = props
 
   const getWidth = useCallback((votes: number) => {
@@ -20,7 +20,7 @@ const AccordsLadder: React.FC<AccordBarsProps> = (props: AccordBarsProps) => {
   return (
     <View style={{ gap: 10 }}>
 
-      {!(accords.length) && <FragranceEmpty headline='No accords yet' />}
+      {(accords.length === 0) && <FragranceEmpty headline='No accords yet' />}
 
       {accords.map((accord, index) => {
         return (

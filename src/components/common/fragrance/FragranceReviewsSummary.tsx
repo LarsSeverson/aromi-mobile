@@ -5,7 +5,7 @@ import { Text } from 'react-native-paper'
 import LinearScaleBar from '../../common/LinearScaleBar'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
-import { FragranceReviewDistribution } from '@/src/gql/graphql'
+import { type FragranceReviewDistribution } from '@/src/generated/graphql'
 
 const MIN_WIDTH = 5
 
@@ -23,11 +23,11 @@ const FragranceReviewsSummary = (props: FragranceReviewsSummaryProps) => {
 
   const maxDistCount = useMemo(() => {
     const numbers = Object.values(distribution).filter(val => typeof val === 'number')
-    return numbers.length ? Math.max(...numbers) : 1
+    return (numbers.length > 0) ? Math.max(...numbers) : 1
   }, [distribution])
 
   const getWidth = useCallback((count: number) => {
-    return !maxDistCount ? MIN_WIDTH : Math.max((count / maxDistCount) * 100, MIN_WIDTH)
+    return (maxDistCount === 0) ? MIN_WIDTH : Math.max((count / maxDistCount) * 100, MIN_WIDTH)
   }, [maxDistCount])
 
   return (

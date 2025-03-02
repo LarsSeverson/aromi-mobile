@@ -1,9 +1,8 @@
-import { MD3DarkTheme, MD3LightTheme, MD3Theme, useTheme } from 'react-native-paper'
+import { MD3DarkTheme, MD3LightTheme, type MD3Theme, useTheme } from 'react-native-paper'
 import { Colors } from './Colors'
-import { Theme } from '@react-navigation/native'
-import { MD3Colors, MD3Typescale } from 'react-native-paper/lib/typescript/types'
+import { type MD3Typescale } from 'react-native-paper/lib/typescript/types'
 
-const fonts: MD3Typescale & any = {
+const AromiFonts: MD3Typescale = {
   displayLarge: {
     fontFamily: 'Roboto-Regular',
     fontWeight: '400',
@@ -98,7 +97,9 @@ const fonts: MD3Typescale & any = {
   labelMedium: {
     fontFamily: 'Palanquin-Regular',
     fontWeight: '500',
-    fontSize: 15
+    fontSize: 15,
+    letterSpacing: 0,
+    lineHeight: 18
   },
   labelSmall: {
     fontFamily: 'PalanquinDark-Regular',
@@ -114,7 +115,17 @@ const fonts: MD3Typescale & any = {
   }
 }
 
-export const lightTheme: MD3Theme & Theme & any = {
+export interface AromiColors {
+  card: string
+  text: string
+  border: string
+  notification: string
+  icon: string
+}
+
+export type AromiTheme = MD3Theme & { colors: AromiColors }
+
+export const lightTheme: AromiTheme = {
   ...MD3LightTheme,
   dark: false,
   version: 3,
@@ -166,13 +177,11 @@ export const lightTheme: MD3Theme & Theme & any = {
     },
     surfaceDisabled: Colors.placeholder2,
     onSurfaceDisabled: Colors.placeholder3
-  } as MD3Colors & Theme['colors'],
-  fonts: {
-    ...fonts
-  }
+  },
+  fonts: AromiFonts
 }
 
-export const darkTheme: MD3Theme & Theme & any = {
+export const darkTheme: AromiTheme = {
   ...MD3DarkTheme,
   dark: true,
   version: 3,
@@ -224,11 +233,8 @@ export const darkTheme: MD3Theme & Theme & any = {
     },
     surfaceDisabled: Colors.placeholder4,
     onSurfaceDisabled: Colors.placeholder
-  } as MD3Theme['colors'] & Theme['colors'],
-  fonts: {
-    ...fonts
-  }
+  },
+  fonts: AromiFonts
 }
 
-export type AppTheme = typeof lightTheme
-export const useAppTheme = () => useTheme<AppTheme>()
+export const useAppTheme = useTheme<AromiTheme>

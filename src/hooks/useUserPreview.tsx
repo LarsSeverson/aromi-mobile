@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
-import { graphql } from '../gql'
-import { UserPreviewQueryVariables } from '../gql/graphql'
+import { graphql } from '../generated'
+import { type UserPreviewQueryVariables } from '../generated/graphql'
+import { INVALID_ID } from '../common/util-types'
 
 const USER_PREVIEW_QUERY = graphql(/* GraphQL */`
   query UserPreview(
@@ -60,10 +61,13 @@ const USER_PREVIEW_QUERY = graphql(/* GraphQL */`
 `)
 
 const useUserPreview = (variables: UserPreviewQueryVariables) => {
-  const { data, loading, error } = useQuery(USER_PREVIEW_QUERY, { variables })
+  const { data, loading, error } = useQuery(USER_PREVIEW_QUERY, {
+    variables,
+    skip: variables.id === INVALID_ID
+  })
 
   return {
-    user: data?.user || null,
+    user: data?.user,
     loading,
     error
   }

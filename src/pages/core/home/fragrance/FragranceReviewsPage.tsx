@@ -1,34 +1,32 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { Text } from 'react-native-paper'
-import PressableList, { PressableRenderItemProps } from '@/src/components/common/PressableList'
+import PressableList, { type PressableRenderItemProps } from '@/src/components/common/PressableList'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import useFragranceReviews from '@/src/hooks/useFragranceReviews'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 import { useMyReview } from '@/src/hooks/useMyReview'
-import FragranceReviewCard from '@/src/components/common/fragrance/FragranceReviewCard'
-import { FragranceReview } from '@/src/gql/graphql'
+import FragranceReviewCard, { type CardFragranceReview } from '@/src/components/common/fragrance/FragranceReviewCard'
 import FragranceReviewsSummary from '@/src/components/common/fragrance/FragranceReviewsSummary'
 import FragranceReviewButton from '@/src/components/common/fragrance/FragranceReviewButton'
 
 const FragranceReviewsPage = () => {
   const router = useRouter()
   const { userInfo } = useAuthContext()
-  const { fragranceId, reviewId = undefined } = useLocalSearchParams<{ fragranceId: string, reviewId: string }>()
+  const { fragranceId } = useLocalSearchParams<{ fragranceId: string, reviewId: string }>()
+  const numFragranceId = Number(fragranceId)
 
   const {
     reviews,
     meta,
     loading: reviewsLoading,
-    error: reviewsError,
-    getMore,
-    refresh
-  } = useFragranceReviews({ fragranceId: Number(fragranceId) })
+    getMore
+  } = useFragranceReviews({ fragranceId: numFragranceId })
 
   const {
     myReview,
-    loading: myReviewLoading,
-    error: myReviewError,
+    // loading: myReviewLoading,
+    // error: myReviewError,
     getMyReview
   } = useMyReview()
 
@@ -43,8 +41,8 @@ const FragranceReviewsPage = () => {
     !reviewsLoading && getMore()
   }, [reviewsLoading, getMore])
 
-  const onRenderFragranceReview = useCallback(({ item: review }: PressableRenderItemProps<FragranceReview>) => {
-    if (!review) return null
+  const onRenderFragranceReview = useCallback(({ item: review }: PressableRenderItemProps<CardFragranceReview>) => {
+    if (review == null) return null
 
     return (
       <FragranceReviewCard
@@ -56,9 +54,9 @@ const FragranceReviewsPage = () => {
     )
   }, [])
 
-  useFocusEffect(useCallback(() => getMyReview(Number(fragranceId)), [fragranceId, getMyReview]))
+  useFocusEffect(useCallback(() => { getMyReview(Number(fragranceId)) }, [fragranceId, getMyReview]))
 
-  if (!meta) return null
+  if (meta == null) return null
 
   return (
     <PressableList
@@ -77,7 +75,7 @@ const FragranceReviewsPage = () => {
             reviewsCount={meta.reviewsCount}
             distribution={meta.reviewDistribution}
           />
-          {myReview
+          {(myReview != null)
             ? (
               <>
                 <Text variant='titleMedium'>My review</Text>
@@ -91,7 +89,10 @@ const FragranceReviewsPage = () => {
             : (
               <>
                 <Text variant='titleMedium'>Leave a review</Text>
-                <FragranceReviewButton username={userInfo.user?.username} onPress={handleAddReviewPressed} />
+                <FragranceReviewButton
+                  username={userInfo.user?.username}
+                  onPress={handleAddReviewPressed}
+                />
               </>
               )}
           <View style={styles.reviewsHeading}>

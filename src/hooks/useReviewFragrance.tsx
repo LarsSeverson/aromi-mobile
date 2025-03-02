@@ -1,8 +1,9 @@
-import { gql, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useCallback } from 'react'
-import { ReviewFragranceMutationVariables } from '../gql/graphql'
+import { graphql } from '../generated'
+import { type ReviewFragranceMutationVariables } from '../generated/graphql'
 
-const REVIEW_FRAGRANCE = gql`
+const REVIEW_FRAGRANCE = graphql(/* GraphQL */ `
   mutation ReviewFragrance($fragranceId: Int!, $myRating: Int!, $myReview: String!) {
     reviewFragrance(fragranceId: $fragranceId, myRating: $myRating, myReview: $myReview) {
       id
@@ -15,13 +16,14 @@ const REVIEW_FRAGRANCE = gql`
       author 
     }
   }
-`
+`)
 
 const useReviewFragrance = () => {
   const [reviewFragranceMutation, { loading, error }] = useMutation(REVIEW_FRAGRANCE, {
     update (cache, result, { variables }) {
-      const reviewFragrance = result.data?.reviewFragrance || null
-      if (!variables || !reviewFragrance) return
+      const reviewFragrance = result.data?.reviewFragrance ?? null
+
+      if (variables == null || reviewFragrance == null) return
 
       cache.modify({
         id: cache.identify({ __typename: 'Fragrance', id: variables.fragranceId }),
@@ -34,7 +36,8 @@ const useReviewFragrance = () => {
     }
   })
 
-  const reviewFragrance = useCallback((variables: ReviewFragranceMutationVariables) => reviewFragranceMutation({ variables }), [reviewFragranceMutation])
+  const reviewFragrance = useCallback(async (variables: ReviewFragranceMutationVariables) =>
+    await reviewFragranceMutation({ variables }), [reviewFragranceMutation])
 
   return {
     loading,

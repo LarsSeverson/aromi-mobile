@@ -1,17 +1,16 @@
 import { StyleSheet, View } from 'react-native'
-import { FragranceNote, NoteLayer } from '@/src/gql/graphql'
 import React, { useCallback } from 'react'
 import { Text } from 'react-native-paper'
-import { useAppTheme } from '@/src/constants/Themes'
 import TextButton from '../../common/TextButton'
 import NotesTrack from './NotesTrack'
 import FragranceEmpty from './FragranceEmpty'
 import FeedbackButton from '../../common/FeedbackButton'
-import { PressableRenderItemProps } from '../../common/PressableList'
-import FragranceNoteCard from './FragranceNoteCard'
+import FragranceNoteCard, { type CardFragranceNote } from './FragranceNoteCard'
+import { type NoteLayer } from '@/src/generated/graphql'
+import { type PressableRenderItemProps } from '../PressableList'
 
 export interface FragranceNotesLayerProps {
-  notes: FragranceNote[]
+  notes: CardFragranceNote[]
   layer: NoteLayer
   onExpanded?: (layer: NoteLayer) => void
 }
@@ -21,8 +20,8 @@ const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {
 
   const handleOnNotePressed = useCallback(() => onExpanded?.(layer), [layer, onExpanded])
 
-  const onRenderNote = useCallback(({ item: note }: PressableRenderItemProps<FragranceNote>) => {
-    if (!note) return null
+  const onRenderNote = useCallback(({ item: note }: PressableRenderItemProps<CardFragranceNote>) => {
+    if (note == null) return null
 
     return (
       <FragranceNoteCard
@@ -46,7 +45,10 @@ const FragranceNotesLayer = (props: FragranceNotesLayerProps) => {
         onItemPressed={handleOnNotePressed}
       />
       {notes.length === 0 && <FragranceEmpty headline={`There are no ${layer} notes yet`} />}
-      <FeedbackButton onPress={handleOnNotePressed} text='how do the notes develop?' />
+      <FeedbackButton
+        onPress={handleOnNotePressed}
+        text='how do the notes develop?'
+      />
     </View>
   )
 }

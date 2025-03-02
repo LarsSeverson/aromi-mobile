@@ -1,5 +1,5 @@
 import React from 'react'
-import { Stack, useNavigation } from 'expo-router'
+import { Stack } from 'expo-router'
 import ProfileHeader from '@/src/components/profile/ProfileHeader'
 import { TextStyles } from '@/src/constants/TextStyles'
 import { useAppTheme } from '@/src/constants/Themes'
@@ -7,7 +7,6 @@ import HeaderBackButton from '@/src/components/common/navigation/HeaderBackButto
 
 const ProfileLayout = () => {
   const theme = useAppTheme()
-  const nav = useNavigation()
 
   return (
     <Stack screenOptions={{ headerStyle: { backgroundColor: theme.colors.background }, headerShadowVisible: false }}>

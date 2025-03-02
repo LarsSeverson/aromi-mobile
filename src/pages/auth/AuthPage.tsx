@@ -6,7 +6,6 @@ import ButtonText from '@/src/components/common/ButtonText'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
 import { useRouter } from 'expo-router'
-import ImageCarousel from '@/src/components/common/ImageCarousel'
 import LegalAgreement from '@/src/components/common/auth/LegalAgreement'
 
 const AuthPage = () => {
@@ -26,12 +25,27 @@ const AuthPage = () => {
 
   return (
     <View style={styles.wrapper}>
-      <Image source='logo' style={{ width: 125, height: 125 }} />
+      <Image
+        source='logo'
+        style={{ width: 125, height: 125 }}
+      />
       <View style={styles.authFlowWrapper}>
         <Text variant='titleLarge'>Welcome to aromi</Text>
-        <ButtonText onPress={onSignUp} text='Sign up' color={Colors.sinopia} textColor={Colors.white} />
-        <ButtonText onPress={onLogIn} text='Log in' color={Colors.placeholder2} />
-        <TextButton text='Continue as guest' onPress={onHome} />
+        <ButtonText
+          onPress={onSignUp}
+          text='Sign up'
+          color={Colors.sinopia}
+          textColor={Colors.white}
+        />
+        <ButtonText
+          onPress={onLogIn}
+          text='Log in'
+          color={Colors.placeholder2}
+        />
+        <TextButton
+          text='Continue as guest'
+          onPress={onHome}
+        />
         <LegalAgreement />
       </View>
     </View>

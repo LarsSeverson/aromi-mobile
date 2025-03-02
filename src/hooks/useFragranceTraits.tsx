@@ -1,8 +1,9 @@
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { useCallback } from 'react'
-import { Fragrance, FragranceTrait, FragranceTraitType } from '../gql/graphql'
+import { graphql } from '../generated'
+import { type FragranceTraitsQueryVariables } from '../generated/graphql'
 
-const FRAGRANCE_TRAITS_QUERY = gql`
+const FRAGRANCE_TRAITS_QUERY = graphql(/* GraphQL */ `
   query FragranceTraits($id: Int!) {
     fragrance(id: $id) {
       id
@@ -46,74 +47,27 @@ const FRAGRANCE_TRAITS_QUERY = gql`
       }
     }
   }
-`
+`)
 
-export interface FragranceTraitsVars {
-  id: number
-}
-
-export interface FragranceTraitsData {
-  fragrance: Fragrance
-}
-
-const VOTE_ON_TRAIT = gql`
-  mutation VoteOnTrait($fragranceId: Int!, $trait: FragranceTraitType!, $myVote: Float!) {
-    voteOnTrait(fragranceId: $fragranceId, trait: $trait, myVote: $myVote) {
-      id
-      trait
-      value
-      myVote
-    }
-  }
-`
-
-export interface VoteOnTraitVars {
-  fragranceId: number
-  trait: FragranceTraitType
-  myVote: number
-}
-
-export interface VoteOnTraitData {
-  voteOnTrait: FragranceTrait
-}
-
-const useFragranceTraits = (variables: FragranceTraitsVars) => {
+const useFragranceTraits = (variables: FragranceTraitsQueryVariables) => {
   const {
     data,
-    loading: traitsLoading,
-    error: traitsError,
+    loading,
+    error,
     refetch
-  } = useQuery<FragranceTraitsData, FragranceTraitsVars>(FRAGRANCE_TRAITS_QUERY, { variables })
+  } = useQuery(FRAGRANCE_TRAITS_QUERY, { variables })
 
-  const [voteOnTraitMutation, {
-    loading: voteLoading,
-    error: voteError
-  }] = useMutation<VoteOnTraitData, VoteOnTraitVars>(VOTE_ON_TRAIT)
-
-  const voteOnTrait = useCallback((variables: VoteOnTraitVars, trait: FragranceTrait) => {
-    return voteOnTraitMutation({
-      variables,
-      optimisticResponse: {
-        voteOnTrait: {
-          ...trait,
-          myVote: variables.myVote
-        }
-      }
-    })
-  }, [voteOnTraitMutation])
-
-  const refresh = useCallback((variables: FragranceTraitsVars) => {
-    refetch(variables)
+  const refresh = useCallback((variables?: FragranceTraitsQueryVariables) => {
+    void refetch(variables)
   }, [refetch])
 
   return {
-    fragranceTraits: data?.fragrance.traits,
+    traits: data?.fragrance?.traits,
 
-    loading: { traitsLoading, voteLoading },
-    error: { traitsError, voteError },
+    loading,
+    error,
 
-    refresh,
-    voteOnTrait
+    refresh
   }
 }
 

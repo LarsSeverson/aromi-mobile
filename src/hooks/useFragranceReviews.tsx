@@ -1,12 +1,11 @@
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { useCallback, useRef, useState } from 'react'
-import { Fragrance, FragranceReviewDistribution } from '../gql/graphql'
+import { graphql } from '../generated'
+import { type FragranceReviewsQueryVariables, type FragranceReviewsQuery } from '../generated/graphql'
+import { type NonNullableVariables } from '../common/util-types'
 
-const DEFAULT_LIMIT = 10
-const DEFAULT_OFFSET = 0
-
-const FRAGRANCE_REVIEWS_QUERY = gql`
-  query FragranceReviews($fragranceId: Int!, $limit: Int, $offset: Int) {
+const FRAGRANCE_REVIEWS_QUERY = graphql(/* GraphQL */ `
+  query FragranceReviews($fragranceId: Int!, $limit: Int = 10, $offset: Int = 0) {
     fragrance(id: $fragranceId) {
       id
       brand
@@ -19,6 +18,7 @@ const FRAGRANCE_REVIEWS_QUERY = gql`
         review
         votes
         dCreated
+        dModified
         dDeleted
         author 
         myVote
@@ -32,54 +32,36 @@ const FRAGRANCE_REVIEWS_QUERY = gql`
       }
     }
   }
-`
+`)
 
-export interface FragranceReviewsVars {
-  fragranceId: number
-  limit: number
-  offset: number
-}
+export type FragranceReviewsMeta = Pick<NonNullable<FragranceReviewsQuery['fragrance']>,
+'id' | 'brand' | 'name' | 'rating' | 'reviewsCount' | 'reviewDistribution'>
 
-export interface FragranceReviewsData {
-  fragrance: Fragrance
-}
-
-export interface UseFragranceReviewsMeta {
-  id: number
-  name: string
-  brand: string
-  reviewsCount: number
-  rating: number
-  reviewDistribution: FragranceReviewDistribution
-}
-
-export interface UseFragranceReviewsProps {
-  fragranceId: number
-  limit?: number | undefined
-  offset?: number | undefined
-}
-
-const useFragranceReviews = (props: UseFragranceReviewsProps) => {
-  const localVariables = useRef<FragranceReviewsVars>({
-    fragranceId: props.fragranceId,
-    limit: props.limit ?? DEFAULT_LIMIT,
-    offset: props.offset ?? DEFAULT_OFFSET
-  })
-
+const useFragranceReviews = (variables: FragranceReviewsQueryVariables) => {
   const {
     data,
     loading,
     error,
     refetch,
     fetchMore
-  } = useQuery<FragranceReviewsData, FragranceReviewsVars>(FRAGRANCE_REVIEWS_QUERY, { variables: localVariables.current })
+  } = useQuery(FRAGRANCE_REVIEWS_QUERY, { variables })
+
+  const localVariables = useRef<NonNullableVariables<FragranceReviewsQueryVariables>>({
+    fragranceId: variables.fragranceId,
+    limit: variables.limit ?? 30,
+    offset: variables.offset ?? 0
+  })
 
   const [hasMore, setHasMore] = useState(true)
 
-  const refresh = useCallback((variables: FragranceReviewsVars) => {
-    localVariables.current = variables
-    localVariables.current.offset = 0
-    refetch(variables)
+  const refresh = useCallback((variables: FragranceReviewsQueryVariables = localVariables.current) => {
+    localVariables.current = {
+      fragranceId: variables.fragranceId,
+      limit: variables.limit ?? 30,
+      offset: 0
+    }
+
+    void refetch(localVariables.current)
   }, [refetch])
 
   const getMore = useCallback(() => {
@@ -89,25 +71,25 @@ const useFragranceReviews = (props: UseFragranceReviewsProps) => {
     const nextOffset = offset + limit
     localVariables.current.offset = nextOffset
 
-    fetchMore({
+    void fetchMore({
       variables: { offset: nextOffset },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
+        if (prev.fragrance == null) return fetchMoreResult
+        if (fetchMoreResult.fragrance == null) return prev
 
-        const oldReviews = prev.fragrance?.reviews || []
-        const newReviews = fetchMoreResult.fragrance?.reviews || []
+        const oldReviews = prev.fragrance?.reviews ?? []
+        const newReviews = fetchMoreResult.fragrance?.reviews ?? []
 
         if (newReviews.length < localVariables.current.limit) {
           setHasMore(false)
         }
 
+        const reviews = oldReviews.concat(newReviews)
+
         return {
           fragrance: {
             ...prev.fragrance,
-            reviews: [
-              ...oldReviews,
-              ...newReviews
-            ]
+            reviews
           }
         }
       }
@@ -115,8 +97,8 @@ const useFragranceReviews = (props: UseFragranceReviewsProps) => {
   }, [hasMore, fetchMore])
 
   return {
-    reviews: data?.fragrance.reviews || [],
-    meta: data?.fragrance as UseFragranceReviewsMeta,
+    reviews: data?.fragrance?.reviews ?? [],
+    meta: data?.fragrance as FragranceReviewsMeta,
     loading,
     error,
     hasMore,

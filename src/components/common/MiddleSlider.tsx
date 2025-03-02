@@ -9,12 +9,12 @@ export interface MiddleSliderProps {
   value?: number | undefined
   min?: number
   max?: number
-  focusPoints?: Array<number>
+  focusPoints?: number[]
   onValueChange?: (value: number) => void
   onInteracted?: () => void
 }
 
-const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => {
+const MiddleSlider = (props: MiddleSliderProps) => {
   const theme = useAppTheme()
   const {
     min = 0,
@@ -73,8 +73,8 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
 
       const newValue = min + (offset.value / (maxOffset - minOffset)) * (max - min)
 
-      onInteracted && runOnJS(onInteracted)()
-      onValueChange && runOnJS(onValueChange)(newValue)
+      if (onInteracted != null) runOnJS(onInteracted)()
+      if (onValueChange != null) runOnJS(onValueChange)(newValue)
     })
 
   useLayoutEffect(() => {
@@ -110,7 +110,7 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
   const rightFilledAnimatedStyle = useAnimatedStyle(() => {
     return {
       left: 0,
-      width: containerWidth ? Math.max((offset.value - containerWidth / 2) + (circleWidth / 2), 0) : 0
+      width: (containerWidth !== 0) ? Math.max((offset.value - containerWidth / 2) + (circleWidth / 2), 0) : 0
     }
   })
 
@@ -130,7 +130,10 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
 
   return (
     <GestureDetector gesture={pan}>
-      <View style={styles.sliderContainer} onLayout={(event) => !mounted.current && setContainerWidth(event.nativeEvent.layout.width)}>
+      <View
+        style={styles.sliderContainer}
+        onLayout={(event) => { !mounted.current && setContainerWidth(event.nativeEvent.layout.width) }}
+      >
 
         <View style={styles.trackContainer}>
           <View style={styles.trackHalfContainer}>
@@ -160,7 +163,10 @@ const MiddleSlider: React.FC<MiddleSliderProps> = (props: MiddleSliderProps) => 
           </View>
         )}
 
-        <Animated.View style={[styles.circle, thumbAnimatedStyle]} onLayout={(event) => !mounted.current && setCircleWidth(event.nativeEvent.layout.width)} />
+        <Animated.View
+          style={[styles.circle, thumbAnimatedStyle]}
+          onLayout={(event) => { !mounted.current && setCircleWidth(event.nativeEvent.layout.width) }}
+        />
       </View>
     </GestureDetector>
   )

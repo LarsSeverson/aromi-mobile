@@ -24,12 +24,10 @@ const MainIndex = () => {
 
     setAuthenticated(authCheck)
 
-    initialized && hideSplash()
+    void (initialized && hideSplash())
   }, [initialized, userInfo.state])
 
-  if (!splashHidden) {
-    return null
-  }
+  if (!splashHidden) return null
 
   if (authenticated) {
     return <Redirect href='/(core)' />

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import ProfileCategory from './ProfileCategory'
 import FragranceReviewCard from '../common/fragrance/FragranceReviewCard'
 import ProfileEmpty from './ProfileEmpty'
-import { UserPreviewQuery } from '@/src/gql/graphql'
+import { UserPreviewQuery } from '@/src/types/graphql'
 
 const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no reviews' : `${username} has no reviews`,

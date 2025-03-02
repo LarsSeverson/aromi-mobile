@@ -2,10 +2,9 @@ import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { useAppTheme } from '@/src/constants/Themes'
-import ButtonText, { ButtonTextProps } from './ButtonText'
+import ButtonText, { type ButtonTextProps } from './ButtonText'
 
-export interface SubmitButtonProps extends ButtonTextProps {
-}
+export interface SubmitButtonProps extends ButtonTextProps {}
 
 const SubmitButton = (props: SubmitButtonProps) => {
   const theme = useAppTheme()
@@ -13,13 +12,13 @@ const SubmitButton = (props: SubmitButtonProps) => {
   const { text, disabled, loading, ...rest } = props
 
   return (
-    <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background, opacity: disabled ? 0.5 : 1 }]}>
+    <View style={[styles.submitWrapper, { backgroundColor: theme.colors.background, opacity: (disabled ?? false) ? 0.5 : 1 }]}>
       <ButtonText
-        text={text || 'Submit'}
+        text={text ?? 'Submit'}
         color={Colors.button}
         textColor={Colors.white}
         style={styles.submit}
-        disabled={disabled || loading}
+        disabled={(disabled ?? false) || loading}
         loading={loading}
         {...rest}
       />

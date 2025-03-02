@@ -1,43 +1,43 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import useFragranceAccords from '@/src/hooks/useFragranceAccords'
-import SelectableList, { SelectableRenderItemProps } from '@/src/components/common/SelectableList'
+import SelectableList, { type SelectableRenderItemProps } from '@/src/components/common/SelectableList'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FragranceAccord } from '@/src/gql/graphql'
-import SelectableAccord from '@/src/components/common/fragrance/SelectableAccord'
+import FragranceAccordCard, { type CardFragranceAccord } from '@/src/components/common/fragrance/FragranceAccordCard'
+import useVoteOnAccord from '@/src/hooks/useVoteOnAccord'
 
 const EditAccordsPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)
 
-  const localSearchTerm = useRef('')
-
   const {
     accords,
     loading,
-    errors,
     hasMore,
-    getMore,
-    voteOnAccord
+    getMore
   } = useFragranceAccords({ id: fragranceId, fill: true })
 
-  const handleSearch = useCallback((newSearchTerm: string) => {
-    localSearchTerm.current = newSearchTerm
+  const { voteOnAccord } = useVoteOnAccord()
 
-    // searchAccords(newSearchTerm)
-  }, [])
+  // const handleSearch = useCallback((newSearchTerm: string) => {
+  //   localSearchTerm.current = newSearchTerm
+
+  //   // searchAccords(newSearchTerm)
+  // }, [])
 
   const getMoreAccords = useCallback(() => {
-    !loading.accordsLoading && getMore()
-  }, [loading.accordsLoading, getMore])
+    if (!loading) {
+      getMore()
+    }
+  }, [loading, getMore])
 
-  const isAccordSelected = useCallback((accord: FragranceAccord) => {
-    return !!accord.myVote
+  const isAccordSelected = useCallback((accord: CardFragranceAccord) => {
+    return accord.myVote ?? false
   }, [])
 
-  const onAccordSelected = useCallback((_: number, fragranceAccord: FragranceAccord, myVote: boolean) => {
+  const onAccordSelected = useCallback((_: number, fragranceAccord: CardFragranceAccord, myVote: boolean) => {
     voteOnAccord({
       fragranceId,
       accordId: fragranceAccord.accordId,
@@ -45,26 +45,34 @@ const EditAccordsPage = () => {
     }, fragranceAccord)
   }, [fragranceId, voteOnAccord])
 
-  const onRenderAccord = useCallback(({ item, index, selected }: SelectableRenderItemProps<FragranceAccord>) => {
-    if (!item) return null
+  const onRenderAccord = useCallback(({ item: accord, selected }: SelectableRenderItemProps<CardFragranceAccord>) => {
+    if (accord == null) return null
 
-    return <SelectableAccord item={item} index={index} selected={selected} originallySelected={!!item.myVote} />
+    return (
+      <FragranceAccordCard
+        accord={accord}
+        selected={selected}
+      />
+    )
   }, [])
 
   const onRenderListFooter = useCallback(() => {
     return (
       <View>
-        {loading.accordsLoading && <ActivityIndicator />}
+        {loading && <ActivityIndicator />}
         {!hasMore && <Text style={{ alignSelf: 'center' }}>End of accords</Text>}
         {!hasMore && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading.accordsLoading])
+  }, [hasMore, loading])
 
-  if (!accords) return null
+  if (accords == null) return null
 
   return (
-    <SafeAreaView edges={[]} style={{ flex: 1 }}>
+    <SafeAreaView
+      edges={[]}
+      style={{ flex: 1 }}
+    >
       {/* <SearchInput onSearch={handleSearch} /> */}
 
       <SelectableList

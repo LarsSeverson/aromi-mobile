@@ -1,4 +1,4 @@
-import { NativeSyntheticEvent, StyleSheet, TextLayoutEventData, View } from 'react-native'
+import { type NativeSyntheticEvent, StyleSheet, type TextLayoutEventData, View } from 'react-native'
 import React, { useState } from 'react'
 import { Text } from 'react-native-paper'
 import TextButton from './TextButton'
@@ -36,13 +36,14 @@ const ExpandableParagraph = (props: ExpandableParagraphProps) => {
         numberOfLines={!expanded ? numLines : undefined}
         ellipsizeMode='tail'
         onTextLayout={handleTextLayout}
-      >{text}
+      >
+        {text}
       </Text>
       {!expanded && truncated && !disabled &&
         <TextButton
           text='awd'
           wrapperStyle={[styles.seeMoreWrapper, { backgroundColor: theme.colors.background }]}
-          onPress={() => setExpanded(true)}
+          onPress={() => { setExpanded(true) }}
           onRenderText={onRenderText}
         />}
     </View>

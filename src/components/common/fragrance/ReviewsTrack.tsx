@@ -1,25 +1,33 @@
-import { StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet, type ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
-import PressableList, { PressableListProps, PressableRenderItemProps } from '../../common/PressableList'
-import FragranceReviewCard from './FragranceReviewCard'
-import { FragranceReview } from '@/src/gql/graphql'
+import PressableList, { type PressableListProps, type PressableRenderItemProps } from '../../common/PressableList'
+import FragranceReviewCard, { type CardFragranceReview } from './FragranceReviewCard'
 
-export interface ReviewsTrackProps extends Omit<PressableListProps<FragranceReview>, 'data' | 'onRenderItem' | 'style'> {
-  reviews: FragranceReview[]
+type PressableProps = Omit<PressableListProps<CardFragranceReview>, 'style' | 'data' | 'onRenderItem'>
+
+export interface ReviewsTrackProps extends PressableProps {
+  reviews: CardFragranceReview[]
   style?: ViewStyle
-  onReviewPressed?: (review: FragranceReview) => void
+  onReviewPressed?: (review: CardFragranceReview) => void
 }
 
 const ReviewsTrack = (props: ReviewsTrackProps) => {
   const { reviews, style, onReviewPressed } = props
 
-  const onRenderReview = useCallback(({ item: review }: PressableRenderItemProps<FragranceReview>) => {
-    if (!review) return null
+  const onRenderReview = useCallback(({ item: review }: PressableRenderItemProps<CardFragranceReview>) => {
+    if (review == null) return null
 
-    return <FragranceReviewCard review={review} withVotes />
+    return (
+      <FragranceReviewCard
+        review={review}
+        withVotes
+      />
+    )
   }, [])
 
-  const columnProps = reviews.length > 1 ? { columnWrapperStyle: StyleSheet.compose(styles.wrapper, style) } : {}
+  const columnProps = reviews.length > 1
+    ? { columnWrapperStyle: StyleSheet.compose(styles.wrapper, style) as ViewStyle }
+    : {}
 
   return (
     <PressableList

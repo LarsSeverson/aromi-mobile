@@ -1,4 +1,4 @@
-import { FlatListProps, FlatList, ScrollView } from 'react-native'
+import { type FlatListProps, FlatList, ScrollView } from 'react-native'
 import React from 'react'
 
 export interface RowListProps<T> extends FlatListProps<T> {
@@ -7,12 +7,12 @@ export interface RowListProps<T> extends FlatListProps<T> {
 
 const RowList = <T, >(props: RowListProps<T>) => {
   const { numRows = 1, numColumns, ...restProps } = props
-  const dataLength = restProps?.data?.length || 0
+  const dataLength = restProps?.data?.length ?? 0
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <FlatList
-        numColumns={numColumns || Math.ceil(dataLength / numRows)}
+        numColumns={numColumns ?? Math.ceil(dataLength / numRows)}
         alwaysBounceVertical={false}
         {...restProps}
       />

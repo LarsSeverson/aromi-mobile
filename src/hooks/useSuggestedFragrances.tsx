@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { gql } from '@apollo/client/core'
-import { useMutation, useQuery } from '@apollo/client'
-import useVoteOnFragrance from './useVoteOnFragrance'
-import { Fragrance } from '../gql/graphql'
+import { useCallback, useRef, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { graphql } from '../generated'
+import { type SuggestedFragrancesQueryVariables } from '../generated/graphql'
+import { type NonNullableVariables } from '../common/util-types'
 
-const DEFAULT_LIMIT = 20
-const DEFAULT_OFFSET = 0
-const DEFAULT_IMGS_LIMIT = 1
-
-const SUGGESTED_FRAGRANCES_QUERY = gql`
-  query SuggestedFragrances($limit: Int, $offset: Int, $imagesLimit: Int, $imagesOffset: Int) {
+const SUGGESTED_FRAGRANCES_QUERY = graphql(/* GraphQL */ `
+  query SuggestedFragrances(
+    $limit: Int = 10, 
+    $offset: Int = 0, 
+    $imagesLimit: Int = 1,
+    $imagesOffset: Int = 0) {
     fragrances(limit: $limit, offset: $offset) {
       id
       brand
@@ -28,58 +28,52 @@ const SUGGESTED_FRAGRANCES_QUERY = gql`
       }
     }
   }
-`
+`)
 
-export interface SuggestedFragrancesVars {
-  limit?: number | undefined
-  offset?: number | undefined
-
-  imagesLimit?: number | undefined
-  imagesOffset?: number | undefined
-}
-
-export interface SuggestedFragrancesData {
-  fragrances: Fragrance[]
-}
-
-const useSuggestedFragrances = (variables: SuggestedFragrancesVars = {}) => {
-  const localVariables = useRef({
-    limit: variables.limit ?? DEFAULT_LIMIT,
-    offset: variables.offset ?? DEFAULT_OFFSET,
-    imagesLimit: variables.imagesLimit ?? DEFAULT_IMGS_LIMIT,
-    imagesOffset: variables.imagesOffset ?? DEFAULT_OFFSET
-  })
-
+const useSuggestedFragrances = (variables: SuggestedFragrancesQueryVariables = {}) => {
   const {
     data,
-    loading: fragrancesLoading,
-    error: fragrancesError,
+    loading,
+    error,
     fetchMore,
     refetch
-  } = useQuery<SuggestedFragrancesData, SuggestedFragrancesVars>(SUGGESTED_FRAGRANCES_QUERY, { variables: localVariables.current })
+  } = useQuery(SUGGESTED_FRAGRANCES_QUERY, { variables })
 
-  const {
-    loading: voteLoading,
-    error: voteError,
-    voteOnFragrance
-  } = useVoteOnFragrance()
+  const localVariables = useRef<NonNullableVariables<SuggestedFragrancesQueryVariables>>({
+    limit: variables.limit ?? 10,
+    offset: variables.offset ?? 0,
+    imagesLimit: variables.imagesLimit ?? 1,
+    imagesOffset: variables.imagesOffset ?? 0
+  })
 
   const [hasMore, setHasMore] = useState(true)
 
-  const refresh = useCallback(() => {
-    localVariables.current.offset = 0
-    refetch(localVariables.current)
+  const refresh = useCallback((variables: SuggestedFragrancesQueryVariables = localVariables.current) => {
+    localVariables.current = {
+      limit: variables.limit ?? 10,
+      offset: 0,
+      imagesLimit: variables.imagesLimit ?? 1,
+      imagesOffset: variables.imagesOffset ?? 0
+    }
+    void refetch(localVariables.current)
   }, [refetch])
 
   const getMore = useCallback(() => {
-    const nextOffset = localVariables.current.offset + localVariables.current.limit
+    if (!hasMore) return
 
+    const { offset, limit } = localVariables.current
+    const nextOffset = offset + limit
     localVariables.current.offset = nextOffset
 
-    fetchMore({
-      variables: { offset: localVariables.current.offset },
+    void fetchMore({
+      variables: { offset: nextOffset },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
+        if (prev.fragrances == null) return fetchMoreResult
+        if (fetchMoreResult.fragrances == null) return prev
+
+        if (fetchMoreResult.fragrances.length < localVariables.current.limit) {
+          setHasMore(false)
+        }
 
         return {
           fragrances: [
@@ -89,25 +83,18 @@ const useSuggestedFragrances = (variables: SuggestedFragrancesVars = {}) => {
         }
       }
     })
-  }, [fetchMore])
-
-  useEffect(() => {
-    if (data?.fragrances) {
-      setHasMore(data.fragrances.length === localVariables.current.limit)
-    }
-  }, [data])
+  }, [hasMore, fetchMore])
 
   return {
-    suggestedFragrances: data?.fragrances || [],
+    suggestedFragrances: data?.fragrances ?? [],
 
-    errors: { fragrancesError, voteError },
-    loading: { fragrancesLoading, voteLoading },
+    error,
+    loading,
 
     hasMore,
 
     getMore,
-    refresh,
-    voteOnFragrance
+    refresh
   }
 }
 

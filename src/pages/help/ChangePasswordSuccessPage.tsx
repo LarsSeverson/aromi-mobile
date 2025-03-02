@@ -9,13 +9,19 @@ interface ChangePasswordSuccessPageProps {
   onButtonPress: () => void
 }
 
-const ChangePasswordSuccessPage: React.FC<ChangePasswordSuccessPageProps> = (props: ChangePasswordSuccessPageProps) => {
+const ChangePasswordSuccessPage = (props: ChangePasswordSuccessPageProps) => {
   const { buttonText, onButtonPress } = props
 
   return (
     <View style={styles.wrapper}>
       <Text variant='titleMedium'>Password changed!</Text>
-      <ButtonText text={buttonText} color={Colors.sinopia} textColor={Colors.white} style={{ width: 200 }} onPress={onButtonPress} />
+      <ButtonText
+        text={buttonText}
+        color={Colors.sinopia}
+        textColor={Colors.white}
+        style={{ width: 200 }}
+        onPress={onButtonPress}
+      />
     </View>
   )
 }

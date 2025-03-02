@@ -1,8 +1,8 @@
-import { gql, useLazyQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { useCallback } from 'react'
-import { FragranceReview } from '../gql/graphql'
+import { graphql } from '../generated'
 
-const MY_REVIEW_QUERY = gql`
+const MY_REVIEW_QUERY = graphql(/* GraphQL */ `
   query MyReview($fragranceId: Int!) {
     fragrance(id: $fragranceId) {
       id
@@ -12,29 +12,20 @@ const MY_REVIEW_QUERY = gql`
         review
         votes
         dCreated
+        dModified
         dDeleted
         author 
         myVote
       }
     }
   }
-`
-
-export interface MyReviewVars {
-  fragranceId: number
-}
-
-export interface MyReviewData {
-  fragrance: {
-    myReview: FragranceReview | null
-  }
-}
+`)
 
 export const useMyReview = () => {
-  const [getMyReviewQuery, { data, loading, error }] = useLazyQuery<MyReviewData, MyReviewVars>(MY_REVIEW_QUERY)
+  const [getMyReviewQuery, { data, loading, error }] = useLazyQuery(MY_REVIEW_QUERY)
 
   const getMyReview = useCallback((fragranceId: number) => {
-    getMyReviewQuery({ variables: { fragranceId } })
+    void getMyReviewQuery({ variables: { fragranceId } })
   }, [getMyReviewQuery])
 
   return {

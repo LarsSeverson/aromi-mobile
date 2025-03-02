@@ -3,23 +3,22 @@ import React, { useCallback, useState } from 'react'
 import { Colors } from '@/src/constants/Colors'
 import { Divider, TextInput, Text } from 'react-native-paper'
 import ButtonText from '@/src/components/common/ButtonText'
-import { Icon } from 'react-native-elements'
+// import { Icon } from 'react-native-elements'
 import { TextStyles } from '@/src/constants/TextStyles'
 import TextButton from '@/src/components/common/TextButton'
 import { KeyboardScrollView } from '@rlemasquerier/react-native-keyboard-scrollview'
-import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
-import { AuthErrorCode } from '@/src/hooks/utils/AuthErrors'
+import { showNotifaction } from '@/src/common/show-notification'
+import { AuthErrorCode } from '@/src/common/auth-errors'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useAuthContext } from '@/src/contexts/AuthContext'
 
 const LogInPage = () => {
   const router = useRouter()
-
-  const storedEmail = useLocalSearchParams().email as string
-
   const aromiAuth = useAuthContext()
 
-  const [email, setEmail] = useState(storedEmail || '')
+  const { email: storedEmail } = useLocalSearchParams<{ email: string }>()
+
+  const [email, setEmail] = useState(storedEmail ?? '')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [password, setPassword] = useState('')
   const [passwordValid, setPasswordValid] = useState<boolean | null>(null)
@@ -35,7 +34,7 @@ const LogInPage = () => {
 
   const logIn = async () => {
     const [e, p] = validate(true, true)
-    if (!e || !p) {
+    if (!(e ?? false) || !(p ?? false)) {
       return
     }
 
@@ -44,10 +43,10 @@ const LogInPage = () => {
     setLoading(false)
 
     if (success) {
-      return router.replace('/(core)')
+      router.replace('/(core)'); return
     }
 
-    if (error) {
+    if (error != null) {
       if (error.code === AuthErrorCode.SIGN_UP_INCOMPLETE) {
         router.push({ pathname: '/auth/ConfirmSignUp', params: { email } })
       } else if (error.code === AuthErrorCode.USER_NOT_FOUND) {
@@ -86,23 +85,27 @@ const LogInPage = () => {
     return valid
   }
 
-  const continueWithGoogle = async () => {
-    setLoading(true)
-    const { success, error } = await aromiAuth.socialSignIn('Google')
-    setLoading(false)
+  // const continueWithGoogle = async () => {
+  //   setLoading(true)
+  //   const { success, error } = await aromiAuth.socialSignIn('Google')
+  //   setLoading(false)
 
-    if (success) {
-      //
-      return
-    }
+  //   if (success) {
+  //     //
+  //     return
+  //   }
 
-    if (error) {
-      showNotifaction.error(error.message)
-    }
-  }
+  //   if (error != null) {
+  //     showNotifaction.error(error.message)
+  //   }
+  // }
 
   return (
-    <KeyboardScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='handled' contentContainerStyle={styles.wrapper}>
+    <KeyboardScrollView
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps='handled'
+      contentContainerStyle={styles.wrapper}
+    >
       <Text variant='titleMedium'>Welcome back</Text>
       <View>
         <TextInput
@@ -113,13 +116,17 @@ const LogInPage = () => {
           autoCapitalize='none'
           autoComplete='email'
           onChangeText={email => {
-            if (emailValid) {
+            if (emailValid ?? false) {
               setEmailValid(null)
             }
             setEmail(email)
           }}
         />
-        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
+        <Text
+          style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}
+        >
+          Please enter a valid email address
+        </Text>
 
         <TextInput
           label='Password'
@@ -134,9 +141,26 @@ const LogInPage = () => {
             setPassword(password)
           }}
         />
-        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}>Password must be 8+ characters, with a letter and number</Text>
-        <TextButton text='Forgot password?' scaleTo={0.995} wrapperStyle={{ alignSelf: 'flex-start' }} style={styles.forgotPasswordWrapper} onPress={onForgotPassword} />
-        <ButtonText text='Log in' loading={loading} loadingColor={Colors.white} color={Colors.sinopia} textColor={Colors.white} onPress={logIn} />
+        <Text
+          style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: passwordValid === false ? 1 : 0 }]}
+        >
+          Password must be 8+ characters, with a letter and number
+        </Text>
+        <TextButton
+          text='Forgot password?'
+          scaleTo={0.995}
+          wrapperStyle={{ alignSelf: 'flex-start' }}
+          style={styles.forgotPasswordWrapper}
+          onPress={onForgotPassword}
+        />
+        <ButtonText
+          text='Log in'
+          loading={loading}
+          loadingColor={Colors.white}
+          color={Colors.sinopia}
+          textColor={Colors.white}
+          onPress={() => { void logIn() }}
+        />
       </View>
 
       <View style={styles.orWrapper}>
@@ -144,9 +168,16 @@ const LogInPage = () => {
         <Text>or</Text>
         <Divider style={{ flex: 1 }} />
       </View>
-      <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} onPress={continueWithGoogle} />
-      <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} />
-      <Text style={{ alignSelf: 'center' }}>New here? <TextButton text='Sign up' style={{ marginBottom: -3 }} onPress={onSignUp} /></Text>
+      {/* <ButtonText text='Continue with Google' outlined icon={<Icon name='logo-google' type='ionicon' size={15} />} onPress={continueWithGoogle} /> */}
+      {/* <ButtonText text='Continue with Apple' outlined icon={<Icon name='logo-apple' type='ionicon' size={15} />} /> */}
+      <Text style={{ alignSelf: 'center' }}>
+        New here?
+        <TextButton
+          text='Sign up'
+          style={{ marginBottom: -3 }}
+          onPress={onSignUp}
+        />
+      </Text>
     </KeyboardScrollView>
   )
 }

@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import React, { useMemo, useState } from 'react'
 import { useAppTheme } from '@/src/constants/Themes'
 import BouncyButton from './BouncyButton'
-import { Divider } from 'react-native-elements'
-import CIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-import AIcon from 'react-native-vector-icons/AntDesign'
+import { Divider, Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 
 export interface VoteButtonProps {
@@ -18,7 +16,7 @@ export interface VoteButtonProps {
   onVote?: (vote: boolean | null) => void
 }
 
-const VoteButton: React.FC<VoteButtonProps> = (props: VoteButtonProps) => {
+const VoteButton = (props: VoteButtonProps) => {
   const theme = useAppTheme()
 
   const {
@@ -42,7 +40,7 @@ const VoteButton: React.FC<VoteButtonProps> = (props: VoteButtonProps) => {
   }, [votes, myVote, curVote])
 
   const onFor = () => {
-    const newVote = curVote ? null : true
+    const newVote = (curVote ?? false) ? null : true
     setCurVote(newVote)
     onVote?.(newVote)
   }
@@ -55,10 +53,11 @@ const VoteButton: React.FC<VoteButtonProps> = (props: VoteButtonProps) => {
 
   const isForActive = curVote === true
   const isAgainstActive = curVote === false
+  const viewStyle: StyleProp<ViewStyle> = StyleSheet.compose(styles.wrapper, style)
 
   return (
     <View style={[
-      StyleSheet.compose(styles.wrapper, style),
+      viewStyle,
       {
         backgroundColor: theme.colors.background,
         borderColor: theme.colors.onSurfaceDisabled
@@ -69,23 +68,25 @@ const VoteButton: React.FC<VoteButtonProps> = (props: VoteButtonProps) => {
         contentStyle={styles.contentWrapper}
         onPress={onFor}
       >
-        {onRenderForIcon
+        {(onRenderForIcon != null)
           ? onRenderForIcon(isForActive)
-          : <CIcon
-              name={curVote ? 'heart' : 'heart-outline'}
+          : <Icon
+              type='octicon'
+              name={(curVote ?? false) ? 'heart' : 'heart-outline'}
               size={size}
               color={isForActive ? Colors.heart : theme.colors.icon}
             />}
-        <Text style={styles.contentTxtWrapper}>{`${curVotes || 'vote'}`}</Text>
+        <Text style={styles.contentTxtWrapper}>{`${curVotes ?? 'vote'}`}</Text>
       </BouncyButton>
       <Divider orientation='vertical' width={1} color={theme.colors.onSurfaceDisabled} />
       <BouncyButton
         style={styles.contentBtnWrapper}
         onPress={onAgainst}
       >
-        {onRenderAgainstIcon
+        {(onRenderAgainstIcon != null)
           ? onRenderAgainstIcon(isAgainstActive)
-          : <AIcon
+          : <Icon
+              type='antdesign'
               name={isAgainstActive ? 'dislike1' : 'dislike2'}
               size={size}
               color={isAgainstActive ? Colors.som : theme.colors.icon}

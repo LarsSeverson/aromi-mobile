@@ -9,7 +9,8 @@ export interface IconProps {
   d: string
 }
 
-export const Icon: React.FC<IconProps> = ({ width = 24, height = 24, d = '' }) => {
+export const Icon = (props: IconProps) => {
+  const { width = 24, height = 25, d = '' } = props
   const theme = useAppTheme()
 
   return (

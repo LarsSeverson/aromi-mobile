@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, type ViewStyle } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { TextInput, TextInputProps } from 'react-native-paper'
+import { TextInput, type TextInputProps } from 'react-native-paper'
 import useDebounce from '@/src/hooks/useDebounce'
 import { useAppTheme } from '@/src/constants/Themes'
 
@@ -11,7 +11,7 @@ export interface SearchInputProps {
   onSearch?: (term: string) => void
 }
 
-const SearchInput: React.FC<SearchInputProps> = (props: SearchInputProps) => {
+const SearchInput = (props: SearchInputProps) => {
   const { debounce = 500, inputProps, style, onSearch } = props
   const theme = useAppTheme()
   const [searchTerm, setSearchTerm] = useState('')
@@ -22,7 +22,7 @@ const SearchInput: React.FC<SearchInputProps> = (props: SearchInputProps) => {
   }
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (debouncedSearchTerm.length > 0) {
       //
     }
   }, [debouncedSearchTerm, onSearch])

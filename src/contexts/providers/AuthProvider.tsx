@@ -6,7 +6,7 @@ interface AuthProviderProps {
   children: React.ReactNode
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = (props: AuthProviderProps) => {
+export const AuthProvider = (props: AuthProviderProps) => {
   const { children } = props
   const auth = useAuth()
 

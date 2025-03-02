@@ -2,14 +2,17 @@ import { useAuthContext } from '@/src/contexts/AuthContext'
 import useUserPreview from '@/src/hooks/useUserPreview'
 import ProfilePage from '@/src/pages/core/profile/ProfilePage'
 import React from 'react'
+import { INVALID_ID } from '@/src/common/util-types'
 
 const Profile = () => {
   const { userInfo } = useAuthContext()
+
   const currentUser = userInfo.user
+  const id = currentUser?.id ?? INVALID_ID
 
-  const { user, loading, error } = useUserPreview({ id: currentUser?.id })
+  const { user } = useUserPreview({ id })
 
-  if (!userInfo.user) {
+  if (currentUser == null) {
     // TODO:
     return null
   }

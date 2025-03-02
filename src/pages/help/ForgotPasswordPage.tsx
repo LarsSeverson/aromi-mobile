@@ -5,7 +5,7 @@ import TextButton from '@/src/components/common/TextButton'
 import ButtonText from '@/src/components/common/ButtonText'
 import { Colors } from '@/src/constants/Colors'
 import { TextStyles } from '@/src/constants/TextStyles'
-import { showNotifaction } from '@/src/components/common/notify/ShowNotification'
+import { showNotifaction } from '@/src/common/show-notification'
 import useAuth from '@/src/hooks/useAuth'
 
 export interface ForgotPasswordProps {
@@ -13,10 +13,11 @@ export interface ForgotPasswordProps {
   onRememberedPassword: () => void
 }
 
-const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPasswordProps) => {
+const ForgotPasswordPage = (props: ForgotPasswordProps) => {
   const { onContinue, onRememberedPassword } = props
 
   const { validateEmail, sendResetPasswordCode } = useAuth()
+
   const [email, setEmail] = useState('')
   const [emailValid, setEmailValid] = useState<boolean | null>(null)
   const [loading, setLoading] = useState(false)
@@ -31,10 +32,11 @@ const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPassword
       setLoading(false)
 
       if (success) {
-        return onContinue(email)
+        onContinue(email)
+        return
       }
 
-      if (error) {
+      if (error != null) {
         showNotifaction.error(error.message)
       }
     }
@@ -58,10 +60,26 @@ const ForgotPasswordPage: React.FC<ForgotPasswordProps> = (props: ForgotPassword
             setEmail(email)
           }}
         />
-        <Text style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}>Please enter a valid email address</Text>
+        <Text
+          style={[TextStyles.smallInputFeedback, styles.feedbackText, { opacity: emailValid === false ? 1 : 0 }]}
+        >
+          Please enter a valid email address
+        </Text>
       </View>
-      <TextButton text='Remember password?' scaleTo={0.995} wrapperStyle={{ alignSelf: 'flex-start' }} style={styles.rememberPasswordText} onPress={onRememberedPassword} />
-      <ButtonText text='Continue' color={Colors.sinopia} textColor={Colors.white} onPress={continueForm} loading={loading} />
+      <TextButton
+        text='Remember password?'
+        scaleTo={0.995}
+        wrapperStyle={{ alignSelf: 'flex-start' }}
+        style={styles.rememberPasswordText}
+        onPress={onRememberedPassword}
+      />
+      <ButtonText
+        text='Continue'
+        color={Colors.sinopia}
+        textColor={Colors.white}
+        loading={loading}
+        onPress={() => { void continueForm() }}
+      />
     </View>
   )
 }

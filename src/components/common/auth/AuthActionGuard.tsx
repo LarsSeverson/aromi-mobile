@@ -1,10 +1,10 @@
-import React, { cloneElement, ReactElement, useCallback } from 'react'
+import type React from 'react'
 
 interface AuthActionGuardProps {
-  children: ReactElement
+  children: React.ReactNode
 }
 
-const AuthActionGuard: React.FC<AuthActionGuardProps> = (props: AuthActionGuardProps) => {
+const AuthActionGuard = (props: AuthActionGuardProps) => {
   // const { children } = props
   // const { checkAuth } = useAuthGuardContext()
   // const childPressEvent = children.props.onPress

@@ -1,7 +1,7 @@
 import React from 'react'
 import ProfileCategory from './ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
-import { UserPreviewQuery } from '@/src/gql/graphql'
+import { UserPreviewQuery } from '@/src/types/graphql'
 
 const getEmptyLikesText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? "You haven't liked any fragrances yet" : `${username} hasn't liked any fragrances yet`,

@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
+import { StyleSheet, View, FlatList, type NativeSyntheticEvent, type NativeScrollEvent } from 'react-native'
 import React, { useState } from 'react'
 import { Image } from 'expo-image'
 import { Text } from 'react-native-paper'
@@ -44,7 +44,10 @@ const ImageCarousel = (props: ImageCarouselProps) => {
       />
       <View style={styles.pagination}>
         {urls.map((_, index) => (
-          <View key={index} style={[styles.dot, activeIndex === index && styles.activeDot]} />
+          <View
+            key={index}
+            style={[styles.dot, activeIndex === index && styles.activeDot]}
+          />
         ))}
       </View>
     </View>

@@ -9,7 +9,7 @@ interface AppErrorProps {
   onRetry: () => void
 }
 
-const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
+const AppError = (props: AppErrorProps) => {
   const { onRetry } = props
 
   return (
@@ -17,7 +17,12 @@ const AppError: React.FC<AppErrorProps> = (props: AppErrorProps) => {
       <Text variant='titleLarge'>Oh no!</Text>
       <Text>It looks like something went wrong. Please try again.</Text>
       <AuthActionGuard>
-        <ButtonText text='Reload page' onPress={onRetry} color={Colors.button} textColor={Colors.white} />
+        <ButtonText
+          text='Reload page'
+          onPress={onRetry}
+          color={Colors.button}
+          textColor={Colors.white}
+        />
       </AuthActionGuard>
     </View>
   )
