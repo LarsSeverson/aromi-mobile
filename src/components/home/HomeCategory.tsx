@@ -1,22 +1,26 @@
-import { GestureResponderEvent, StyleSheet, View } from 'react-native'
+import { type GestureResponderEvent, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import React from 'react'
 import TextButton from '../common/TextButton'
 
 interface HomeCategoryProps {
   children?: React.ReactNode
-  onPress?: (event: GestureResponderEvent) => void | undefined
+  onPress?: (event: GestureResponderEvent) => void
   expandable?: boolean
 }
 
 const HomeCategory: React.FC<HomeCategoryProps> = (props: HomeCategoryProps) => {
-  const expandable = props.expandable !== undefined ? props.expandable : true
+  const expandable = props.expandable ?? true
 
   return (
     <View style={styles.wrapper}>
       <Text variant='titleMedium'>{props.children}</Text>
       {expandable && (
-        <TextButton onPress={props.onPress} text='see all' wrapperStyle={{ marginLeft: 'auto' }} />
+        <TextButton
+          onPress={props.onPress}
+          text='see all'
+          wrapperStyle={{ marginLeft: 'auto' }}
+        />
       )}
     </View>
   )

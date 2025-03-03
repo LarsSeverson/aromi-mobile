@@ -1,15 +1,17 @@
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
-import { Button, Text } from 'react-native-paper'
+import { Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { signOut } from 'aws-amplify/auth'
 import { useAppTheme } from '@/src/constants/Themes'
 
 const HomeHeader = () => {
   const theme = useAppTheme()
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={[styles.wrapper, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView
+      edges={['top', 'left', 'right']}
+      style={[styles.wrapper, { backgroundColor: theme.colors.background }]}
+    >
       <Text variant='headlineLarge'>aromi</Text>
     </SafeAreaView>
   )

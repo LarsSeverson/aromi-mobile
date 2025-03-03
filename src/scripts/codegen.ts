@@ -12,7 +12,6 @@ export const config: CodegenConfig = {
       presetConfig: {
         filename: 'graphql.ts'
       },
-      plugins: ['typescript'],
       config: {
         scalars: {
           DateTime: 'Date'

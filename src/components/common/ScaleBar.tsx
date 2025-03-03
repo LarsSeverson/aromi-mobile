@@ -23,7 +23,16 @@ export interface ScaleBarProps extends ViewProps {
 
 const ScaleBar = (props: ScaleBarProps) => {
   const theme = useAppTheme()
-  const { value, label, lessColor = Colors.pink, greaterColor = Colors.button, lessLabel, greaterLabel, Icon, ...viewProps } = props
+  const {
+    value,
+    label,
+    lessColor = Colors.pink,
+    greaterColor = Colors.button,
+    lessLabel,
+    greaterLabel,
+    Icon,
+    ...viewProps
+  } = props
 
   if (value > 100.0 || value < 0.0) {
     return null
@@ -38,13 +47,14 @@ const ScaleBar = (props: ScaleBarProps) => {
       {...viewProps}
       style={[styles.wrapper, viewStyle]}
     >
+      {Icon}
       <Text style={styles.label}>{label}</Text>
       <View style={[styles.trackContainer, { backgroundColor: theme.colors.surfaceDisabled }]}>
-        <View style={styles.trackWrapper}>
-          <View style={[styles.track, { backgroundColor: lessColor, width: `${leftWidth}%` }]} />
+        <View style={styles.trackLeftWrapper}>
+          <View style={[styles.leftTrack, { backgroundColor: lessColor, width: `${leftWidth}%` }]} />
         </View>
-        <View style={styles.trackWrapper}>
-          <View style={[styles.track, { backgroundColor: greaterColor, width: `${rightWidth}%` }]} />
+        <View style={styles.trackRightWrapper}>
+          <View style={[styles.rightTrack, { backgroundColor: greaterColor, width: `${rightWidth}%` }]} />
         </View>
       </View>
       <View style={styles.footLabelWrapper}>
@@ -73,15 +83,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flexDirection: 'row'
   },
-  trackWrapper: {
+  trackLeftWrapper: {
     flex: 1,
     flexDirection: 'row-reverse'
   },
-  track: {
+  trackRightWrapper: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  leftTrack: {
     borderTopLeftRadius: 20,
     borderBottomLeftRadius: 20
   },
+  rightTrack: {
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20
+  },
   footLabelWrapper: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

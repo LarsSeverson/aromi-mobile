@@ -1,9 +1,7 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import ProfileCategory from './ProfileCategory'
-import FragranceReviewCard from '../common/fragrance/FragranceReviewCard'
+import ProfileCategory from '../../profile/ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
-import { UserPreviewQuery } from '@/src/types/graphql'
+import FragranceReviewCard, { type CardFragranceReview } from '../fragrance/FragranceReviewCard'
 
 const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no reviews' : `${username} has no reviews`,
@@ -12,10 +10,8 @@ const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
     : 'Check back later to see what reviews they share.'
 })
 
-type Reviews = NonNullable<UserPreviewQuery['user']>['reviews']
-
 export interface UserReviewsProps {
-  reviews: Reviews
+  reviews: CardFragranceReview[]
   username: string
   isOwner?: boolean | undefined
 }
@@ -28,14 +24,19 @@ const UserReviews = (props: UserReviewsProps) => {
   return (
     <ProfileCategory title='Reviews'>
       {noReviews
-        ? <ProfileEmpty headline={headline} body={body} />
+        ? <ProfileEmpty
+            headline={headline}
+            body={body}
+          />
         : (reviews.map(
-            (review, index) => <FragranceReviewCard key={index} review={review} />
+            (review, index) => (
+              <FragranceReviewCard
+                key={index}
+                review={review}
+              />)
           ))}
     </ProfileCategory>
   )
 }
 
 export default UserReviews
-
-const styles = StyleSheet.create({})

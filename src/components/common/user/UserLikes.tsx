@@ -1,7 +1,7 @@
 import React from 'react'
-import ProfileCategory from './ProfileCategory'
+import ProfileCategory from '../../profile/ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
-import { UserPreviewQuery } from '@/src/types/graphql'
+import { type CardFragrancePreview } from '../fragrance/FragrancePreviewCard'
 
 const getEmptyLikesText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? "You haven't liked any fragrances yet" : `${username} hasn't liked any fragrances yet`,
@@ -10,10 +10,8 @@ const getEmptyLikesText = (isOwner: boolean, username: string) => ({
     : 'Check back later to see what fragrances they like'
 })
 
-type Fragrances = NonNullable<UserPreviewQuery['user']>['likes']
-
 export interface UserLikesProps {
-  fragrances: Fragrances
+  fragrances: CardFragrancePreview[]
   username: string
   isOwner?: boolean | undefined
 }

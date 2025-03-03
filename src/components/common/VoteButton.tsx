@@ -72,7 +72,7 @@ const VoteButton = (props: VoteButtonProps) => {
           ? onRenderForIcon(isForActive)
           : <Icon
               type='octicon'
-              name={(curVote ?? false) ? 'heart' : 'heart-outline'}
+              name={(curVote ?? false) ? 'heart-fill' : 'heart'}
               size={size}
               color={isForActive ? Colors.heart : theme.colors.icon}
             />}

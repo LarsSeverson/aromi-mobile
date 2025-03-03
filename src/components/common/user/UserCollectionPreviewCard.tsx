@@ -1,13 +1,15 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from 'react-native-paper'
-import GridImages from '../common/GridImages'
-import { UserPreviewQuery } from '@/src/types/graphql'
+import { type FragranceCollection } from '@/src/generated/graphql'
+import GridImages from '../GridImages'
 
-type Collection = NonNullable<UserPreviewQuery['user']>['collections'][number]
+type PartialFragrance = Pick<FragranceCollection['fragrances'][number], 'images'>
+type PartialUser = Pick<FragranceCollection['user'], 'username'>
+export type CardUserCollection = Pick<FragranceCollection, 'name' > & { user: PartialUser } & { fragrances: PartialFragrance[] }
 
 export interface UserCollectionPreviewCardProps {
-  collection: Collection
+  collection: CardUserCollection
 }
 
 const UserCollectionPreviewCard = (props: UserCollectionPreviewCardProps) => {

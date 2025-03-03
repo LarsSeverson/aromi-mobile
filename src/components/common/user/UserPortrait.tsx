@@ -3,7 +3,7 @@ import React from 'react'
 import { Divider, Text } from 'react-native-paper'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
-import { appImages } from '@/src/assets/images/appImages'
+import { appImages } from '@/src/common/app-images'
 
 export interface UserPortraitProps {
   username: string
@@ -15,7 +15,7 @@ export interface UserPortraitProps {
 
 const UserPortrait = (props: UserPortraitProps) => {
   const theme = useAppTheme()
-  const { username, followers, following, avatar, isOwner } = props
+  const { username, followers, following } = props
 
   return (
     <View style={styles.container}>

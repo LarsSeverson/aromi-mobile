@@ -14,7 +14,10 @@ const ProfileEmpty = (props: ProfileEmptyProps) => {
   return (
     <View style={StyleSheet.compose(styles.wrapper, style)}>
       <Text variant='titleSmall'>{headline}</Text>
-      <Text variant='labelMedium' style={styles.bodyWrapper}>
+      <Text
+        variant='labelMedium'
+        style={styles.bodyWrapper}
+      >
         {body}
       </Text>
     </View>

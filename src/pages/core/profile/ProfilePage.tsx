@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
-import UserPortrait from '@/src/components/profile/UserPortrait'
-import UserCollections from '@/src/components/profile/UserCollections'
 import { type AuthUser } from '@/src/hooks/useAuth'
-import UserLikes from '@/src/components/profile/UserLikes'
-import UserReviews from '@/src/components/profile/UserReviews'
 import { ScrollView } from 'react-native-gesture-handler'
 import { type UserPreviewQuery } from '@/src/generated/graphql'
+import UserPortrait from '@/src/components/common/user/UserPortrait'
+import UserCollections from '@/src/components/common/user/UserCollections'
+import UserLikes from '@/src/components/common/user/UserLikes'
+import UserReviews from '@/src/components/common/user/UserReviews'
 
 export interface ProfilePageProps {
   user: UserPreviewQuery['user'] | null

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFragrance from '@/src/hooks/useFragrance'
 import { Divider } from 'react-native-paper'
@@ -19,10 +19,12 @@ import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 
 const FragrancePage = () => {
   const router = useRouter()
-  const fragranceId = useRef(Number(useLocalSearchParams<{ fragranceId: string }>()))
+  const { fragranceId } = useLocalSearchParams<{ fragranceId: string }>()
 
-  const { fragrance, loading } = useFragrance({ id: fragranceId.current })
+  const { fragrance, loading } = useFragrance({ id: Number(fragranceId) })
   const { voteOnFragrance } = useVoteOnFragrance()
+
+  console.log(fragranceId)
 
   const onFragranceVote = useCallback((myVote: boolean | null) => {
     if (fragrance == null) return
@@ -37,47 +39,47 @@ const FragrancePage = () => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId: fragranceId.current
+        fragranceId
       }
     })
-  }, [router])
+  }, [router, fragranceId])
 
   const gotoEditAccords = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/accords',
       params: {
-        fragranceId: fragranceId.current
+        fragranceId
       }
     })
-  }, [router])
+  }, [router, fragranceId])
 
   const gotoEditNotes = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/note-layers',
       params: {
-        fragranceId: fragranceId.current
+        fragranceId
       }
     })
-  }, [router])
+  }, [router, fragranceId])
 
   const gotoEditCharacteristics = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId: fragranceId.current
+        fragranceId
       }
     })
-  }, [router])
+  }, [router, fragranceId])
 
   const gotoFragranceReviews = useCallback((reviewId?: number | undefined) => {
     router.push({
       pathname: '/(core)/home/fragrance/reviews',
       params: {
-        fragranceId: fragranceId.current,
+        fragranceId,
         reviewId
       }
     })
-  }, [router])
+  }, [router, fragranceId])
 
   const gotoAddFragranceReview = useCallback(() => {
     router.push({
