@@ -2,6 +2,7 @@ import React from 'react'
 import ProfileCategory from '../../profile/ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
 import { type CardFragrancePreview } from '../fragrance/FragrancePreviewCard'
+import FragrancesTrack from '../fragrance/FragrancesTrack'
 
 const getEmptyLikesText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? "You haven't liked any fragrances yet" : `${username} hasn't liked any fragrances yet`,
@@ -25,9 +26,7 @@ const UserLikes = (props: UserLikesProps) => {
     <ProfileCategory title='Likes'>
       {noLikes
         ? <ProfileEmpty headline={headline} body={body} />
-        : (fragrances.map(
-            (collection, index) => null)
-          )}
+        : <FragrancesTrack fragrances={fragrances} />}
     </ProfileCategory>
   )
 }

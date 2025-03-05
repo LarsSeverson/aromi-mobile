@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar'
 import { AuthProvider } from '../contexts/providers/AuthProvider'
 import { ClientProvider } from '../contexts/providers/ClientProvider'
 import { appImages } from '../common/app-images'
+import { ThemeProvider } from '@react-navigation/native'
 
 void SplashScreen.preventAutoHideAsync()
 
@@ -79,15 +80,17 @@ const RootLayout = () => {
     <>
       <StatusBar style={darkMode ? 'light' : 'dark'} />
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PaperProvider theme={theme}>
-          <NotifierWrapper>
-            <ClientProvider>
-              <AuthProvider>
-                <Slot />
-              </AuthProvider>
-            </ClientProvider>
-          </NotifierWrapper>
-        </PaperProvider>
+        <ThemeProvider value={theme}>
+          <PaperProvider theme={theme}>
+            <NotifierWrapper>
+              <ClientProvider>
+                <AuthProvider>
+                  <Slot />
+                </AuthProvider>
+              </ClientProvider>
+            </NotifierWrapper>
+          </PaperProvider>
+        </ThemeProvider>
       </GestureHandlerRootView>
     </>
   )

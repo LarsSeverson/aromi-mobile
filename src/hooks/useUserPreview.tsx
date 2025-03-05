@@ -27,7 +27,6 @@ const USER_PREVIEW_QUERY = graphql(/* GraphQL */`
         id
         name
         fragrances(limit: $fragrancesLimit, offset: $fragrancesOffset) {
-          id
           images(limit: $fragranceImagesLimit, offset: $fragranceImagesOffset) {
             id
             url
@@ -49,6 +48,12 @@ const USER_PREVIEW_QUERY = graphql(/* GraphQL */`
       }
       likes(limit: $likesLimit, offset: $likesOffset) {
         id
+        brand
+        name
+        images(limit: $fragranceImagesLimit, offset: $fragranceImagesOffset) {
+          id
+          url
+        }
         vote {
           id
           likes

@@ -1,6 +1,7 @@
 import { MD3DarkTheme, MD3LightTheme, type MD3Theme, useTheme } from 'react-native-paper'
 import { Colors } from './Colors'
 import { type MD3Typescale } from 'react-native-paper/lib/typescript/types'
+import { type Theme } from '@react-navigation/native'
 
 const AromiFonts: MD3Typescale = {
   displayLarge: {
@@ -113,6 +114,31 @@ const AromiFonts: MD3Typescale = {
     fontWeight: 'normal',
     letterSpacing: 0
   }
+
+}
+
+const NavigationFonts: Theme['fonts'] = {
+  regular: {
+    fontFamily: 'RobotoMono-Regular',
+    fontWeight: '400'
+  },
+  medium: {
+    fontFamily: 'RobotoMono-Medium',
+    fontWeight: '400'
+  },
+  bold: {
+    fontFamily: 'RobotoMono-Bold',
+    fontWeight: '400'
+  },
+  heavy: {
+    fontFamily: 'RobotoMono-Heavy',
+    fontWeight: '400'
+  }
+}
+
+const CombinedFonts = {
+  ...AromiFonts,
+  ...NavigationFonts
 }
 
 export interface AromiColors {
@@ -123,7 +149,7 @@ export interface AromiColors {
   icon: string
 }
 
-export type AromiTheme = MD3Theme & { colors: AromiColors }
+export type AromiTheme = Theme & MD3Theme & { colors: AromiColors }
 
 export const lightTheme: AromiTheme = {
   ...MD3LightTheme,
@@ -178,7 +204,7 @@ export const lightTheme: AromiTheme = {
     surfaceDisabled: Colors.placeholder2,
     onSurfaceDisabled: Colors.placeholder3
   },
-  fonts: AromiFonts
+  fonts: CombinedFonts
 }
 
 export const darkTheme: AromiTheme = {
@@ -234,7 +260,7 @@ export const darkTheme: AromiTheme = {
     surfaceDisabled: Colors.placeholder4,
     onSurfaceDisabled: Colors.placeholder
   },
-  fonts: AromiFonts
+  fonts: CombinedFonts
 }
 
 export const useAppTheme = useTheme<AromiTheme>

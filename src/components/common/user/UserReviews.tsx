@@ -1,7 +1,8 @@
 import React from 'react'
 import ProfileCategory from '../../profile/ProfileCategory'
 import ProfileEmpty from './ProfileEmpty'
-import FragranceReviewCard, { type CardFragranceReview } from '../fragrance/FragranceReviewCard'
+import { type CardFragranceReview } from '../fragrance/FragranceReviewCard'
+import ReviewsTrack from '../fragrance/ReviewsTrack'
 
 const getEmptyReviewsText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no reviews' : `${username} has no reviews`,
@@ -22,19 +23,16 @@ const UserReviews = (props: UserReviewsProps) => {
   const noReviews = reviews.length === 0
 
   return (
-    <ProfileCategory title='Reviews'>
+    <ProfileCategory
+      title='Reviews'
+      showSeeAll
+    >
       {noReviews
         ? <ProfileEmpty
             headline={headline}
             body={body}
           />
-        : (reviews.map(
-            (review, index) => (
-              <FragranceReviewCard
-                key={index}
-                review={review}
-              />)
-          ))}
+        : <ReviewsTrack reviews={reviews} />}
     </ProfileCategory>
   )
 }

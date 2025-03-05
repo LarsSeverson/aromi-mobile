@@ -7,16 +7,31 @@
     "icon": "./src/assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./src/assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "transparent"
-    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aromiInc.aromi"
+      "bundleIdentifier": "com.aromiInc.aromi",
+      "splash": {
+        "image": "./src/assets/images/splash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./src/assets/images/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#000000"
+        }
+      }
     },
     "android": {
+      "splash": {
+        "image": "./src/assets/images/splash.png",
+        "resizeMode": "cover",
+        "backgroundColor": "#ffffff",
+        "dark": {
+          "image": "./src/assets/images/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#000000"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
