@@ -7,13 +7,9 @@ import { NoteLayer } from '@/src/generated/graphql'
 
 const FragranceNoteLayersPage = () => {
   const router = useRouter()
+  const fragranceId = Number(useLocalSearchParams<{ fragranceId: string }>().fragranceId)
 
-  const fragranceId = Number(useLocalSearchParams().fragranceId)
-
-  const {
-    notes,
-    loading
-  } = useFragranceNotes({ id: fragranceId, includeTop: true, includeMiddle: true, includeBase: true })
+  const { data, loading } = useFragranceNotes(fragranceId)
 
   const handleOnExpanded = useCallback((layer: NoteLayer) => {
     router.push({
@@ -26,7 +22,7 @@ const FragranceNoteLayersPage = () => {
   }, [fragranceId, router])
 
   // TODO
-  if (loading || notes == null) {
+  if (loading) {
     return null
   }
 
@@ -34,17 +30,17 @@ const FragranceNoteLayersPage = () => {
     <View style={styles.wrapper}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
         <FragranceNotesLayer
-          notes={notes.top ?? []}
+          notes={data.top}
           layer={NoteLayer.Top}
           onExpanded={handleOnExpanded}
         />
         <FragranceNotesLayer
-          notes={notes.middle ?? []}
+          notes={data.middle}
           layer={NoteLayer.Middle}
           onExpanded={handleOnExpanded}
         />
         <FragranceNotesLayer
-          notes={notes.base ?? []}
+          notes={data.base}
           layer={NoteLayer.Base}
           onExpanded={handleOnExpanded}
         />

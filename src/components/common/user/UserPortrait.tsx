@@ -4,18 +4,20 @@ import { Divider, Text } from 'react-native-paper'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { appImages } from '@/src/common/app-images'
+import { type User } from '@/src/generated/graphql'
+
+// TODO: Avatar
+export type CardUser = Pick<User, 'id' | 'username' | 'followers' | 'following'>
 
 export interface UserPortraitProps {
-  username: string
-  followers: number
-  following: number
-  avatar?: string | undefined
-  isOwner?: boolean | undefined
+  user: CardUser
+  myPortrait?: boolean | undefined
 }
 
 const UserPortrait = (props: UserPortraitProps) => {
   const theme = useAppTheme()
-  const { username, followers, following } = props
+  const { user } = props
+  const { username, followers, following } = user
 
   return (
     <View style={styles.container}>

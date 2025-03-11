@@ -1,144 +1,235 @@
 import { useQuery } from '@apollo/client'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
-import { type FragranceQueryVariables } from '../generated/graphql'
+import { flattenConnection, INVALID_ID, type FlattenType } from '../common/util-types'
+import { type FragranceQuery } from '../generated/graphql'
+
+/*
+const IMAGES_LIMIT = 4
+const NOTES_LIMIT = 7
+const ACCORDS_LIMIT = 7
+const REVIEWS_LIMIT = 9
+*/
 
 const FRAGRANCE_QUERY = graphql(/* GraphQL */ `
   query Fragrance(
-    $id: Int!, 
-    $imagesLimit: Int = 5, 
-    $imagesOffset: Int = 0,
-    $notesLimit: Int = 8,
-    $notesOffset: Int = 0,
-    $notesFill: Boolean = false,
-    $accordsLimit: Int = 8,
-    $accordsOffset: Int = 0,
-    $accordsFill: Boolean = false,
-    $reviewsLimit: Int = 10,
-    $reviewsOffset: Int = 0) {
-    fragrance(id: $id) {
+    $fragranceId: Int!
+    $imagesInput: QueryInput = {
+      pagination: {
+        first: 5 
+      }
+    }
+    $accordsInput: AccordsInput = {
+      pagination: {
+        first: 8,
+        sort: {
+          by: votes
+        }
+      }
+    }
+    $notesInput: NotesInput = {
+      pagination: {
+        first: 8,
+        sort: {
+          by: votes
+        }
+      }
+    }
+    $reviewsInput: QueryInput = {
+      pagination: {
+        first: 10,
+        sort: {
+          by: votes
+        }
+      }
+    }
+  ) {
+    fragrance(id: $fragranceId) {
       id
       brand
       name
       rating
       reviewsCount
 
-      vote {
+      votes {
         id
         likes
         dislikes
         myVote
       }
 
-      images(limit: $imagesLimit, offset: $imagesOffset) {
-        id
-        url
+      images(input: $imagesInput) {
+        edges {
+          node {
+            id
+            url
+          }
+        }
       }
 
       traits {
         gender {
           id
-          trait
           value
+          trait
           myVote
         }
         longevity {
           id
-          trait
           value
+          trait
           myVote
         }
         sillage {
           id
-          trait
           value
+          trait
           myVote
         }
         complexity {
           id
-          trait
           value
+          trait
           myVote
         }
         balance {
           id
-          trait
           value
+          trait
           myVote
         }
         allure {
           id
-          trait
           value
+          trait
           myVote
+        }
+      }
+
+      accords(input: $accordsInput) {
+        edges {
+          node {
+            id
+            accordId
+            name
+            color
+            votes
+            myVote
+          }
         }
       }
 
       notes {
-        top(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
-          id
-          noteId
-          layer
-          name
-          votes
-          myVote
+        fragranceId
+        top(input: $notesInput) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              votes
+              layer
+              myVote
+            }
+          }
         }
-        middle(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
-          id
-          noteId
-          layer
-          name
-          votes
-          myVote
+        middle(input: $notesInput) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              votes
+              layer
+              myVote
+            }
+          }
         }
-        base(limit: $notesLimit, offset: $notesOffset, fill: $notesFill) {
-          id
-          noteId
-          layer
-          name
-          votes
-          myVote
+        base(input: $notesInput) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              votes
+              layer
+              myVote
+            }
+          }
         }
       }
-
-      accords(limit: $accordsLimit, offset: $accordsOffset, fill: $accordsFill) {
-        id
-        accordId
-        name
-        color
-        votes
-        myVote
-      }
-
-      reviews(limit: $reviewsLimit, offset: $reviewsOffset) {
-        id
-        rating
-        review
-        votes
-        dCreated
-        dModified
-        dDeleted
-        author 
-        myVote
+      reviews(input: $reviewsInput) {
+        edges {
+          node {
+            id
+            author
+            rating
+            review
+            votes
+            myVote
+            dCreated
+            dModified
+            dDeleted
+          }
+        }
       }
     }
   }
 `)
 
-const useFragrance = (variables: FragranceQueryVariables) => {
-  const {
-    data,
-    loading,
-    error,
-    refetch
-  } = useQuery(FRAGRANCE_QUERY, { variables })
+export type FlattenedFragranceQuery = FlattenType<NonNullable<FragranceQuery['fragrance']>>
+export type FragranceSummary = Pick<FlattenedFragranceQuery, 'id' | 'brand' | 'name' | 'rating' | 'reviewsCount' | 'votes' | 'traits'>
 
-  const refresh = useCallback((variables?: FragranceQueryVariables) => {
-    void refetch(variables)
+const useFragrance = (fragranceId: number) => {
+  const { data, loading, error, refetch } = useQuery(FRAGRANCE_QUERY, { variables: { fragranceId } })
+
+  const refresh = useCallback(() => {
+    void refetch()
   }, [refetch])
 
+  const summary = useMemo<FragranceSummary | undefined>(() =>
+    (data?.fragrance == null)
+      ? undefined
+      : {
+          id: data.fragrance.id,
+          brand: data.fragrance.brand,
+          name: data.fragrance.name,
+          rating: data.fragrance.rating,
+          reviewsCount: data.fragrance.reviewsCount,
+          votes: data.fragrance.votes,
+          traits: data.fragrance.traits
+        }
+  , [data?.fragrance])
+
+  const images = useMemo<FlattenedFragranceQuery['images']>(() =>
+    flattenConnection(data?.fragrance?.images),
+  [data?.fragrance?.images])
+
+  const accords = useMemo<FlattenedFragranceQuery['accords']>(() =>
+    flattenConnection(data?.fragrance?.accords),
+  [data?.fragrance?.accords])
+
+  const notes = useMemo<FlattenedFragranceQuery['notes']>(() => ({
+    fragranceId: data?.fragrance?.notes.fragranceId ?? INVALID_ID,
+    top: flattenConnection(data?.fragrance?.notes.top),
+    middle: flattenConnection(data?.fragrance?.notes.middle),
+    base: flattenConnection(data?.fragrance?.notes.base)
+  }),
+  [data?.fragrance?.notes])
+
+  const reviews = useMemo<FlattenedFragranceQuery['reviews']>(() =>
+    flattenConnection(data?.fragrance?.reviews),
+  [data?.fragrance?.reviews])
+
   return {
-    fragrance: data?.fragrance,
+    summary,
+    images,
+    accords,
+    notes,
+    reviews,
     loading,
     error,
 

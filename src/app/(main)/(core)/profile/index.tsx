@@ -1,26 +1,24 @@
 import { useAuthContext } from '@/src/contexts/AuthContext'
-import useUserPreview from '@/src/hooks/useUserPreview'
 import ProfilePage from '@/src/pages/core/profile/ProfilePage'
 import React from 'react'
 import { INVALID_ID } from '@/src/common/util-types'
+import useUserActivity from '@/src/hooks/useUserActivity'
 
 const Profile = () => {
   const { userInfo } = useAuthContext()
 
   const currentUser = userInfo.user
-  const id = currentUser?.id ?? INVALID_ID
+  const userId = currentUser?.id ?? INVALID_ID
 
-  const { user } = useUserPreview({ id })
+  const { hasActivity } = useUserActivity(userId)
 
-  if (currentUser == null) {
-    // TODO:
-    return null
-  }
+  if (currentUser == null) return null // TODO
 
   return (
     <ProfilePage
-      user={user}
-      currentUser={userInfo.user}
+      user={currentUser}
+      myProfile
+      hasActivity={hasActivity}
     />
   )
 }

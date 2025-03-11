@@ -1,139 +1,133 @@
 import { useQuery } from '@apollo/client'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
-import { type FragranceNotesQueryVariables } from '../generated/graphql'
-import { type NonNullableVariables } from '../common/util-types'
+import { type FragranceNotesQuery, type FragranceNotesQueryVariables } from '../generated/graphql'
+import { flattenConnection, type FlattenType } from '../common/util-types'
+
+const NOTES_LIMIT = 12
 
 const FRAGRANCE_NOTES_QUERY = graphql(/* GraphQL */ `
   query FragranceNotes(
-    $id: Int!, 
-    $limit: Int = 12, 
-    $offset: Int = 0, 
-    $fill: Boolean = false,
-    $includeTop: Boolean!,
-    $includeMiddle: Boolean!,
-    $includeBase: Boolean!
+    $fragranceId: Int!
+    $includeTop: Boolean = false
+    $includeMiddle: Boolean = false
+    $includeBase: Boolean = false
+    $notesInput: NotesInput = {
+      pagination: {
+        first: 12 
+        sort: {
+          by: votes
+        }
+      }
+      fill: false
+    }
   ) {
-    fragrance(id: $id) {
+    fragrance(id: $fragranceId) {
       id
-
       notes {
-        top(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeTop) {
-          id
-          noteId
-          name
-          layer
-          votes
-          myVote
+        top(input: $notesInput) @include(if: $includeTop) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              layer
+              votes
+              myVote
+            }
+          }
+          pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+          }
         }
-        middle(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeMiddle) {
-          id
-          noteId
-          name
-          layer
-          votes
-          myVote
+        middle(input: $notesInput) @include(if: $includeMiddle) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              layer
+              votes
+              myVote
+            }
+          }
+          pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+          }
         }
-        base(limit: $limit, offset: $offset, fill: $fill) @include(if: $includeBase) {
-          id
-          noteId
-          name
-          layer
-          votes
-          myVote
+        base(input: $notesInput) @include(if: $includeBase) {
+          edges {
+            node {
+              id
+              noteId
+              name
+              icon
+              layer
+              votes
+              myVote
+            }
+          }
+          pageInfo {
+            hasPreviousPage
+            hasNextPage
+            startCursor
+            endCursor
+          }
         }
-      } 
+      }
     }
   }
 `)
 
-const useFragranceNotes = (variables: FragranceNotesQueryVariables) => {
-  const {
-    data,
-    loading,
-    error,
-    refetch,
-    fetchMore
-  } = useQuery(FRAGRANCE_NOTES_QUERY, { variables })
+export interface FlattenedFragranceNotes {
+  top: NonNullable<FlattenType<NonNullable<FragranceNotesQuery['fragrance']>>['notes']['top']>
+  middle: NonNullable<FlattenType<NonNullable<FragranceNotesQuery['fragrance']>>['notes']['middle']>
+  base: NonNullable<FlattenType<NonNullable<FragranceNotesQuery['fragrance']>>['notes']['base']>
+}
 
-  const localVariables = useRef<NonNullableVariables<FragranceNotesQueryVariables>>({
-    id: variables.id,
-    limit: variables.limit ?? 12,
-    offset: variables.offset ?? 0,
-    fill: variables.fill ?? false,
-    includeTop: variables.includeTop,
-    includeMiddle: variables.includeMiddle,
-    includeBase: variables.includeBase
-  })
+export interface UseFragranceNotesIncludes {
+  includeTop: boolean
+  includeMiddle: boolean
+  includeBase: boolean
+}
 
-  const [hasMore, setHasMore] = useState(true)
-
-  const refresh = useCallback((variables: FragranceNotesQueryVariables = localVariables.current) => {
-    localVariables.current = {
-      id: variables.id,
-      limit: variables.limit ?? 12,
-      offset: 0,
-      fill: variables.fill ?? false,
-      includeTop: variables.includeTop,
-      includeMiddle: variables.includeMiddle,
-      includeBase: variables.includeBase
-    }
-
-    void refetch(localVariables.current)
-  }, [refetch])
-
-  const getMore = useCallback(() => {
-    if (!hasMore) return
-
-    const { offset, limit } = localVariables.current
-    const nextOffset = offset + limit
-    localVariables.current.offset = nextOffset
-
-    void fetchMore({
-      variables: { offset: nextOffset },
-      updateQuery: (prev, { fetchMoreResult }) => {
-        if (prev.fragrance == null) return fetchMoreResult
-        if (fetchMoreResult.fragrance == null) return prev
-
-        const oldTopNotes = prev.fragrance.notes.top ?? []
-        const oldMiddleNotes = prev.fragrance.notes.middle ?? []
-        const oldBaseNotes = prev.fragrance.notes.base ?? []
-
-        const { includeTop, includeMiddle, includeBase } = localVariables.current
-
-        const newTopNotes = includeTop ? fetchMoreResult.fragrance.notes.top ?? [] : []
-        const newMiddleNotes = includeMiddle ? fetchMoreResult.fragrance.notes.middle ?? [] : []
-        const newBaseNotes = includeBase ? fetchMoreResult.fragrance.notes.base ?? [] : []
-
-        const hasMoreAccords =
-        (includeTop ? newTopNotes.length > 0 : true) &&
-        (includeMiddle ? newMiddleNotes.length > 0 : true) &&
-        (includeBase ? newBaseNotes.length > 0 : true)
-
-        setHasMore(hasMoreAccords)
-
-        return {
-          fragrance: {
-            ...prev.fragrance,
-            notes: {
-              top: includeTop ? oldTopNotes.concat(newTopNotes) : oldTopNotes,
-              middle: includeMiddle ? oldMiddleNotes.concat(newMiddleNotes) : oldMiddleNotes,
-              base: includeBase ? oldBaseNotes.concat(newBaseNotes) : oldBaseNotes
-            }
-          }
-        }
+const useFragranceNotes = (fragranceId: number, includes?: UseFragranceNotesIncludes) => {
+  const variables = useMemo<FragranceNotesQueryVariables>(() => ({
+    fragranceId,
+    notesInput: {
+      pagination: {
+        first: NOTES_LIMIT
       }
-    })
-  }, [hasMore, fetchMore])
+    },
+    ...includes
+  }), [fragranceId, includes])
+
+  const { data, loading, error, refetch } = useQuery(FRAGRANCE_NOTES_QUERY, { variables })
+
+  const refresh = useCallback(() => {
+    void refetch(variables)
+  }, [variables, refetch])
+
+  const notes = useMemo<FlattenedFragranceNotes>(() => ({
+    top: flattenConnection(data?.fragrance?.notes.top),
+    middle: flattenConnection(data?.fragrance?.notes.middle),
+    base: flattenConnection(data?.fragrance?.notes.base)
+  }), [data?.fragrance?.notes])
 
   return {
-    notes: data?.fragrance?.notes ?? { top: [], middle: [], base: [] },
+    data: notes,
     loading,
     error,
-    hasMore,
 
-    refresh,
-    getMore
+    refresh
   }
 }
 

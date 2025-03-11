@@ -14,7 +14,7 @@ const GridImages = (props: GridImagesProps) => {
 
   return (
     <View style={styles.wrapper}>
-      {images.length === 1
+      {images.length < 4
         ? (
           <Image
             source={{ uri: images.at(0) }}
@@ -46,13 +46,10 @@ const styles = StyleSheet.create({
   },
   gridImage: {
     width: '50%',
-    height: '50%',
-    resizeMode: 'contain',
-    borderWidth: 1
+    height: '50%'
   },
   fullImage: {
     width: '100%',
-    height: '100%',
-    resizeMode: 'contain'
+    height: '100%'
   }
 })

@@ -1,5 +1,5 @@
 import React from 'react'
-import FragranceNoteLayersPage from '@/src/pages/core/home/fragrance/FragranceNoteLayersPage'
+import FragranceNoteLayersPage from '@/src/pages/common/FragranceNoteLayersPage'
 
 const NoteLayers = () => {
   return <FragranceNoteLayersPage />

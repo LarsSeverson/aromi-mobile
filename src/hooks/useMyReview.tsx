@@ -29,7 +29,7 @@ export const useMyReview = () => {
   }, [getMyReviewQuery])
 
   return {
-    myReview: data?.fragrance?.myReview,
+    data: data?.fragrance?.myReview,
     loading,
     error,
     getMyReview

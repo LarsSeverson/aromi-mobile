@@ -8,6 +8,8 @@ const UPSERT_USER_MUTATION = graphql(/* GraphQL */ `
       email
       username
       cognitoId
+      followers
+      following
     }
   }
 `)
@@ -16,7 +18,7 @@ const useUpsertUser = () => {
   const [execute, { data, loading, error }] = useMutation(UPSERT_USER_MUTATION)
 
   return {
-    user: data?.upsertUser,
+    data: data?.upsertUser,
     error,
     loading,
 

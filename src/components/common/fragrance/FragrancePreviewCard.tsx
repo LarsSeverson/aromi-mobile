@@ -5,9 +5,11 @@ import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
 import VoteButton from '../VoteButton'
-import { type Fragrance } from '@/src/generated/graphql'
+import { type FragranceImage, type Fragrance } from '@/src/generated/graphql'
 
-export type CardFragrancePreview = Pick<Fragrance, 'id' | 'name' | 'brand' | 'vote' | 'images'>
+export type CardFragrancePreview = Omit<Pick<Fragrance, 'id' | 'name' | 'brand' | 'votes'>, 'images'> & {
+  images: FragranceImage[]
+}
 
 export interface FragrancePreviewCardProps extends BouncyButtonProps {
   fragrance: CardFragrancePreview
@@ -19,7 +21,7 @@ export interface FragrancePreviewCardProps extends BouncyButtonProps {
 const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   const theme = useAppTheme()
   const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
-  const votes = fragrance.vote.likes - fragrance.vote.dislikes
+  const votes = fragrance.votes.likes - fragrance.votes.dislikes
 
   const handlePress = useCallback(() => {
     onFragrancePress?.(fragrance.id)
@@ -39,7 +41,7 @@ const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
           />
           <VoteButton
             votes={votes}
-            myVote={fragrance.vote.myVote}
+            myVote={fragrance.votes.myVote}
             style={styles.reactionsWrapper}
             onVote={handleVote}
           />

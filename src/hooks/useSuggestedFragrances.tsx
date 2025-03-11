@@ -1,97 +1,120 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import { graphql } from '../generated'
-import { type SuggestedFragrancesQueryVariables } from '../generated/graphql'
-import { type NonNullableVariables } from '../common/util-types'
+import { type SuggestedFragrancesQuery, type SuggestedFragrancesQueryVariables } from '../generated/graphql'
+import { flattenConnection, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
+
+const FRAGRANCES_LIMIT = 20
 
 const SUGGESTED_FRAGRANCES_QUERY = graphql(/* GraphQL */ `
   query SuggestedFragrances(
-    $limit: Int = 10, 
-    $offset: Int = 0, 
-    $imagesLimit: Int = 1,
-    $imagesOffset: Int = 0) {
-    fragrances(limit: $limit, offset: $offset) {
-      id
-      brand
-      name
-
-      vote {
-        id
-        likes
-        dislikes
-        myVote
-      } 
-
-      images(limit: $imagesLimit, offset: $imagesOffset) {
-        id
-        url
+    $input: QueryInput = { 
+      pagination: { 
+        first: 20
       }
     }
-  }
+    $imagesInput: QueryInput = { 
+      pagination: { 
+        first: 1
+      }
+    }
+  ) {
+    fragrances(input: $input) {
+      edges {
+        node {
+          id
+          brand
+          name
+          votes {
+            id
+            dislikes
+            likes
+            myVote
+          }
+          images(input: $imagesInput) {
+            edges {
+              node {
+                id
+                url
+              }
+            }
+          }
+        }
+        cursor
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  } 
 `)
 
-const useSuggestedFragrances = (variables: SuggestedFragrancesQueryVariables = {}) => {
-  const {
-    data,
-    loading,
-    error,
-    fetchMore,
-    refetch
-  } = useQuery(SUGGESTED_FRAGRANCES_QUERY, { variables })
+export type FlattendedSuggestedFragrancesData = FlattenType<SuggestedFragrancesQuery>
 
-  const localVariables = useRef<NonNullableVariables<SuggestedFragrancesQueryVariables>>({
-    limit: variables.limit ?? 10,
-    offset: variables.offset ?? 0,
-    imagesLimit: variables.imagesLimit ?? 1,
-    imagesOffset: variables.imagesOffset ?? 0
-  })
+const useSuggestedFragrances = (): PaginatedQueryHookReturn<FlattendedSuggestedFragrancesData['fragrances']> => {
+  const variables = useMemo<SuggestedFragrancesQueryVariables>(() => ({
+    input: { pagination: { first: FRAGRANCES_LIMIT } }
+  }), [])
 
-  const [hasMore, setHasMore] = useState(true)
-
-  const refresh = useCallback((variables: SuggestedFragrancesQueryVariables = localVariables.current) => {
-    localVariables.current = {
-      limit: variables.limit ?? 10,
-      offset: 0,
-      imagesLimit: variables.imagesLimit ?? 1,
-      imagesOffset: variables.imagesOffset ?? 0
-    }
-    void refetch(localVariables.current)
-  }, [refetch])
+  const { data, loading, error, fetchMore, refetch } = useQuery(SUGGESTED_FRAGRANCES_QUERY, { variables })
 
   const getMore = useCallback(() => {
-    if (!hasMore) return
+    if (data == null) return
 
-    const { offset, limit } = localVariables.current
-    const nextOffset = offset + limit
-    localVariables.current.offset = nextOffset
+    const pageInfo = data.fragrances.pageInfo
+    const { hasNextPage, endCursor } = pageInfo
+
+    if (!hasNextPage || (endCursor == null)) return
+
+    const newVariables: SuggestedFragrancesQueryVariables = {
+      ...variables,
+      input: {
+        pagination: {
+          ...variables.input?.pagination,
+          after: endCursor
+        }
+      }
+    }
 
     void fetchMore({
-      variables: { offset: nextOffset },
+      variables: newVariables,
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (prev.fragrances == null) return fetchMoreResult
-        if (fetchMoreResult.fragrances == null) return prev
+        const c1 = prev.fragrances
+        const c2 = fetchMoreResult.fragrances
 
-        if (fetchMoreResult.fragrances.length < localVariables.current.limit) {
-          setHasMore(false)
-        }
+        if (c1 == null) return fetchMoreResult
+        if (c2 == null) return prev
 
         return {
-          fragrances: [
-            ...prev.fragrances,
-            ...fetchMoreResult.fragrances
-          ]
+          fragrances: {
+            edges: c1.edges.concat(c2.edges),
+            pageInfo: c2.pageInfo
+          }
         }
       }
     })
-  }, [hasMore, fetchMore])
+  }, [data, variables, fetchMore])
+
+  const refresh = useCallback(() => {
+    void refetch(variables)
+  }, [variables, refetch])
+
+  const fragrances = useMemo<FlattendedSuggestedFragrancesData['fragrances']>(() =>
+    flattenConnection(data?.fragrances).map(fragrance => ({
+      ...fragrance,
+      images: flattenConnection(fragrance.images)
+    })),
+  [data?.fragrances])
 
   return {
-    suggestedFragrances: data?.fragrances ?? [],
+    data: fragrances,
+    pageInfo: data?.fragrances.pageInfo,
 
     error,
     loading,
-
-    hasMore,
 
     getMore,
     refresh

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { useCallback } from 'react'
 import { graphql } from '../generated'
-import { type FragranceVote, type VoteOnFraganceMutationVariables } from '../generated/graphql'
+import { type FragranceVotes, type VoteOnFraganceMutationVariables } from '../generated/graphql'
 
 const VOTE_ON_FRAGRANCE_MUTATION = graphql(/* GraphQL */ `
   mutation VoteOnFragance($fragranceId: Int!, $myVote: Boolean) {
@@ -20,12 +20,12 @@ const useVoteOnFragrance = () => {
     error
   }] = useMutation(VOTE_ON_FRAGRANCE_MUTATION)
 
-  const voteOnFragrance = useCallback((variables: VoteOnFraganceMutationVariables, vote: FragranceVote) => {
+  const voteOnFragrance = useCallback((variables: VoteOnFraganceMutationVariables, votes: FragranceVotes) => {
     void voteOnFragranceMutation({
       variables,
       optimisticResponse: {
         voteOnFragrance: {
-          ...vote,
+          ...votes,
           myVote: variables.myVote
         }
       }

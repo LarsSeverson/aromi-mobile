@@ -1,5 +1,5 @@
 import React from 'react'
-import EditCharacteristicsPage from '@/src/pages/core/home/fragrance/edit/EditCharacteristicsPage'
+import EditCharacteristicsPage from '@/src/pages/common/EditCharacteristicsPage'
 
 const EditCharacteristics = () => {
   return <EditCharacteristicsPage />

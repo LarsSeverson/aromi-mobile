@@ -30,13 +30,16 @@ const FragranceImageCarousel = (props: FragranceImageCarouselProps) => {
           type='material-community'
           backgroundColor={Colors.placeholder2}
           style={styles.icon}
+          size={22}
         />
       </BouncyButton>
       <BouncyButton style={styles.collectionButton}>
         <Icon
-          name='bookmark-outline'
+          name='plus-circle-outline'
+          type='material-community'
           backgroundColor={Colors.placeholder2}
           style={styles.icon}
+          size={22}
         />
       </BouncyButton>
     </View>

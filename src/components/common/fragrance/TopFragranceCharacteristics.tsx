@@ -6,15 +6,15 @@ import FragranceCategory from './FragranceCategory'
 import { type CardFragranceTrait } from './TraitSlider'
 
 export interface TopFragranceCharacteristicsCards {
-  longevity: CardFragranceTrait
-  sillage: CardFragranceTrait
-  complexity: CardFragranceTrait
-  balance: CardFragranceTrait
-  allure: CardFragranceTrait
+  longevity?: CardFragranceTrait | undefined | null
+  sillage?: CardFragranceTrait | undefined | null
+  complexity?: CardFragranceTrait | undefined | null
+  balance?: CardFragranceTrait | undefined | null
+  allure?: CardFragranceTrait | undefined | null
 }
 
 export interface TopFragranceCharacteristicsProps {
-  traits: TopFragranceCharacteristicsCards
+  traits?: TopFragranceCharacteristicsCards | undefined | null
   onExpand?: () => void
 }
 
@@ -28,41 +28,46 @@ const TopFragranceCharacteristics = (props: TopFragranceCharacteristicsProps) =>
       onCategoryPressed={onExpand}
     >
       <View style={styles.wrapper}>
-        <ScaleBar
-          value={traits.longevity.value}
-          label='longevity'
-          Icon={<LongevityIcon />}
-          lessLabel='very short'
-          greaterLabel='very long'
-        />
-        <ScaleBar
-          value={traits.sillage.value}
-          label='sillage'
-          Icon={<SillageIcon />}
-          lessLabel='intimate'
-          greaterLabel='expansive'
-        />
-        <ScaleBar
-          value={traits.complexity.value}
-          label='complexity'
-          Icon={<ComplexityIcon />}
-          lessLabel='simple'
-          greaterLabel='intricate'
-        />
-        <ScaleBar
-          value={traits.balance.value}
-          label='balance'
-          Icon={<BalanceIcon />}
-          lessLabel='unbalanced'
-          greaterLabel='harmonious'
-        />
-        <ScaleBar
-          value={traits.allure.value}
-          label='allure'
-          Icon={<AllureIcon />}
-          lessLabel='unappealing'
-          greaterLabel='captivating'
-        />
+        {traits?.longevity != null && (
+          <ScaleBar
+            value={traits.longevity.value}
+            label='longevity'
+            Icon={<LongevityIcon />}
+            lessLabel='very short'
+            greaterLabel='very long'
+          />)}
+        {traits?.sillage != null && (
+          <ScaleBar
+            value={traits.sillage.value}
+            label='sillage'
+            Icon={<SillageIcon />}
+            lessLabel='intimate'
+            greaterLabel='expansive'
+          />)}
+        {traits?.complexity != null && (
+          <ScaleBar
+            value={traits.complexity.value}
+            label='complexity'
+            Icon={<ComplexityIcon />}
+            lessLabel='simple'
+            greaterLabel='intricate'
+          />)}
+        {traits?.balance != null && (
+          <ScaleBar
+            value={traits.balance.value}
+            label='balance'
+            Icon={<BalanceIcon />}
+            lessLabel='unbalanced'
+            greaterLabel='harmonious'
+          />)}
+        {traits?.allure != null && (
+          <ScaleBar
+            value={traits.allure.value}
+            label='allure'
+            Icon={<AllureIcon />}
+            lessLabel='unappealing'
+            greaterLabel='captivating'
+          />)}
       </View>
     </FragranceCategory>
   )

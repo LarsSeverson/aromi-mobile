@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
 import { type FragranceTraitsQueryVariables } from '../generated/graphql'
 
 const FRAGRANCE_TRAITS_QUERY = graphql(/* GraphQL */ `
-  query FragranceTraits($id: Int!) {
-    fragrance(id: $id) {
+  query FragranceTraits($fragranceId: Int!) {
+    fragrance(id: $fragranceId) {
       id
       traits {
         gender {
@@ -49,21 +49,19 @@ const FRAGRANCE_TRAITS_QUERY = graphql(/* GraphQL */ `
   }
 `)
 
-const useFragranceTraits = (variables: FragranceTraitsQueryVariables) => {
-  const {
-    data,
-    loading,
-    error,
-    refetch
-  } = useQuery(FRAGRANCE_TRAITS_QUERY, { variables })
+const useFragranceTraits = (fragranceId: number) => {
+  const variables = useMemo<FragranceTraitsQueryVariables>(() => ({
+    fragranceId
+  }), [fragranceId])
 
-  const refresh = useCallback((variables?: FragranceTraitsQueryVariables) => {
+  const { data, loading, error, refetch } = useQuery(FRAGRANCE_TRAITS_QUERY, { variables })
+
+  const refresh = useCallback(() => {
     void refetch(variables)
-  }, [refetch])
+  }, [variables, refetch])
 
   return {
-    traits: data?.fragrance?.traits,
-
+    data: data?.fragrance?.traits,
     loading,
     error,
 

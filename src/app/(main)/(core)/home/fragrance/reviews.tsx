@@ -1,4 +1,4 @@
-import FragranceReviewsPage from '@/src/pages/core/home/fragrance/FragranceReviewsPage'
+import FragranceReviewsPage from '@/src/pages/common/FragranceReviewsPage'
 import React from 'react'
 
 const Reviews = () => {

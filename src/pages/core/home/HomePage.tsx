@@ -1,23 +1,24 @@
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useCallback } from 'react'
 import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/common/BlockList'
 import FragrancePreviewCard, { type CardFragrancePreview } from '@/src/components/common/fragrance/FragrancePreviewCard'
 import { useRouter } from 'expo-router'
 import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const HomePage = () => {
   const router = useRouter()
-  const { suggestedFragrances } = useSuggestedFragrances()
+  const { data } = useSuggestedFragrances()
   const { voteOnFragrance } = useVoteOnFragrance()
 
   // const onRefresh = useCallback(() => {}, [])
 
   const onFragranceVote = useCallback((fragrance: CardFragrancePreview, myVote: boolean | null) => {
-    const { id, vote } = fragrance
+    const { id, votes } = fragrance
     const vars = { fragranceId: id, myVote }
 
-    voteOnFragrance(vars, vote)
+    voteOnFragrance(vars, votes)
   }, [voteOnFragrance])
 
   const openFragrance = useCallback((fragranceId: number) => {
@@ -39,15 +40,15 @@ const HomePage = () => {
   // const expandForYou = () => {}
 
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView edges={['bottom']} style={styles.wrapper}>
       <BlockList
-        data={suggestedFragrances}
+        data={data}
         renderItem={onRenderFragrance}
         numColumns={2}
         style={{ padding: 5 }}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -55,7 +56,6 @@ export default HomePage
 
 const styles = StyleSheet.create({
   wrapper: {
-
   },
   homeContentWrapper: {
     gap: 20

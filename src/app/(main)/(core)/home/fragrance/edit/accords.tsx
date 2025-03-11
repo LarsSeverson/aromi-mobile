@@ -1,5 +1,5 @@
 import React from 'react'
-import EditAccordsPage from '@/src/pages/core/home/fragrance/edit/EditAccordsPage'
+import EditAccordsPage from '@/src/pages/common/EditAccordsPage'
 
 const EditAccords = () => {
   return <EditAccordsPage />

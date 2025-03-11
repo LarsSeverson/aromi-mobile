@@ -1,68 +1,79 @@
 import { StyleSheet, View } from 'react-native'
-import React from 'react'
-import { type AuthUser } from '@/src/hooks/useAuth'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import { type UserPreviewQuery } from '@/src/generated/graphql'
-import UserPortrait from '@/src/components/common/user/UserPortrait'
+import UserPortrait, { type CardUser } from '@/src/components/common/user/UserPortrait'
 import UserCollections from '@/src/components/common/user/UserCollections'
 import UserLikes from '@/src/components/common/user/UserLikes'
 import UserReviews from '@/src/components/common/user/UserReviews'
 import { Text } from 'react-native-paper'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export interface ProfilePageProps {
-  user: UserPreviewQuery['user'] | null
-  currentUser?: AuthUser | null | undefined
+  user: CardUser
+  myProfile: boolean
+  hasActivity: boolean | null | undefined
 }
 
 const ProfilePage = (props: ProfilePageProps) => {
-  const { user, currentUser } = props
-  const isOwner = (currentUser != null) && currentUser.id === user?.id
-  const isCollectionsEmpty = user?.collections.length === 0
-  const isLikesEmpty = user?.likes.length === 0
-  const isReviewsEmpty = user?.reviews.length === 0
-  const isEmpty = isCollectionsEmpty && isLikesEmpty && isReviewsEmpty
+  const { user, myProfile, hasActivity } = props
+  const [collectionsLoaded, setCollectionsLoaded] = useState(false)
+  const [likesLoaded, setLikesLoaded] = useState(false)
+  const [reviewsLoaded, setReviewsLoaded] = useState(false)
 
-  if (user == null) { return null } // TODO
+  const opacity = useSharedValue(0)
+  const allLoaded = collectionsLoaded && likesLoaded && reviewsLoaded
+
+  useEffect(() => {
+    if (allLoaded || !(hasActivity ?? false)) {
+      opacity.value = withTiming(1, { duration: 50 })
+    }
+  }, [allLoaded, opacity, hasActivity])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value
+  }))
 
   return (
-    <ScrollView style={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper}>
       <UserPortrait
-        username={user.username}
-        followers={user.followers}
-        following={user.following}
-        isOwner={isOwner}
+        user={user}
+        myPortrait={myProfile}
       />
-      {isEmpty
-        ? (
-          <View style={styles.empty}>
-            <Text variant='titleMedium'>No recent activity</Text>
-            {isOwner && <Text>When you add collections, like fragrances, or leave reviews, they'll show up here</Text>}
-          </View>
-          )
-        : (
-          <>
-            {!isCollectionsEmpty && (
+      <Animated.View style={animatedStyle}>
+        {!(hasActivity ?? true)
+          ? (
+            <View style={styles.empty}>
+              <Text variant='headlineMedium'>No recent activity</Text>
+              {myProfile && (
+                <Text
+                  variant='titleSmall'
+                  style={{ textAlign: 'center' }}
+                >
+                  When you add collections, like fragrances, or leave reviews, they'll show up here
+                </Text>)}
+            </View>
+            )
+          : (
+            <>
               <UserCollections
-                collections={user.collections}
-                username={user.username}
-                isOwner={isOwner}
-              />)}
-            {!isLikesEmpty && (
+                user={user}
+                myCollections={myProfile}
+                onLoad={() => { setCollectionsLoaded(true) }}
+              />
               <UserLikes
-                fragrances={user.likes}
-                username={user.username}
-                isOwner={isOwner}
+                user={user}
+                myLikes={myProfile}
+                onLoad={() => { setLikesLoaded(true) }}
               />
-            )}
-            {!isReviewsEmpty && (
+
               <UserReviews
-                reviews={user.reviews}
-                username={user.username}
-                isOwner={isOwner}
+                user={user}
+                myReviews={myProfile}
+                onLoad={() => { setReviewsLoaded(true) }}
               />
+            </>
             )}
-          </>
-          )}
+      </Animated.View>
     </ScrollView>
   )
 }
@@ -75,6 +86,8 @@ const styles = StyleSheet.create({
   },
   empty: {
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingVertical: 100,
+    gap: 10
   }
 })

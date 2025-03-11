@@ -1,41 +1,22 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { useLocalSearchParams, useNavigation } from 'expo-router'
-import useFragranceNotes from '@/src/hooks/useFragranceNotes'
 import SelectableList, { type SelectableRenderItemProps } from '@/src/components/common/SelectableList'
 import FeedbackButton from '@/src/components/common/FeedbackButton'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FragranceNoteCard, { type CardFragranceNote } from '@/src/components/common/fragrance/FragranceNoteCard'
-import { NoteLayer } from '@/src/generated/graphql'
+import { type NoteLayer } from '@/src/generated/graphql'
 import useVoteOnNote from '@/src/hooks/useVoteOnNote'
-
-const DEFAULT_LIMIT = 30
+import useFragranceNotesLayer from '@/src/hooks/useFragranceNotesLayer'
 
 const EditNotesLayerPage = () => {
   const nav = useNavigation()
-  const fragranceId = Number(useLocalSearchParams().fragranceId)
-  const layer = useLocalSearchParams().layer as NoteLayer
+  const { fragranceId, layer } = useLocalSearchParams<{ fragranceId: string, layer: NoteLayer }>()
+  const parsedFragranceId = Number(fragranceId)
 
-  const {
-    notes,
-    loading,
-    hasMore,
-    getMore
-  } = useFragranceNotes({
-    id: fragranceId,
-    includeBase: layer === NoteLayer.Base,
-    includeMiddle: layer === NoteLayer.Middle,
-    includeTop: layer === NoteLayer.Top,
-    fill: true,
-    limit: DEFAULT_LIMIT
-  })
-
+  const { data, pageInfo, loading, getMore } = useFragranceNotesLayer(parsedFragranceId, layer)
   const { voteOnNote } = useVoteOnNote()
-
-  // const handleSearch = useCallback((newSearchTerm: string) => {
-  //   localSearchTerm.current = newSearchTerm
-  // }, [])
 
   const getMoreNotes = useCallback(() => {
     if (!loading) {
@@ -51,12 +32,12 @@ const EditNotesLayerPage = () => {
     const { noteId, layer } = fragranceNote
 
     voteOnNote({
-      fragranceId,
+      fragranceId: parsedFragranceId,
       noteId,
       layer,
       myVote
     }, fragranceNote)
-  }, [fragranceId, voteOnNote])
+  }, [parsedFragranceId, voteOnNote])
 
   const onRenderNote = useCallback(({ item: note, selected }: SelectableRenderItemProps<CardFragranceNote>) => {
     if (note == null) return null
@@ -74,24 +55,20 @@ const EditNotesLayerPage = () => {
     return (
       <View>
         {loading && <ActivityIndicator />}
-        {!hasMore && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
-        {!hasMore && <FeedbackButton />}
+        {!(pageInfo?.hasNextPage ?? true) && <Text style={{ alignSelf: 'center' }}>End of notes</Text>}
+        {!(pageInfo?.hasNextPage ?? true) && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading])
+  }, [pageInfo?.hasNextPage, loading])
 
   useEffect(() => {
     nav.setOptions({ headerTitle: `${layer} notes` })
   }, [nav, layer])
 
-  if (notes == null) return null
-
   return (
     <SafeAreaView edges={[]} style={{ flex: 1 }}>
-      {/* <SearchInput onSearch={handleSearch} /> */}
-
       <SelectableList
-        data={notes[layer] ?? []}
+        data={data}
         numColumns={3}
         onEndReachedThreshold={0.5}
         renderItemStyle={{ width: '33.33%' }}

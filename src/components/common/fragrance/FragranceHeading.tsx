@@ -5,16 +5,16 @@ import { Text } from 'react-native-paper'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
 import RatingStars from '../../common/RatingStars'
-import { type FragranceVote } from '@/src/generated/graphql'
+import { type FragranceVotes } from '@/src/generated/graphql'
 
-export type FragranceHeadingVote = Pick<FragranceVote, 'likes' | 'dislikes' | 'myVote'>
+export type FragranceHeadingVote = Pick<FragranceVotes, 'likes' | 'dislikes' | 'myVote'>
 
 export interface FragranceHeadingProps {
   name: string
   brand: string
   rating: number
   reviewsCount: number
-  vote: FragranceHeadingVote
+  votes: FragranceHeadingVote
 
   onVote?: (myVote: boolean | null) => void
   gotoReviews?: () => void
@@ -26,13 +26,13 @@ const FragranceHeading = (props: FragranceHeadingProps) => {
     brand,
     rating,
     reviewsCount,
-    vote,
+    votes,
 
     onVote
   } = props
 
-  const localVote = useRef(vote)
-  const [curLiked, setCurLiked] = useState<boolean | null>(vote.myVote ?? null)
+  const localVote = useRef(votes)
+  const [curLiked, setCurLiked] = useState<boolean | null>(votes.myVote ?? null)
 
   const counts = useMemo(() => {
     const { likes, dislikes, myVote } = localVote.current

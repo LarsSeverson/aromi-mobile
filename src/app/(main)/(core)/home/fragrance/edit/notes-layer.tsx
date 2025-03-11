@@ -1,5 +1,5 @@
 import React from 'react'
-import EditNotesLayerPage from '@/src/pages/core/home/fragrance/edit/EditNotesLayerPage'
+import EditNotesLayerPage from '@/src/pages/common/EditNotesLayerPage'
 
 const NotesLayer = () => {
   return <EditNotesLayerPage />

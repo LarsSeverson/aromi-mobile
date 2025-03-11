@@ -20,20 +20,19 @@ import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 const FragrancePage = () => {
   const router = useRouter()
   const { fragranceId } = useLocalSearchParams<{ fragranceId: string }>()
+  const parsedFragranceId = Number(fragranceId)
 
-  const { fragrance, loading } = useFragrance({ id: Number(fragranceId) })
+  const { summary, images, accords, notes, reviews, loading } = useFragrance(parsedFragranceId)
   const { voteOnFragrance } = useVoteOnFragrance()
 
-  console.log(fragranceId)
-
   const onFragranceVote = useCallback((myVote: boolean | null) => {
-    if (fragrance == null) return
+    if (summary == null) return
 
-    const { id, vote } = fragrance
+    const { id, votes } = summary
     const vars = { fragranceId: id, myVote }
 
-    voteOnFragrance(vars, vote)
-  }, [fragrance, voteOnFragrance])
+    voteOnFragrance(vars, votes)
+  }, [summary, voteOnFragrance])
 
   const gotoEditGender = useCallback(() => {
     router.push({
@@ -87,48 +86,48 @@ const FragrancePage = () => {
     })
   }, [router])
 
-  if (loading || fragrance == null) {
+  if (loading || summary == null) {
     return null
   }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <FragranceImageCarousel images={fragrance.images} />
+      <FragranceImageCarousel images={images} />
 
       <Divider />
 
       <FragranceHeading
-        name={fragrance.name}
-        brand={fragrance.brand}
-        rating={fragrance.rating}
-        reviewsCount={fragrance.reviewsCount}
-        vote={fragrance.vote}
+        name={summary.name}
+        brand={summary.brand}
+        rating={summary.rating}
+        reviewsCount={summary.reviewsCount}
+        votes={summary.votes}
         onVote={onFragranceVote}
       />
 
       <Divider style={{ marginTop: 10 }} />
 
       <FragranceCategory title='Gender' expandText='masculine or feminine' onCategoryPressed={gotoEditGender}>
-        <ScaleBar value={fragrance.traits.gender.value} Icon={<GenderIcon />} lessLabel='feminine' greaterLabel='masculine' />
+        <ScaleBar value={summary.traits.gender?.value ?? 50} Icon={<GenderIcon />} lessLabel='feminine' greaterLabel='masculine' />
       </FragranceCategory>
 
       <TopFragranceAccords
-        accords={fragrance.accords}
+        accords={accords}
         onExpand={gotoEditAccords}
       />
 
       <TopFragranceNotes
-        notes={fragrance.notes}
+        notes={notes}
         onExpand={gotoEditNotes}
       />
 
       <TopFragranceCharacteristics
-        traits={fragrance.traits}
+        traits={summary.traits}
         onExpand={gotoEditCharacteristics}
       />
 
       <TopFragranceReviews
-        reviews={fragrance.reviews}
+        reviews={reviews}
         onExpandReviews={gotoFragranceReviews}
         onWriteReview={gotoAddFragranceReview}
       />

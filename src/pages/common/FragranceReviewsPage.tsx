@@ -14,21 +14,10 @@ const FragranceReviewsPage = () => {
   const router = useRouter()
   const { userInfo } = useAuthContext()
   const { fragranceId } = useLocalSearchParams<{ fragranceId: string, reviewId: string }>()
-  const numFragranceId = Number(fragranceId)
+  const parsedFragranceId = Number(fragranceId)
 
-  const {
-    reviews,
-    meta,
-    loading: reviewsLoading,
-    getMore
-  } = useFragranceReviews({ fragranceId: numFragranceId })
-
-  const {
-    myReview,
-    // loading: myReviewLoading,
-    // error: myReviewError,
-    getMyReview
-  } = useMyReview()
+  const { data, summary, loading, getMore } = useFragranceReviews(parsedFragranceId)
+  const { data: myReview, getMyReview } = useMyReview()
 
   const handleAddReviewPressed = useCallback(() => {
     router.push({
@@ -38,8 +27,10 @@ const FragranceReviewsPage = () => {
   }, [router, fragranceId])
 
   const getMoreReviews = useCallback(() => {
-    !reviewsLoading && getMore()
-  }, [reviewsLoading, getMore])
+    if (!loading) {
+      getMore()
+    }
+  }, [loading, getMore])
 
   const onRenderFragranceReview = useCallback(({ item: review }: PressableRenderItemProps<CardFragranceReview>) => {
     if (review == null) return null
@@ -56,11 +47,11 @@ const FragranceReviewsPage = () => {
 
   useFocusEffect(useCallback(() => { getMyReview(Number(fragranceId)) }, [fragranceId, getMyReview]))
 
-  if (meta == null) return null
+  if (summary == null) return null
 
   return (
     <PressableList
-      data={reviews}
+      data={data}
       onRenderItem={onRenderFragranceReview}
       pressableItemProps={{ scaleTo: 0.998 }}
       contentContainerStyle={{ gap: 10 }}
@@ -69,11 +60,11 @@ const FragranceReviewsPage = () => {
       ListHeaderComponent={
         <View style={{ gap: 12 }}>
           <FragranceReviewsSummary
-            name={meta.name}
-            brand={meta.brand}
-            rating={meta.rating}
-            reviewsCount={meta.reviewsCount}
-            distribution={meta.reviewDistribution}
+            name={summary.name}
+            brand={summary.brand}
+            rating={summary.rating}
+            reviewsCount={summary.reviewsCount}
+            distribution={summary.reviewDistribution}
           />
           {(myReview != null)
             ? (
@@ -96,7 +87,7 @@ const FragranceReviewsPage = () => {
               </>
               )}
           <View style={styles.reviewsHeading}>
-            {reviews.length > 0 && <Text variant='titleMedium'>Top reviews</Text>}
+            {data.length > 0 && <Text variant='titleMedium'>Top reviews</Text>}
           </View>
         </View>
     }

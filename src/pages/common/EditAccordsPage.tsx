@@ -12,20 +12,8 @@ import useVoteOnAccord from '@/src/hooks/useVoteOnAccord'
 const EditAccordsPage = () => {
   const fragranceId = Number(useLocalSearchParams().fragranceId)
 
-  const {
-    accords,
-    loading,
-    hasMore,
-    getMore
-  } = useFragranceAccords({ id: fragranceId, fill: true })
-
+  const { data, pageInfo, loading, getMore } = useFragranceAccords(fragranceId)
   const { voteOnAccord } = useVoteOnAccord()
-
-  // const handleSearch = useCallback((newSearchTerm: string) => {
-  //   localSearchTerm.current = newSearchTerm
-
-  //   // searchAccords(newSearchTerm)
-  // }, [])
 
   const getMoreAccords = useCallback(() => {
     if (!loading) {
@@ -60,23 +48,19 @@ const EditAccordsPage = () => {
     return (
       <View>
         {loading && <ActivityIndicator />}
-        {!hasMore && <Text style={{ alignSelf: 'center' }}>End of accords</Text>}
-        {!hasMore && <FeedbackButton />}
+        {!(pageInfo?.hasNextPage ?? true) && <Text style={{ alignSelf: 'center' }}>End of accords</Text>}
+        {!(pageInfo?.hasNextPage ?? true) && <FeedbackButton />}
       </View>
     )
-  }, [hasMore, loading])
-
-  if (accords == null) return null
+  }, [loading, pageInfo?.hasNextPage])
 
   return (
     <SafeAreaView
       edges={[]}
       style={{ flex: 1 }}
     >
-      {/* <SearchInput onSearch={handleSearch} /> */}
-
       <SelectableList
-        data={accords}
+        data={data}
         numColumns={3}
         onEndReachedThreshold={0.5}
         renderItemStyle={{ width: '33.33%' }}

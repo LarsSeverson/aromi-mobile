@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ProfileCategory from '../../profile/ProfileCategory'
-import UserCollectionPreviewCard, { type CardUserCollection } from './UserCollectionPreviewCard'
+import FragranceCollectionPreviewCard from '../fragrance/FragranceCollectionPreviewCard.tsx'
 import ProfileEmpty from './ProfileEmpty'
+import useUserCollections from '@/src/hooks/useUserCollections'
+import { type CardUser } from './UserPortrait'
 
 const getEmptyCollectionText = (isOwner: boolean, username: string) => ({
   headline: isOwner ? 'You have no collections' : `${username} has no collections`,
@@ -11,15 +13,27 @@ const getEmptyCollectionText = (isOwner: boolean, username: string) => ({
 })
 
 export interface UserCollectionsProps {
-  collections: CardUserCollection[]
-  username: string
-  isOwner?: boolean | undefined
+  user: CardUser
+  myCollections?: boolean | undefined
+  onLoad?: () => void
 }
 
 const UserCollections = (props: UserCollectionsProps) => {
-  const { collections, username, isOwner = false } = props
-  const { headline, body } = getEmptyCollectionText(isOwner, username)
+  const { user, myCollections = false, onLoad } = props
+  const { headline, body } = getEmptyCollectionText(myCollections, user.username)
+
+  const { data: collections, loading } = useUserCollections(user.id, 6)
+
   const noCollections = collections.length === 0
+
+  useEffect(() => {
+    if (!loading) {
+      onLoad?.()
+    }
+  }, [loading, onLoad])
+
+  if (loading) return null // TODO
+  if (collections == null) return null
 
   return (
     <ProfileCategory title='Collections'>
@@ -30,7 +44,7 @@ const UserCollections = (props: UserCollectionsProps) => {
           />
         : (collections.map(
             (collection, index) => (
-              <UserCollectionPreviewCard
+              <FragranceCollectionPreviewCard
                 key={index}
                 collection={collection}
               />)
