@@ -40,15 +40,14 @@ const HomePage = () => {
   // const expandForYou = () => {}
 
   return (
-    <SafeAreaView edges={['bottom']} style={styles.wrapper}>
-      <BlockList
-        data={data}
-        renderItem={onRenderFragrance}
-        numColumns={2}
-        style={{ padding: 5 }}
-        showsVerticalScrollIndicator={false}
-      />
-    </SafeAreaView>
+    <BlockList
+      data={data}
+      renderItem={onRenderFragrance}
+      numColumns={2}
+      style={styles.wrapper}
+      showsVerticalScrollIndicator={false}
+      ListHeaderComponent={<SafeAreaView edges={['top']} />}
+    />
   )
 }
 
@@ -56,6 +55,7 @@ export default HomePage
 
 const styles = StyleSheet.create({
   wrapper: {
+    padding: 5
   },
   homeContentWrapper: {
     gap: 20

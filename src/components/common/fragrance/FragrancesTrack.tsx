@@ -19,8 +19,8 @@ const FragrancesTrack = (props: FraganceTrackProps) => {
   const { voteOnFragrance } = useVoteOnFragrance()
 
   const onFragranceVote = useCallback((fragrance: CardFragrancePreview, myVote: boolean | null) => {
-    const { id, vote } = fragrance
-    voteOnFragrance({ fragranceId: id, myVote }, vote)
+    const { id, votes } = fragrance
+    voteOnFragrance({ fragranceId: id, myVote }, votes)
   }, [voteOnFragrance])
 
   const onRenderFragrance = useCallback(({ item: fragrance }: PressableRenderItemProps<CardFragrancePreview>) => {
@@ -36,15 +36,12 @@ const FragrancesTrack = (props: FraganceTrackProps) => {
     )
   }, [onFragranceVote, onFragrancePress])
 
-  const columnProps = fragrances.length > 1
-    ? { columnWrapperStyle: StyleSheet.compose(styles.wrapper, style) as ViewStyle }
-    : {}
-
   return (
     <BlockList
       data={fragrances}
       horizontal
-      {...columnProps}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={style}
       renderItem={onRenderFragrance}
     />
   )
@@ -53,9 +50,6 @@ const FragrancesTrack = (props: FraganceTrackProps) => {
 export default FragrancesTrack
 
 const styles = StyleSheet.create({
-  wrapper: {
-    gap: 10
-  },
   fragrance: {
     height: 200,
     aspectRatio: 1,

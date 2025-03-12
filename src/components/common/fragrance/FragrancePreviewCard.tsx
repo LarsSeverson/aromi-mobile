@@ -34,7 +34,7 @@ const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   return (
     <View style={styles.wrapper}>
       <BouncyButton onPress={handlePress} {...rest}>
-        <View style={[styles.previewWrapper, { backgroundColor: theme.colors.surfaceDisabled }]}>
+        <View style={[styles.previewWrapper, { borderColor: theme.colors.surfaceDisabled }]}>
           <Image
             source={{ uri: fragrance.images.at(0)?.url }}
             style={styles.imgWrapper}
@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
   previewWrapper: {
     aspectRatio: 1,
     borderRadius: 15,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderWidth: 1
   },
   imgWrapper: {
     position: 'relative',

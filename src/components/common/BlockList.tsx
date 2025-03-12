@@ -1,7 +1,6 @@
 import { FlatList, type StyleProp, type ViewStyle } from 'react-native'
 import React, { useCallback, useMemo } from 'react'
 import RowList, { type RowListProps } from './RowList'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 interface Identifiable { id: number }
 
@@ -31,15 +30,13 @@ const BlockList = <T extends Identifiable, >(props: BlockListProps<T>) => {
   }, [])
 
   return (
-    <SafeAreaView edges={['bottom']}>
-      <List
-        keyExtractor={keyExtractor}
-        numColumns={numColumns}
-        {...props}
-        data={data}
-        renderItem={renderItem}
-      />
-    </SafeAreaView>
+    <List
+      keyExtractor={keyExtractor}
+      numColumns={numColumns}
+      {...props}
+      data={data}
+      renderItem={renderItem}
+    />
   )
 }
 

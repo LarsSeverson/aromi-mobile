@@ -13,12 +13,12 @@ const GridImages = (props: GridImagesProps) => {
   const { images } = props
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, { borderColor: theme.colors.surfaceDisabled }]}>
       {images.length < 4
         ? (
           <Image
             source={{ uri: images.at(0) }}
-            style={[styles.fullImage, { backgroundColor: theme.colors.surfaceDisabled }]}
+            style={styles.fullImage}
           />
           )
         : (
@@ -26,7 +26,7 @@ const GridImages = (props: GridImagesProps) => {
               <Image
                 key={index}
                 source={{ uri: img }}
-                style={[styles.gridImage, { backgroundColor: theme.colors.surfaceDisabled }]}
+                style={styles.gridImage}
               />
             ))
           )}
@@ -42,7 +42,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: 50,
     height: 50,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderWidth: 1
   },
   gridImage: {
     width: '50%',

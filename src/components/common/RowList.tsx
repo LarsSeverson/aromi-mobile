@@ -10,7 +10,10 @@ const RowList = <T, >(props: RowListProps<T>) => {
   const dataLength = restProps?.data?.length ?? 0
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    >
       <FlatList
         numColumns={numColumns ?? Math.ceil(dataLength / numRows)}
         alwaysBounceVertical={false}
