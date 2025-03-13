@@ -39,7 +39,10 @@ const ProfilePage = (props: ProfilePageProps) => {
 
   return (
     <View>
-      <ScrollView contentContainerStyle={[styles.wrapper, { paddingTop: headerHeight }]}>
+      <ScrollView
+        contentContainerStyle={[styles.wrapper, { paddingTop: headerHeight }]}
+        showsVerticalScrollIndicator={false}
+      >
         <UserPortrait
           user={user}
           myPortrait={myProfile}
@@ -70,7 +73,6 @@ const ProfilePage = (props: ProfilePageProps) => {
                   myLikes={myProfile}
                   onLoad={() => { setLikesLoaded(true) }}
                 />
-
                 <UserReviews
                   user={user}
                   myReviews={myProfile}

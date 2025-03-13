@@ -1,11 +1,12 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import BouncyButton, { type BouncyButtonProps } from '../BouncyButton'
 import { Image } from 'expo-image'
 import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
 import VoteButton from '../VoteButton'
 import { type FragranceImage, type Fragrance } from '@/src/generated/graphql'
+import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 
 export type CardFragrancePreview = Omit<Pick<Fragrance, 'id' | 'name' | 'brand' | 'votes'>, 'images'> & {
   images: FragranceImage[]
@@ -15,25 +16,34 @@ export interface FragrancePreviewCardProps extends BouncyButtonProps {
   fragrance: CardFragrancePreview
 
   onFragrancePress?: (fragranceId: number) => void
-  onFragranceVote?: (fragrance: CardFragrancePreview, myVote: boolean | null) => void
 }
 
 const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   const theme = useAppTheme()
-  const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
-  const votes = fragrance.votes.likes - fragrance.votes.dislikes
+  const { fragrance, onFragrancePress, ...rest } = props
+
+  const { voteOnFragrance } = useVoteOnFragrance()
+
+  const votes = useMemo(() =>
+    fragrance.votes.likes - fragrance.votes.dislikes,
+  [fragrance.votes])
 
   const handlePress = useCallback(() => {
     onFragrancePress?.(fragrance.id)
   }, [fragrance.id, onFragrancePress])
 
   const handleVote = useCallback((myVote: boolean | null) => {
-    onFragranceVote?.(fragrance, myVote)
-  }, [fragrance, onFragranceVote])
+    const { id, votes } = fragrance
+    const vars = { fragranceId: id, myVote }
+    voteOnFragrance(vars, votes)
+  }, [fragrance, voteOnFragrance])
 
   return (
     <View style={styles.wrapper}>
-      <BouncyButton onPress={handlePress} {...rest}>
+      <BouncyButton
+        onPress={handlePress}
+        {...rest}
+      >
         <View style={[styles.previewWrapper, { borderColor: theme.colors.surfaceDisabled }]}>
           <Image
             source={{ uri: fragrance.images.at(0)?.url }}
@@ -76,7 +86,7 @@ const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   )
 }
 
-export default FragrancePreviewCard
+export default React.memo(FragrancePreviewCard)
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -85,7 +95,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   previewWrapper: {
-    aspectRatio: 1,
+    height: '100%',
     borderRadius: 15,
     overflow: 'hidden',
     borderWidth: 1

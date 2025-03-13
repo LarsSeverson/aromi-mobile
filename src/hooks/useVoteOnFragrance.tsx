@@ -15,21 +15,10 @@ const VOTE_ON_FRAGRANCE_MUTATION = graphql(/* GraphQL */ `
 `)
 
 const useVoteOnFragrance = () => {
-  const [voteOnFragranceMutation, {
-    loading,
-    error
-  }] = useMutation(VOTE_ON_FRAGRANCE_MUTATION)
+  const [voteOnFragranceMutation, { loading, error }] = useMutation(VOTE_ON_FRAGRANCE_MUTATION, { fetchPolicy: 'no-cache' })
 
   const voteOnFragrance = useCallback((variables: VoteOnFraganceMutationVariables, votes: FragranceVotes) => {
-    void voteOnFragranceMutation({
-      variables,
-      optimisticResponse: {
-        voteOnFragrance: {
-          ...votes,
-          myVote: variables.myVote
-        }
-      }
-    })
+    void voteOnFragranceMutation({ variables })
   }, [voteOnFragranceMutation])
 
   return {

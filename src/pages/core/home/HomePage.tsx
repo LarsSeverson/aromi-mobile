@@ -4,48 +4,45 @@ import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/common/BlockList'
 import FragrancePreviewCard, { type CardFragrancePreview } from '@/src/components/common/fragrance/FragrancePreviewCard'
 import { useRouter } from 'expo-router'
-import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 const HomePage = () => {
   const router = useRouter()
-  const { data } = useSuggestedFragrances()
-  const { voteOnFragrance } = useVoteOnFragrance()
+  const { data, loadingMore, getMore } = useSuggestedFragrances()
 
   // const onRefresh = useCallback(() => {}, [])
-
-  const onFragranceVote = useCallback((fragrance: CardFragrancePreview, myVote: boolean | null) => {
-    const { id, votes } = fragrance
-    const vars = { fragranceId: id, myVote }
-
-    voteOnFragrance(vars, votes)
-  }, [voteOnFragrance])
 
   const openFragrance = useCallback((fragranceId: number) => {
     router.push({ pathname: '/(core)/home/fragrance/', params: { fragranceId } })
   }, [router])
 
-  const onRenderFragrance = useCallback(({ item: fragrance }: { item: CardFragrancePreview | null }) => {
-    if (fragrance == null) return null
-
+  const onRenderFragrance = useCallback(({ item: fragrance }: { item: CardFragrancePreview }) => {
     return (
       <FragrancePreviewCard
         fragrance={fragrance}
         onFragrancePress={openFragrance}
-        onFragranceVote={onFragranceVote}
+        style={{ height: 240 }}
       />
     )
-  }, [onFragranceVote, openFragrance])
+  }, [openFragrance])
 
-  // const expandForYou = () => {}
+  if (data.length === 0) return null
 
   return (
     <BlockList
       data={data}
       renderItem={onRenderFragrance}
       numColumns={2}
-      style={styles.wrapper}
       showsVerticalScrollIndicator={false}
+      loadingMore={loadingMore}
+      onEndReachedThreshold={0.5}
+      style={styles.wrapper}
+      onEndReached={() => {
+        if (!(loadingMore ?? false)) {
+          getMore()
+        }
+      }}
+      initialNumToRender={6}
       ListHeaderComponent={<SafeAreaView edges={['top']} />}
     />
   )

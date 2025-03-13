@@ -1,14 +1,16 @@
-import { FlatList, type StyleProp, type ViewStyle } from 'react-native'
+import { ActivityIndicator, FlatList, View, type StyleProp, type ViewStyle } from 'react-native'
 import React, { useCallback, useMemo } from 'react'
 import RowList, { type RowListProps } from './RowList'
 
 interface Identifiable { id: number }
 
-export interface BlockListProps<T extends Identifiable> extends RowListProps<T | null> {
-  data: Array<T | null>
+export interface BlockListProps<T extends Identifiable> extends RowListProps<T> {
+  data: T[]
 
   numRows?: number | undefined
   numColumns?: number | undefined
+  loadingMore?: boolean | undefined
+  refreshing?: boolean | undefined
 
   renderItemStyle?: StyleProp<ViewStyle>
 }
@@ -18,6 +20,8 @@ const BlockList = <T extends Identifiable, >(props: BlockListProps<T>) => {
     data,
     numRows,
     numColumns = 1,
+    loadingMore,
+    // refreshing,
 
     renderItem
   } = props
@@ -29,6 +33,14 @@ const BlockList = <T extends Identifiable, >(props: BlockListProps<T>) => {
     return item.id.toString()
   }, [])
 
+  const onRenderFooter = useCallback(() => {
+    return (
+      <View style={{ paddingVertical: 30 }}>
+        {(loadingMore ?? false) && <ActivityIndicator />}
+      </View>
+    )
+  }, [loadingMore])
+
   return (
     <List
       keyExtractor={keyExtractor}
@@ -36,6 +48,7 @@ const BlockList = <T extends Identifiable, >(props: BlockListProps<T>) => {
       {...props}
       data={data}
       renderItem={renderItem}
+      ListFooterComponent={onRenderFooter}
     />
   )
 }

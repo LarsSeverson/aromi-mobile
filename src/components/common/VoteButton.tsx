@@ -1,5 +1,5 @@
-import { type StyleProp, StyleSheet, Text, View, type ViewStyle } from 'react-native'
-import React, { useMemo, useState } from 'react'
+import { StyleSheet, Text, View, type ViewStyle } from 'react-native'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useAppTheme } from '@/src/constants/Themes'
 import BouncyButton from './BouncyButton'
 import { Divider, Icon } from 'react-native-elements'
@@ -33,70 +33,91 @@ const VoteButton = (props: VoteButtonProps) => {
 
   const [curVote, setCurVote] = useState<boolean | null>(myVote)
 
+  const isForActive = curVote === true
+  const isAgainstActive = curVote === false
+
   const curVotes = useMemo(() => {
     const getVoteValue = (vote: boolean | null) => vote === true ? 1 : vote === false ? -1 : 0
 
     return votes - getVoteValue(myVote) + getVoteValue(curVote)
   }, [votes, myVote, curVote])
 
-  const onFor = () => {
+  const onFor = useCallback(() => {
     const newVote = (curVote ?? false) ? null : true
     setCurVote(newVote)
     onVote?.(newVote)
-  }
+  }, [curVote, onVote])
 
-  const onAgainst = () => {
+  const onAgainst = useCallback(() => {
     const newVote = curVote === false ? null : false
     setCurVote(newVote)
     onVote?.(newVote)
-  }
+  }, [curVote, onVote])
 
-  const isForActive = curVote === true
-  const isAgainstActive = curVote === false
-  const viewStyle: StyleProp<ViewStyle> = StyleSheet.compose(styles.wrapper, style)
+  const renderForIcon = useMemo(() => {
+    if (onRenderForIcon != null) {
+      return onRenderForIcon(isForActive)
+    }
+
+    return (
+      <Icon
+        type='octicon'
+        name={(curVote ?? false) ? 'heart-fill' : 'heart'}
+        size={size}
+        color={isForActive ? Colors.heart : theme.colors.icon}
+      />
+    )
+  }, [onRenderForIcon, isForActive, curVote, size, theme.colors.icon])
+
+  const renderAgainstIcon = useMemo(() => {
+    if (onRenderAgainstIcon != null) {
+      return onRenderAgainstIcon(isAgainstActive)
+    }
+
+    return (
+      <Icon
+        type='antdesign'
+        name={isAgainstActive ? 'dislike1' : 'dislike2'}
+        size={size}
+        color={isAgainstActive ? Colors.som : theme.colors.icon}
+      />
+    )
+  }, [onRenderAgainstIcon, isAgainstActive, size, theme.colors.icon])
 
   return (
     <View style={[
-      viewStyle,
+      styles.wrapper,
       {
         backgroundColor: theme.colors.background,
         borderColor: theme.colors.onSurfaceDisabled
-      }]}
+      },
+      style
+    ]}
     >
       <BouncyButton
         style={styles.contentBtnWrapper}
         contentStyle={styles.contentWrapper}
         onPress={onFor}
       >
-        {(onRenderForIcon != null)
-          ? onRenderForIcon(isForActive)
-          : <Icon
-              type='octicon'
-              name={(curVote ?? false) ? 'heart-fill' : 'heart'}
-              size={size}
-              color={isForActive ? Colors.heart : theme.colors.icon}
-            />}
+        {renderForIcon}
         <Text style={styles.contentTxtWrapper}>{`${curVotes ?? 'vote'}`}</Text>
       </BouncyButton>
-      <Divider orientation='vertical' width={1} color={theme.colors.onSurfaceDisabled} />
+      <Divider
+        orientation='vertical'
+        width={1}
+        color={theme.colors.onSurfaceDisabled}
+      />
       <BouncyButton
         style={styles.contentBtnWrapper}
         onPress={onAgainst}
       >
-        {(onRenderAgainstIcon != null)
-          ? onRenderAgainstIcon(isAgainstActive)
-          : <Icon
-              type='antdesign'
-              name={isAgainstActive ? 'dislike1' : 'dislike2'}
-              size={size}
-              color={isAgainstActive ? Colors.som : theme.colors.icon}
-            />}
+        {renderAgainstIcon}
       </BouncyButton>
     </View>
   )
 }
 
-export default VoteButton
+export default React.memo(VoteButton)
 
 const styles = StyleSheet.create({
   wrapper: {

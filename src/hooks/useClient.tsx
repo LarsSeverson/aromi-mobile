@@ -2,6 +2,8 @@ import { fetchAuthSession } from 'aws-amplify/auth'
 import { setContext } from '@apollo/client/link/context'
 import { ApolloClient, HttpLink, InMemoryCache, type NormalizedCacheObject } from '@apollo/client/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { connectApolloClientToVSCodeDevTools } from '@apollo/client-devtools-vscode'
+import { relayStylePagination } from '../common/pagination'
 
 export interface UseClientReturn {
   client: ApolloClient<NormalizedCacheObject>
@@ -25,8 +27,20 @@ export const useClient = (): UseClientReturn => {
 
   const client = useMemo(() => new ApolloClient({
     link: authLink.concat(new HttpLink({ uri: process.env.EXPO_PUBLIC_GQL_ENDPOINT })),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            fragrances: relayStylePagination()
+          }
+        }
+      }
+    })
   }), [authLink])
+
+  if (client != null && process.env.NODE_ENV === 'development') {
+    connectApolloClientToVSCodeDevTools(client, 'ws://localhost:7095')
+  }
 
   const getToken = useCallback(async () => {
     try {

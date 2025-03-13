@@ -1,6 +1,7 @@
 import { type GestureResponderEvent, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native'
 import React, { type ReactNode, useRef } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import * as Haptics from 'expo-haptics'
 
 export interface BouncyButtonProps extends PressableProps {
   children?: ReactNode
@@ -18,6 +19,8 @@ const BouncyButton = (props: BouncyButtonProps) => {
     isPressed.value = true
     scale.value = withSpring(scaleTo, { stiffness: 900, damping: 100 })
     longPressed.current = false
+
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
   }
 
   const onPressOutHandler = (event: GestureResponderEvent) => {

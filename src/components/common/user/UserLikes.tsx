@@ -38,8 +38,17 @@ const UserLikes = (props: UserLikesProps) => {
   return (
     <ProfileCategory title='Likes'>
       {noLikes
-        ? <ProfileEmpty headline={headline} body={body} />
-        : <FragrancesTrack fragrances={likes} />}
+        ? (
+          <ProfileEmpty
+            headline={headline}
+            body={body}
+          />
+          )
+        : (
+          <FragrancesTrack
+            fragrances={likes}
+          />
+          )}
     </ProfileCategory>
   )
 }

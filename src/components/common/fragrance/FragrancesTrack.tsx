@@ -1,4 +1,4 @@
-import { StyleSheet, type ViewStyle } from 'react-native'
+import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native'
 import React, { useCallback } from 'react'
 import { type PressableListProps, type PressableRenderItemProps } from '../PressableList'
 import FragrancePreviewCard, { type CardFragrancePreview } from './FragrancePreviewCard'
@@ -9,12 +9,13 @@ type PressableProps = Omit<PressableListProps<CardFragrancePreview>, 'style' | '
 
 export interface FraganceTrackProps extends PressableProps {
   fragrances: CardFragrancePreview[]
-  style?: ViewStyle
+  trackStyle?: ViewStyle
+  style?: StyleProp<ViewStyle>
   onFragrancePress?: (fragranceId: number) => void
 }
 
 const FragrancesTrack = (props: FraganceTrackProps) => {
-  const { fragrances, style, onFragrancePress } = props
+  const { fragrances, trackStyle, style, onFragrancePress } = props
 
   const { voteOnFragrance } = useVoteOnFragrance()
 
@@ -31,17 +32,17 @@ const FragrancesTrack = (props: FraganceTrackProps) => {
         fragrance={fragrance}
         onFragrancePress={onFragrancePress}
         onFragranceVote={onFragranceVote}
-        style={styles.fragrance}
+        style={StyleSheet.compose(styles.fragrance, style) as ViewStyle}
       />
     )
-  }, [onFragranceVote, onFragrancePress])
+  }, [style, onFragranceVote, onFragrancePress])
 
   return (
     <BlockList
       data={fragrances}
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={style}
+      contentContainerStyle={trackStyle}
       renderItem={onRenderFragrance}
     />
   )
