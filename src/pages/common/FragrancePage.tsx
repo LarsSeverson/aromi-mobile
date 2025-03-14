@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import useFragrance from '@/src/hooks/useFragrance'
+import { useRouter } from 'expo-router'
 import { Divider } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { GenderIcon } from '@/src/constants/Icons'
@@ -16,69 +15,72 @@ import TopFragranceNotes from '@/src/components/common/fragrance/TopFragranceNot
 import TopFragranceCharacteristics from '@/src/components/common/fragrance/TopFragranceCharacteristics'
 import TopFragranceReviews from '@/src/components/common/fragrance/TopFragranceReviews'
 import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
+import useFragranceTraits from '@/src/hooks/useFragranceTraits'
+import { type FragranceInfo } from '@/src/hooks/useFragranceInfo'
 
-const FragrancePage = () => {
+export interface FragrancePageProps {
+  fragranceInfo: FragranceInfo
+}
+
+const FragrancePage = (props: FragrancePageProps) => {
   const router = useRouter()
-  const { fragranceId } = useLocalSearchParams<{ fragranceId: string }>()
-  const parsedFragranceId = Number(fragranceId)
 
-  const { summary, images, accords, notes, reviews, loading } = useFragrance(parsedFragranceId)
+  const { fragranceInfo } = props
+  const { id } = fragranceInfo
+
+  const { data: traits } = useFragranceTraits(id)
   const { voteOnFragrance } = useVoteOnFragrance()
 
   const onFragranceVote = useCallback((myVote: boolean | null) => {
-    if (summary == null) return
-
-    const { id, votes } = summary
     const vars = { fragranceId: id, myVote }
-
-    voteOnFragrance(vars, votes)
-  }, [summary, voteOnFragrance])
+    voteOnFragrance(vars)
+  }, [id, voteOnFragrance])
 
   const gotoEditGender = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId
+        fragranceId: id
       }
     })
-  }, [router, fragranceId])
+  }, [router, id])
 
   const gotoEditAccords = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/accords',
       params: {
-        fragranceId
+        fragranceId: id
       }
     })
-  }, [router, fragranceId])
+  }, [router, id])
 
   const gotoEditNotes = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/note-layers',
       params: {
-        fragranceId
+        fragranceId: id
       }
     })
-  }, [router, fragranceId])
+  }, [router, id])
 
   const gotoEditCharacteristics = useCallback(() => {
     router.push({
       pathname: '/(core)/home/fragrance/edit/characteristics',
       params: {
-        fragranceId
+        fragranceId: id
       }
     })
-  }, [router, fragranceId])
+  }, [router, id])
 
   const gotoFragranceReviews = useCallback((reviewId?: number | undefined) => {
     router.push({
       pathname: '/(core)/home/fragrance/reviews',
       params: {
-        fragranceId,
+        fragranceId: id,
         reviewId
       }
     })
-  }, [router, fragranceId])
+  }, [router, id])
 
   const gotoAddFragranceReview = useCallback(() => {
     router.push({
@@ -86,48 +88,51 @@ const FragrancePage = () => {
     })
   }, [router])
 
-  if (loading || summary == null) {
-    return null
-  }
-
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <FragranceImageCarousel images={images} />
+      <FragranceImageCarousel
+        fragranceId={id}
+      />
 
       <Divider />
 
       <FragranceHeading
-        name={summary.name}
-        brand={summary.brand}
-        rating={summary.rating}
-        reviewsCount={summary.reviewsCount}
-        votes={summary.votes}
+        fragranceInfo={fragranceInfo}
         onVote={onFragranceVote}
       />
 
       <Divider style={{ marginTop: 10 }} />
 
-      <FragranceCategory title='Gender' expandText='masculine or feminine' onCategoryPressed={gotoEditGender}>
-        <ScaleBar value={summary.traits.gender?.value ?? 50} Icon={<GenderIcon />} lessLabel='feminine' greaterLabel='masculine' />
+      <FragranceCategory
+        title='Gender'
+        expandText='masculine or feminine'
+        onCategoryPressed={gotoEditGender}
+      >
+        <ScaleBar
+          value={traits.gender.value}
+          Icon={<GenderIcon />}
+          lessLabel='feminine'
+          greaterLabel='masculine'
+        />
       </FragranceCategory>
 
       <TopFragranceAccords
-        accords={accords}
+        fragranceInfo={fragranceInfo}
         onExpand={gotoEditAccords}
       />
 
       <TopFragranceNotes
-        notes={notes}
+        fragranceInfo={fragranceInfo}
         onExpand={gotoEditNotes}
       />
 
       <TopFragranceCharacteristics
-        traits={summary.traits}
+        traits={traits}
         onExpand={gotoEditCharacteristics}
       />
 
       <TopFragranceReviews
-        reviews={reviews}
+        fragranceInfo={fragranceInfo}
         onExpandReviews={gotoFragranceReviews}
         onWriteReview={gotoAddFragranceReview}
       />

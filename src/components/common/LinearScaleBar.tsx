@@ -1,6 +1,7 @@
 import { type StyleProp, StyleSheet, View, type ViewProps, type ViewStyle } from 'react-native'
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import { Colors } from '@/src/constants/Colors'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export interface LinearScaleBarProps extends ViewProps {
   value: number
@@ -9,6 +10,15 @@ export interface LinearScaleBarProps extends ViewProps {
 
 const LinearScaleBar = (props: LinearScaleBarProps) => {
   const { value, color = Colors.button, ...viewProps } = props
+  const width = useSharedValue(0)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    width: `${width.value}%`
+  }))
+
+  useLayoutEffect(() => {
+    width.value = withTiming(value, { duration: 300 })
+  }, [width, value])
 
   if (value > 100.0 || value < 0.0) {
     return null
@@ -21,7 +31,7 @@ const LinearScaleBar = (props: LinearScaleBarProps) => {
       {...viewProps}
       style={viewStyle}
     >
-      <View style={{ backgroundColor: color, width: `${value}%`, borderRadius: 20 }} />
+      <Animated.View style={[animatedStyle, { backgroundColor: color, borderRadius: 20 }]} />
     </View>
   )
 }

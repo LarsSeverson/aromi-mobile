@@ -1,8 +1,8 @@
-import { useQuery } from '@apollo/client'
+import { NetworkStatus, useQuery } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
 import { type FragranceReviewsQueryVariables, type FragranceReviewsQuery } from '../generated/graphql'
-import { flattenConnection, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
+import { flattenConnection, INVALID_ID, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
 
 const REVIEWS_LIMIT = 20
 
@@ -20,10 +20,6 @@ const FRAGRANCE_REVIEWS_QUERY = graphql(/* GraphQL */ `
   ) {
     fragrance(id: $fragranceId) {
       id
-      brand
-      name
-      rating
-      reviewsCount
       reviews(input: $reviewsInput) {
         edges {
           node {
@@ -45,23 +41,13 @@ const FRAGRANCE_REVIEWS_QUERY = graphql(/* GraphQL */ `
           endCursor
         }
       }
-      reviewDistribution {
-        one
-        two
-        three
-        four
-        five
-      }
     }
   }
 `)
 
-export type FragranceReviewsSummary = Pick<NonNullable<FragranceReviewsQuery['fragrance']>,
-'id' | 'brand' | 'name' | 'rating' | 'reviewsCount' | 'reviewDistribution'> | undefined
+export type FlattenedFragranceReviewsReturn = FlattenType<NonNullable<FragranceReviewsQuery['fragrance']>['reviews']>
 
-export type FlattenedFragranceReviewsQuery = FlattenType<NonNullable<FragranceReviewsQuery['fragrance']>>
-
-const useFragranceReviews = (fragranceId: number): PaginatedQueryHookReturn<FlattenedFragranceReviewsQuery['reviews']> & { summary: FragranceReviewsSummary } => {
+const useFragranceReviews = (fragranceId: number): PaginatedQueryHookReturn<FlattenedFragranceReviewsReturn> => {
   const variables = useMemo<FragranceReviewsQueryVariables>(() => ({
     fragranceId,
     reviewsInput: {
@@ -71,7 +57,11 @@ const useFragranceReviews = (fragranceId: number): PaginatedQueryHookReturn<Flat
     }
   }), [fragranceId])
 
-  const { data, loading, error, refetch, fetchMore } = useQuery(FRAGRANCE_REVIEWS_QUERY, { variables })
+  const { data, loading, error, networkStatus, refetch, fetchMore } = useQuery(FRAGRANCE_REVIEWS_QUERY, {
+    variables,
+    notifyOnNetworkStatusChange: true,
+    skip: fragranceId === INVALID_ID
+  })
 
   const getMore = useCallback(() => {
     if (data?.fragrance == null) return
@@ -91,53 +81,22 @@ const useFragranceReviews = (fragranceId: number): PaginatedQueryHookReturn<Flat
       }
     }
 
-    void fetchMore({
-      variables: newVariables,
-      updateQuery: (prev, { fetchMoreResult }) => {
-        const c1 = prev.fragrance
-        const c2 = fetchMoreResult.fragrance
-
-        if (c1 == null) return fetchMoreResult
-        if (c2 == null) return prev
-
-        return {
-          fragrance: {
-            ...c1,
-            reviews: {
-              edges: c1.reviews.edges.concat(c2.reviews.edges),
-              pageInfo: c2.reviews.pageInfo
-            }
-          }
-        }
-      }
-    })
+    void fetchMore({ variables: newVariables })
   }, [data, variables, fetchMore])
 
   const refresh = useCallback(() => {
     void refetch(variables)
   }, [variables, refetch])
 
-  const summary = useMemo<FragranceReviewsSummary>(() =>
-    ((data?.fragrance) != null)
-      ? {
-          id: data.fragrance.id,
-          brand: data.fragrance.brand,
-          name: data.fragrance.name,
-          rating: data.fragrance.rating,
-          reviewsCount: data.fragrance.reviewsCount,
-          reviewDistribution: data.fragrance.reviewDistribution
-        }
-      : undefined, [data?.fragrance])
-
-  const reviews = useMemo<FlattenedFragranceReviewsQuery['reviews']>(() =>
+  const reviews = useMemo<FlattenedFragranceReviewsReturn>(() =>
     flattenConnection(data?.fragrance?.reviews),
   [data?.fragrance?.reviews])
 
   return {
     data: reviews,
-    summary,
     pageInfo: data?.fragrance?.reviews.pageInfo,
     loading,
+    loadingMore: networkStatus === NetworkStatus.fetchMore,
     error,
 
     refresh,

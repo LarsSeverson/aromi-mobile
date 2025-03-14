@@ -6,7 +6,6 @@ import { useAppTheme } from '@/src/constants/Themes'
 import { Icon, Text } from 'react-native-paper'
 import VoteButton from '../VoteButton'
 import { type FragranceImage, type Fragrance } from '@/src/generated/graphql'
-import useVoteOnFragrance from '@/src/hooks/useVoteOnFragrance'
 
 export type CardFragrancePreview = Omit<Pick<Fragrance, 'id' | 'name' | 'brand' | 'votes'>, 'images'> & {
   images: FragranceImage[]
@@ -15,28 +14,25 @@ export type CardFragrancePreview = Omit<Pick<Fragrance, 'id' | 'name' | 'brand' 
 export interface FragrancePreviewCardProps extends BouncyButtonProps {
   fragrance: CardFragrancePreview
 
-  onFragrancePress?: (fragranceId: number) => void
+  onFragrancePress?: () => void
+  onFragranceVote?: (myVote: boolean | null) => void
 }
 
 const FragrancePreviewCard = (props: FragrancePreviewCardProps) => {
   const theme = useAppTheme()
-  const { fragrance, onFragrancePress, ...rest } = props
-
-  const { voteOnFragrance } = useVoteOnFragrance()
+  const { fragrance, onFragrancePress, onFragranceVote, ...rest } = props
 
   const votes = useMemo(() =>
     fragrance.votes.likes - fragrance.votes.dislikes,
   [fragrance.votes])
 
   const handlePress = useCallback(() => {
-    onFragrancePress?.(fragrance.id)
-  }, [fragrance.id, onFragrancePress])
+    onFragrancePress?.()
+  }, [onFragrancePress])
 
   const handleVote = useCallback((myVote: boolean | null) => {
-    const { id, votes } = fragrance
-    const vars = { fragranceId: id, myVote }
-    voteOnFragrance(vars, votes)
-  }, [fragrance, voteOnFragrance])
+    onFragranceVote?.(myVote)
+  }, [onFragranceVote])
 
   return (
     <View style={styles.wrapper}>

@@ -1,22 +1,22 @@
-import { useQuery } from '@apollo/client'
+import { NetworkStatus, useQuery } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
 import { type FragranceAccordsQueryVariables, type FragranceAccordsQuery, SortBy } from '../generated/graphql'
-import { flattenConnection, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
+import { flattenConnection, INVALID_ID, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
 
-const ACCORDS_LIMIT = 30
+const ACCORDS_LIMIT = 18
 
 const FRAGRANCE_ACCORDS_QUERY = graphql(/* GraphQL */ `
   query FragranceAccords(
     $fragranceId: Int!
     $accordsInput: AccordsInput = {
       pagination: {
-        first: 30 
+        first: 18 
         sort: {
           by: votes
         }
       }
-      fill: true
+      fill: false
     }
   ) {
     fragrance(id: $fragranceId) {
@@ -44,20 +44,25 @@ const FRAGRANCE_ACCORDS_QUERY = graphql(/* GraphQL */ `
 `)
 
 export type FlattenedFragranceAccordsQuery = FlattenType<NonNullable<FragranceAccordsQuery['fragrance']>>
+export type FragranceAccordsQueryReturn = FlattenedFragranceAccordsQuery['accords']
 
-const useFragranceAccords = (fragranceId: number): PaginatedQueryHookReturn<FlattenedFragranceAccordsQuery['accords']> => {
+const useFragranceAccords = (fragranceId: number, limit: number = ACCORDS_LIMIT, fill: boolean = false): PaginatedQueryHookReturn<FragranceAccordsQueryReturn> => {
   const variables = useMemo<FragranceAccordsQueryVariables>(() => ({
     fragranceId,
     accordsInput: {
       pagination: {
-        first: ACCORDS_LIMIT,
+        first: limit,
         sort: { by: SortBy.Votes }
       },
-      fill: true
+      fill
     }
-  }), [fragranceId])
+  }), [fill, fragranceId, limit])
 
-  const { data, loading, error, refetch, fetchMore } = useQuery(FRAGRANCE_ACCORDS_QUERY, { variables })
+  const { data, loading, error, networkStatus, refetch, fetchMore } = useQuery(FRAGRANCE_ACCORDS_QUERY, {
+    variables,
+    notifyOnNetworkStatusChange: true,
+    skip: fragranceId === INVALID_ID
+  })
 
   const getMore = useCallback(() => {
     if (data?.fragrance == null) return
@@ -77,33 +82,14 @@ const useFragranceAccords = (fragranceId: number): PaginatedQueryHookReturn<Flat
       }
     }
 
-    void fetchMore({
-      variables: newVariables,
-      updateQuery: (prev, { fetchMoreResult }) => {
-        const c1 = prev.fragrance
-        const c2 = fetchMoreResult.fragrance
-
-        if (c1 == null) return fetchMoreResult
-        if (c2 == null) return prev
-
-        return {
-          fragrance: {
-            ...c1,
-            accords: {
-              edges: c1.accords.edges.concat(c2.accords.edges),
-              pageInfo: c2.accords.pageInfo
-            }
-          }
-        }
-      }
-    })
+    void fetchMore({ variables: newVariables })
   }, [data, variables, fetchMore])
 
   const refresh = useCallback(() => {
     void refetch(variables)
   }, [variables, refetch])
 
-  const accords = useMemo<FlattenedFragranceAccordsQuery['accords']>(() =>
+  const accords = useMemo<FragranceAccordsQueryReturn>(() =>
     flattenConnection(data?.fragrance?.accords),
   [data?.fragrance?.accords])
 
@@ -111,6 +97,7 @@ const useFragranceAccords = (fragranceId: number): PaginatedQueryHookReturn<Flat
     data: accords,
     pageInfo: data?.fragrance?.accords.pageInfo,
     loading,
+    loadingMore: networkStatus === NetworkStatus.fetchMore,
     error,
 
     refresh,

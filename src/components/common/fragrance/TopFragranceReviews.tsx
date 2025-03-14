@@ -2,26 +2,26 @@ import React, { useCallback } from 'react'
 import FragranceCategory from './FragranceCategory'
 import FragranceEmpty from './FragranceEmpty'
 import { type FragranceReview } from '@/src/generated/graphql'
-import { type CardFragranceReview } from './FragranceReviewCard'
 import ReviewsTrack from './ReviewsTrack'
+import { type FragranceInfo } from '@/src/hooks/useFragranceInfo'
+import useFragranceReviews from '@/src/hooks/useFragranceReviews'
 
 export interface FragranceReviewsPreviewProps {
-  reviews: CardFragranceReview[]
-
+  fragranceInfo: FragranceInfo
   onExpandReviews?: (reviewId?: number | undefined) => void
   onWriteReview?: () => void
 }
 
 const TopFragranceReviews = (props: FragranceReviewsPreviewProps) => {
-  const {
-    reviews,
+  const { fragranceInfo, onExpandReviews } = props
 
-    onExpandReviews
-  } = props
+  const { data: reviews, loading } = useFragranceReviews(fragranceInfo.id)
 
   const handleOnReviewPressed = useCallback((review: FragranceReview) => {
     onExpandReviews?.(review.id)
   }, [onExpandReviews])
+
+  if (loading) return null
 
   return (
     <FragranceCategory

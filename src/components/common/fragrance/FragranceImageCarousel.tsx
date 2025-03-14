@@ -4,18 +4,18 @@ import ImageCarousel from '../../common/ImageCarousel'
 import BouncyButton from '../../common/BouncyButton'
 import { Icon } from 'react-native-elements'
 import { Colors } from '@/src/constants/Colors'
-import { type FragranceImage } from '@/src/generated/graphql'
-
-export type FragranceImageCarouselImage = Pick<FragranceImage, 'url'>
+import useFragranceImages from '@/src/hooks/useFragranceImages'
 
 export interface FragranceImageCarouselProps {
-  images: FragranceImageCarouselImage[]
+  fragranceId: number
   onImagePressed?: (uri: string) => void
 }
 
 const FragranceImageCarousel = (props: FragranceImageCarouselProps) => {
   const { width } = useWindowDimensions()
-  const { images } = props
+  const { fragranceId } = props
+
+  const { data: images } = useFragranceImages(fragranceId)
 
   return (
     <View style={styles.wrapper}>

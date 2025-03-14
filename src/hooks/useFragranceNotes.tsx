@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
 import { type FragranceNotesQuery, type FragranceNotesQueryVariables } from '../generated/graphql'
-import { flattenConnection, type FlattenType } from '../common/util-types'
+import { flattenConnection, INVALID_ID, type QueryHookReturn, type FlattenType } from '../common/util-types'
 
 const NOTES_LIMIT = 12
 
@@ -99,7 +99,7 @@ export interface UseFragranceNotesIncludes {
   includeBase: boolean
 }
 
-const useFragranceNotes = (fragranceId: number, includes?: UseFragranceNotesIncludes) => {
+const useFragranceNotes = (fragranceId: number, includes?: UseFragranceNotesIncludes): QueryHookReturn<FlattenedFragranceNotes> => {
   const variables = useMemo<FragranceNotesQueryVariables>(() => ({
     fragranceId,
     notesInput: {
@@ -110,7 +110,10 @@ const useFragranceNotes = (fragranceId: number, includes?: UseFragranceNotesIncl
     ...includes
   }), [fragranceId, includes])
 
-  const { data, loading, error, refetch } = useQuery(FRAGRANCE_NOTES_QUERY, { variables })
+  const { data, loading, error, refetch } = useQuery(FRAGRANCE_NOTES_QUERY, {
+    variables,
+    skip: fragranceId === INVALID_ID
+  })
 
   const refresh = useCallback(() => {
     void refetch(variables)

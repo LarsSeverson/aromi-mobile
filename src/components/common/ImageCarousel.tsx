@@ -24,7 +24,7 @@ const ImageCarousel = (props: ImageCarouselProps) => {
   if (empty) {
     return (
       <View style={[styles.placeholderWrapper, { height, backgroundColor: theme.colors.surfaceDisabled }]}>
-        <Text variant='titleMedium'>No image available yet</Text>
+        <Text variant='titleMedium'>No images available yet</Text>
       </View>
     )
   }

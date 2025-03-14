@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client'
+import { NetworkStatus, useQuery } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { graphql } from '../generated'
 import { type FragranceNotesLayerQuery, type FragranceNotesLayerQueryVariables, NoteLayer } from '../generated/graphql'
-import { flattenConnection, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
+import { flattenConnection, INVALID_ID, type FlattenType, type PaginatedQueryHookReturn } from '../common/util-types'
 
-const NOTES_LIMIT = 30
+const NOTES_LIMIT = 18
 
 const FRAGRANCE_NOTES_LAYER_QUERY = graphql(/* GraphQL */ `
   query FragranceNotesLayer(
@@ -14,7 +14,7 @@ const FRAGRANCE_NOTES_LAYER_QUERY = graphql(/* GraphQL */ `
     $includeBase: Boolean = false
     $notesInput: NotesInput = {
       pagination: {
-        first: 30
+        first: 18
         sort: {
           by: votes
         }
@@ -88,9 +88,9 @@ const FRAGRANCE_NOTES_LAYER_QUERY = graphql(/* GraphQL */ `
 `)
 
 type FragranceNotesData = Pick<NonNullable<FragranceNotesLayerQuery['fragrance']>['notes'], 'top' | 'middle' | 'base'>
-export type FlattenedFragranceNotesLayerQuery = FlattenType<FragranceNotesData>
+export type FlattenedFragranceNotesLayerReturn = NonNullable<FlattenType<FragranceNotesData>['base' | 'middle' | 'top']>
 
-const useFragranceNotesLayer = (fragranceId: number, layer: NoteLayer): PaginatedQueryHookReturn<NonNullable<FlattenedFragranceNotesLayerQuery['base']>> => {
+const useFragranceNotesLayer = (fragranceId: number, layer: NoteLayer, fill: boolean = false): PaginatedQueryHookReturn<FlattenedFragranceNotesLayerReturn> => {
   const key = useMemo<keyof FragranceNotesData>(() => layer.toLowerCase() as keyof FragranceNotesData, [layer])
   const variables = useMemo<FragranceNotesLayerQueryVariables>(() => ({
     fragranceId,
@@ -98,14 +98,18 @@ const useFragranceNotesLayer = (fragranceId: number, layer: NoteLayer): Paginate
       pagination: {
         first: NOTES_LIMIT
       },
-      fill: true
+      fill
     },
     includeTop: layer === NoteLayer.Top,
     includeMiddle: layer === NoteLayer.Middle,
     includeBase: layer === NoteLayer.Base
-  }), [fragranceId, layer])
+  }), [fragranceId, layer, fill])
 
-  const { data, loading, error, fetchMore, refetch } = useQuery(FRAGRANCE_NOTES_LAYER_QUERY, { variables })
+  const { data, loading, error, networkStatus, fetchMore, refetch } = useQuery(FRAGRANCE_NOTES_LAYER_QUERY, {
+    variables,
+    notifyOnNetworkStatusChange: true,
+    skip: fragranceId === INVALID_ID
+  })
 
   const getMore = useCallback(() => {
     if (data?.fragrance == null) return
@@ -127,42 +131,14 @@ const useFragranceNotesLayer = (fragranceId: number, layer: NoteLayer): Paginate
       }
     }
 
-    void fetchMore({
-      variables: newVariables,
-      updateQuery: (prev, { fetchMoreResult }) => {
-        const c1 = prev.fragrance
-        const c2 = fetchMoreResult.fragrance
-
-        if (c1 == null) return fetchMoreResult
-        if (c2 == null) return prev
-
-        const pNotes = c1.notes[key]
-        const nNotes = c2.notes[key]
-
-        if ((pNotes == null) && (nNotes == null)) return prev
-        if (pNotes == null) return fetchMoreResult
-        if (nNotes == null) return prev
-
-        return {
-          fragrance: {
-            ...c1,
-            notes: {
-              [key]: {
-                edges: pNotes.edges.concat(nNotes.edges),
-                pageInfo: nNotes.pageInfo
-              }
-            }
-          }
-        }
-      }
-    })
+    void fetchMore({ variables: newVariables })
   }, [data, key, variables, fetchMore])
 
   const refresh = useCallback(() => {
     void refetch(variables)
   }, [variables, refetch])
 
-  const notes = useMemo<NonNullable<FlattenedFragranceNotesLayerQuery['base']>>(() =>
+  const notes = useMemo<NonNullable<FlattenedFragranceNotesLayerReturn>>(() =>
     flattenConnection(data?.fragrance?.notes[key])
   , [data?.fragrance?.notes, key])
 
@@ -170,6 +146,7 @@ const useFragranceNotesLayer = (fragranceId: number, layer: NoteLayer): Paginate
     data: notes,
     pageInfo: data?.fragrance?.notes[key]?.pageInfo,
     loading,
+    loadingMore: networkStatus === NetworkStatus.fetchMore,
     error,
 
     refresh,

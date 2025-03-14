@@ -1,37 +1,25 @@
 import { StyleSheet } from 'react-native'
 import React, { useCallback } from 'react'
-import useSuggestedFragrances from '@/src/hooks/useSuggestedFragrances'
+import useSuggestedFragrances, { type SuggestedFragrancesFragrance } from '@/src/hooks/useSuggestedFragrances'
 import BlockList from '@/src/components/common/BlockList'
-import FragrancePreviewCard, { type CardFragrancePreview } from '@/src/components/common/fragrance/FragrancePreviewCard'
-import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import HomeFragranceBlock from '@/src/components/home/HomeFragranceBlock'
 
 const HomePage = () => {
-  const router = useRouter()
   const { data, loadingMore, getMore } = useSuggestedFragrances()
 
-  // const onRefresh = useCallback(() => {}, [])
+  console.log('rendered')
 
-  const openFragrance = useCallback((fragranceId: number) => {
-    router.push({ pathname: '/(core)/home/fragrance/', params: { fragranceId } })
-  }, [router])
-
-  const onRenderFragrance = useCallback(({ item: fragrance }: { item: CardFragrancePreview }) => {
-    return (
-      <FragrancePreviewCard
-        fragrance={fragrance}
-        onFragrancePress={openFragrance}
-        style={{ height: 240 }}
-      />
-    )
-  }, [openFragrance])
+  const onRenderHomeFragranceBlock = useCallback(({ item: fragrance }: { item: SuggestedFragrancesFragrance }) => {
+    return <HomeFragranceBlock fragrance={fragrance} />
+  }, [])
 
   if (data.length === 0) return null
 
   return (
     <BlockList
       data={data}
-      renderItem={onRenderFragrance}
+      renderItem={onRenderHomeFragranceBlock}
       numColumns={2}
       showsVerticalScrollIndicator={false}
       loadingMore={loadingMore}

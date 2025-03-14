@@ -53,8 +53,10 @@ const SUGGESTED_FRAGRANCES_QUERY = graphql(/* GraphQL */ `
 `)
 
 export type FlattendedSuggestedFragrancesData = FlattenType<SuggestedFragrancesQuery>
+export type SuggestedFragrancesFragrance = FlattendedSuggestedFragrancesData['fragrances'][number]
+export type SuggestedFragrancesReturn = FlattendedSuggestedFragrancesData['fragrances']
 
-const useSuggestedFragrances = (): PaginatedQueryHookReturn<FlattendedSuggestedFragrancesData['fragrances']> => {
+const useSuggestedFragrances = (): PaginatedQueryHookReturn<SuggestedFragrancesReturn> => {
   const variables = useMemo<SuggestedFragrancesQueryVariables>(() => ({
     input: { pagination: { first: FRAGRANCES_LIMIT } }
   }), [])
@@ -93,7 +95,7 @@ const useSuggestedFragrances = (): PaginatedQueryHookReturn<FlattendedSuggestedF
     void refetch(variables)
   }, [variables, refetch])
 
-  const fragrances = useMemo<FlattendedSuggestedFragrancesData['fragrances']>(() => {
+  const fragrances = useMemo<SuggestedFragrancesReturn>(() => {
     return flattenConnection(data?.fragrances).map(fragrance => ({
       ...fragrance,
       images: flattenConnection(fragrance.images)
